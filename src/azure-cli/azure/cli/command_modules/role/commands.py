@@ -204,9 +204,9 @@ def load_command_table(self, _):
         g.custom_command('add', 'add_group_owner')
         g.custom_command('remove', 'remove_group_owner')
 
-    with self.command_group('ad group member', role_group_sdk, exception_handler=graph_err_handler) as g:
-        g.command('list', 'get_group_members')
-        g.command('add', 'add_member')
+    with self.command_group('ad group member', role_group_sdk, exception_handler=graph_err_handler, group_alias_list=['ad gm']) as g:
+        g.command('list', 'get_group_members', full_alias_list=['ad list-group-member'])
+        g.command('add', 'add_member', alias_list=['create'])
         g.command('remove', 'remove_member')
         g.custom_command('check', 'check_group_membership', client_factory=get_graph_client_groups)
 

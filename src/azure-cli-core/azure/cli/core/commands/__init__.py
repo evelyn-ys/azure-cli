@@ -1159,6 +1159,9 @@ class AzCommandGroup(CommandGroup):
         if operations_tmpl:
             self.group_kwargs['operations_tmpl'] = operations_tmpl
         self.is_stale = False
+        group_alias_list = [] if merged_kwargs.get('group_alias_list') is None else merged_kwargs.get('group_alias_list')
+        for group_alias in group_alias_list:
+            self.command_loader.command_group_table[group_alias] = self
 
     def __enter__(self):
         return self
@@ -1244,11 +1247,36 @@ class AzCommandGroup(CommandGroup):
 
         operations_tmpl = merged_kwargs['operations_tmpl']
         command_name = '{} {}'.format(self.group_name, name) if self.group_name else name
+        merged_kwargs['full_alias_list'] = self._merge_full_alias_list(self.group_name, name,
+                                                      merged_kwargs.get('group_alias_list'),
+                                                      merged_kwargs.get('alias_list'),
+                                                      merged_kwargs.get('full_alias_list'))
         self.command_loader._cli_command(command_name,  # pylint: disable=protected-access
                                          operation=operations_tmpl.format(method_name),
                                          **merged_kwargs)
-
+        for full_alias in merged_kwargs['full_alias_list']:
+            self.command_loader.command_table[full_alias] = self.command_loader.command_table[command_name]
         return command_name
+
+    def _merge_full_alias_list(self, group_name, name, group_alias_list, alias_list, full_alias_list):
+        if group_alias_list is None:
+            group_alias_list = [group_name]
+        else:
+            group_alias_list.append(group_name)
+
+        if alias_list is None:
+            alias_list = [name]
+        else:
+            alias_list.append(name)
+
+        if full_alias_list is None:
+            full_alias_list = []
+        for group_alias in group_alias_list:
+            for alias in alias_list:
+                full_alias = '{} {}'.format(group_alias, alias)
+                full_alias_list.append(full_alias)
+        full_alias_list.remove('{} {}'.format(group_name, name))
+        return full_alias_list or []
 
     # pylint: disable=no-self-use
     def _resolve_operation(self, kwargs, name, command_type=None, custom_command=False):
