@@ -90,7 +90,7 @@ class StorageBlobUploadLiveTests(LiveScenarioTest):
         if fix_block_size:
             import mock
             with mock.patch('azure.cli.command_modules.storage.operations.blob._adjust_block_blob_size', side_effect=fix_block_blob_size):
-                self.cmd('storage blob upload -c {} -f "{}" -n {} --type {}'
+                self.cmd('storage blob upload -c {} -f "{}" -n {} --type {} --timeout 1200'
                          .format(container, local_file, blob_name, blob_type))
         else:
             self.cmd('storage blob upload -c {} -f "{}" -n {} --type {}'
