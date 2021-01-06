@@ -438,6 +438,19 @@ def transform_blob_type(cmd, blob_type):
     return None
 
 
+def _adjust_block_blob_size(client, file_path):
+    # increase the block size to 100MB when the block list will contain more than
+    # 50,000 blocks(each block 4MB)
+    if os.path.isfile(file_path) and os.stat(file_path).st_size > 50000 * 4 * 1024 * 1024:
+        client.MAX_BLOCK_SIZE = 100 * 1024 * 1024
+        client.MAX_SINGLE_PUT_SIZE = 256 * 1024 * 1024
+    # increase the block size to 4000MB when the block list will contain more than
+    # 50,000 blocks(each block 100MB)
+    if os.path.isfile(file_path) and os.stat(file_path).st_size > 50000 * 100 * 1024 * 1024:
+        client.MAX_BLOCK_SIZE = 4000 * 1024 * 1024
+        client.MAX_SINGLE_PUT_SIZE = 5000 * 1024 * 1024
+
+
 # pylint: disable=too-many-locals
 def upload_blob(cmd, client, file_path, container_name=None, blob_name=None, blob_type=None, content_settings=None,
                 metadata=None, validate_content=False, maxsize_condition=None, max_connections=2, lease_id=None,
@@ -523,10 +536,7 @@ def upload_blob(cmd, client, file_path, container_name=None, blob_name=None, blo
         return client.append_blob_from_path(**append_blob_args)
 
     def upload_block_blob():
-        # increase the block size to 100MB when the block list will contain more than 50,000 blocks
-        if os.path.isfile(file_path) and os.stat(file_path).st_size > 50000 * 4 * 1024 * 1024:
-            client.MAX_BLOCK_SIZE = 100 * 1024 * 1024
-            client.MAX_SINGLE_PUT_SIZE = 256 * 1024 * 1024
+        _adjust_block_blob_size(client, file_path)
 
         create_blob_args = {
             'container_name': container_name,
