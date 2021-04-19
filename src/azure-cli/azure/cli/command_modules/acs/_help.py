@@ -154,12 +154,12 @@ short-summary: Manage Azure Kubernetes Services.
 
 helps["aks check-acr"] = """
 type: command
-short-summary: Validate an ACR is accesible from an AKS cluster.
+short-summary: Validate an ACR is accessible from an AKS cluster.
 parameters:
   - name: --acr
     short-summary: The FQDN of the ACR.
 examples:
-  - name: Validate the ACR is accesible from the AKS cluster.
+  - name: Validate the ACR is accessible from the AKS cluster.
     text: az aks check-acr --name MyManagedCluster --resource-group MyResourceGroup --acr myacr.azurecr.io
     crafted: true
 """
@@ -233,10 +233,28 @@ parameters:
     short-summary: User account to create on node VMs for SSH access.
   - name: --windows-admin-username
     type: string
-    short-summary: Username to create on Windows node VMs.
+    short-summary: User account to create on windows node VMs.
+    long-summary: |-
+      Rules for windows-admin-username:
+          - restriction: Cannot end in "."
+          - Disallowed values: "administrator", "admin", "user", "user1", "test", "user2", "test1", "user3", "admin1", "1", "123", "a", "actuser", "adm", "admin2", "aspnet", "backup", "console", "david", "guest", "john", "owner", "root", "server", "sql", "support", "support_388945a0", "sys", "test2", "test3", "user4", "user5".
+          - Minimum-length: 1 character
+          - Max-length: 20 characters
+      Reference: https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.management.compute.models.virtualmachinescalesetosprofile.adminusername?view=azure-dotnet
   - name: --windows-admin-password
     type: string
-    short-summary: Password to create on Windows node VMs.
+    short-summary: User account password to use on windows node VMs.
+    long-summary: |-
+      Rules for windows-admin-password:
+          - Minimum-length: 14 characters
+          - Max-length: 123 characters
+          - Complexity requirements: 3 out of 4 conditions below need to be fulfilled
+            * Has lower characters
+            * Has upper characters
+            * Has a digit
+            * Has a special character (Regex match [\\W_])
+          - Disallowed values:  "abc@123", "P@$$w0rd", "P@ssw0rd", "P@ssword123", "Pa$$word", "pass@word1", "Password!", "Password1", "Password22", "iloveyou!"
+      Reference: https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.management.compute.models.virtualmachinescalesetosprofile.adminpassword?view=azure-dotnet
   - name: --enable-ahub
     type: bool
     short-summary: Enable Azure Hybrid User Benefits (AHUB) for Windows VMs.
@@ -364,6 +382,9 @@ parameters:
   - name: --enable-node-public-ip
     type: bool
     short-summary: Enable VMSS node public IP.
+  - name: --node-public-ip-prefix-id
+    type: string
+    short-summary: Public IP prefix ID used to assign public IPs to VMSS nodes.
   - name: --workspace-resource-id
     type: string
     short-summary: The resource ID of an existing Log Analytics Workspace to use for storing monitoring data. If not specified, uses the default Log Analytics Workspace if it exists, otherwise creates one.
@@ -376,6 +397,13 @@ parameters:
   - name: --enable-private-cluster
     type: string
     short-summary: Enable private cluster.
+  - name: --private-dns-zone
+    type: string
+    short-summary: Private dns zone mode for private cluster.
+    long-summary: Allowed values are "system" or custom private dns zone resource id. If not set, defaults to type system. Requires --enable-private-cluster to be used.
+  - name: --fqdn-subdomain
+    type: string
+    short-summary: Prefix for FQDN that is created for private cluster with custom private dns zone scenario.
   - name: --api-server-authorized-ip-ranges
     type: string
     short-summary: Comma seperated list of authorized apiserver IP ranges. Set to 0.0.0.0/32 to restrict apiserver traffic to node pools.
@@ -517,6 +545,20 @@ parameters:
   - name: --disable-ahub
     type: bool
     short-summary: Disable Azure Hybrid User Benefits (AHUB) feature for cluster.
+  - name: --windows-admin-password
+    type: string
+    short-summary: User account password to use on windows node VMs.
+    long-summary: |-
+      Rules for windows-admin-password:
+          - Minimum-length: 14 characters
+          - Max-length: 123 characters
+          - Complexity requirements: 3 out of 4 conditions below need to be fulfilled
+            * Has lower characters
+            * Has upper characters
+            * Has a digit
+            * Has a special character (Regex match [\\W_])
+          - Disallowed values:  "abc@123", "P@$$w0rd", "P@ssw0rd", "P@ssword123", "Pa$$word", "pass@word1", "Password!", "Password1", "Password22", "iloveyou!"
+      Reference: https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.management.compute.models.virtualmachinescalesetosprofile.adminpassword?view=azure-dotnet
 examples:
   - name: Update a kubernetes cluster with standard SKU load balancer to use two AKS created IPs for the load balancer outbound connection usage.
     text: az aks update -g MyResourceGroup -n MyManagedCluster --load-balancer-managed-outbound-ip-count 2
@@ -542,6 +584,8 @@ examples:
     text: az aks update -g MyResourceGroup -n MyManagedCluster --enable-ahub
   - name: Disable Azure Hybrid User Benefits featture for a kubernetes cluster.
     text: az aks update -g MyResourceGroup -n MyManagedCluster --disable-ahub
+  - name: Update Windows password of a kubernetes cluster
+    text: az aks update -g MyResourceGroup -n MyManagedCLuster --windows-admin-password "Repl@cePassw0rd12345678"
 """
 
 helps['aks delete'] = """
@@ -700,6 +744,9 @@ parameters:
   - name: --enable-node-public-ip
     type: bool
     short-summary: Enable VMSS node public IP.
+  - name: --node-public-ip-prefix-id
+    type: string
+    short-summary: Public IP prefix ID used to assign public IPs to VMSS nodes.
   - name: --vnet-subnet-id
     type: string
     short-summary: The ID of a subnet in an existing VNet into which to deploy the cluster.

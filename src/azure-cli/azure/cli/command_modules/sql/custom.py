@@ -40,7 +40,8 @@ from azure.mgmt.sql.models import (
     PartnerRegionInfo,
     InstanceFailoverGroupReadOnlyEndpoint,
     InstanceFailoverGroupReadWriteEndpoint,
-    ServerPublicNetworkAccess
+    ServerPublicNetworkAccess,
+    ServerInfo
 )
 
 from azure.cli.core.profiles import ResourceType
@@ -3643,6 +3644,62 @@ def server_aad_only_enable(
         azure_ad_only_authentication=True
     )
 
+###############################################
+#           sql server trust groups           #
+###############################################
+
+
+def server_trust_group_create(
+        client,
+        resource_group_name,
+        name,
+        location,
+        group_member,
+        trust_scope,
+        no_wait=False):
+
+    members = [ServerInfo(server_id=member) for member in group_member]
+    return sdk_no_wait(no_wait, client.create_or_update,
+                       resource_group_name=resource_group_name,
+                       location_name=location,
+                       server_trust_group_name=name,
+                       group_members=members,
+                       trust_scopes=trust_scope)
+
+
+def server_trust_group_delete(
+        client,
+        resource_group_name,
+        name,
+        location,
+        no_wait=False):
+
+    return sdk_no_wait(no_wait, client.delete,
+                       resource_group_name=resource_group_name,
+                       location_name=location,
+                       server_trust_group_name=name)
+
+
+def server_trust_group_get(
+        client,
+        resource_group_name,
+        name,
+        location):
+
+    return client.get(resource_group_name=resource_group_name,
+                      location_name=location,
+                      server_trust_group_name=name)
+
+
+def server_trust_group_list(
+        client,
+        resource_group_name,
+        instance_name=None,
+        location=None):
+    if instance_name:
+        return client.list_by_instance(resource_group_name=resource_group_name, managed_instance_name=instance_name)
+    return client.list_by_location(resource_group_name=resource_group_name, location_name=location)
+
 
 ###############################################
 #                sql managed instance         #
@@ -3707,6 +3764,7 @@ def managed_instance_create(
     kwargs['location'] = location
     kwargs['sku'] = _find_managed_instance_sku_from_capabilities(cmd.cli_ctx, kwargs['location'], sku)
     kwargs['subnet_id'] = virtual_network_subnet_id
+    kwargs['maintenance_configuration_id'] = _complete_maintenance_configuration_id(cmd.cli_ctx, kwargs['maintenance_configuration_id'])
 
     if not kwargs['yes'] and kwargs['location'].lower() in ['southeastasia', 'brazilsouth', 'eastasia']:
         if kwargs['storage_account_type'] == 'GRS':
@@ -3800,7 +3858,7 @@ def managed_instance_update(
     if tags is not None:
         instance.tags = tags
 
-    instance.maintenance_configuration_id = maintenance_configuration_id
+    instance.maintenance_configuration_id = _complete_maintenance_configuration_id(cmd.cli_ctx, maintenance_configuration_id)
 
     return instance
 
@@ -4432,7 +4490,7 @@ def managed_db_log_replay_start(
     if auto_complete and not last_backup_name:
         raise CLIError('Please specify a last backup name when using auto complete flag.')
 
-    kwargs['auto_complete'] = auto_complete
+    kwargs['auto_complete_restore'] = auto_complete
     kwargs['last_backup_name'] = last_backup_name
 
     kwargs['storageContainerUri'] = storage_container_uri
