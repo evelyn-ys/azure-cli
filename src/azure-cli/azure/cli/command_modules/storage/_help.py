@@ -283,6 +283,10 @@ examples:
 helps['storage account management-policy update'] = """
 type: command
 short-summary: Update the data policy rules associated with the specified storage account.
+examples:
+    - name: Update the data policy rules associated with the specified storage account.
+      text: |
+        az storage account management-policy update --account-name myaccount --resource-group myresourcegroup --set policy.rules[0].name=newname
 """
 
 helps['storage account management-policy show'] = """
@@ -2253,7 +2257,8 @@ examples:
 
 helps['storage share-rm delete'] = """
 type: command
-short-summary: Delete the specified Azure file share.
+short-summary: Delete the specified Azure file share or share snapshot.
+long-summary: 'Incoming BREAKING CHANGE: Snapshot will not be deleted by default and we will add a new parameter to use if you want to include sanpshots for delete operation.'
 examples:
   - name: Delete an Azure file share 'myfileshare' under the storage account 'mystorageaccount' (account name) in resource group 'MyResourceGroup'.
     text: az storage share-rm delete -g MyResourceGroup --storage-account mystorageaccount --name myfileshare
@@ -2261,6 +2266,8 @@ examples:
     text: az storage share-rm delete --storage-account mystorageaccount --name myfileshare
   - name: Delete an Azure file share by resource id.
     text: az storage share-rm delete --ids file-share-id
+  - name: Delete an Azure file share snapshot.
+    text: az storage share-rm delete --ids file-share-id --snapshot "2021-03-25T05:29:56.0000000Z"
 """
 
 helps['storage share-rm exists'] = """
@@ -2299,14 +2306,16 @@ examples:
 
 helps['storage share-rm show'] = """
 type: command
-short-summary: Show the properties for a specified Azure file share.
+short-summary: Show the properties for a specified Azure file share or share snapshot.
 examples:
   - name: Show the properties for an Azure file share 'myfileshare' under the storage account 'mystorageaccount' (account name) in resource group 'MyResourceGroup'.
     text: az storage share-rm show -g MyResourceGroup --storage-account mystorageaccount --name myfileshare
   - name: Show the properties for an Azure file share 'myfileshare' under the storage account 'mystorageaccount' (account id).
     text: az storage share-rm show --storage-account mystorageaccount --name myfileshare
-  - name: Show the properties of an Azure file shares by resource id.
+  - name: Show the properties of an Azure file share by resource id.
     text: az storage share-rm show --ids file-share-id
+  - name: Show the properties of an Azure file share snapshot
+    text: az storage share-rm show --ids file-share-id --snapshot "2021-03-25T05:29:56.0000000Z"
 """
 
 helps['storage share-rm stats'] = """
@@ -2327,6 +2336,14 @@ examples:
     text: az storage share-rm update --storage-account mystorageaccount --name myfileshare --quota 3 --metadata key1=value1 key2=value2
   - name: Update the properties for an Azure file shares by resource id.
     text: az storage share-rm update --ids file-share-id --quota 3 --metadata key1=value1 key2=value2
+"""
+
+helps['storage share-rm snapshot'] = """
+type: command
+short-summary: Create a snapshot of an existing share under the specified account.
+examples:
+  - name: Create a snapshot of an existing share under the specified account.
+    text: az storage share-rm snapshot -g MyResourceGroup --storage-account mystorageaccount --name myfileshare
 """
 
 helps['storage share'] = """
