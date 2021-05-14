@@ -1243,6 +1243,17 @@ def load_arguments(self, _):  # pylint: disable=too-many-locals, too-many-statem
         c.argument('restored_name',
                    help='A new file share name to be restored. If not specified, deleted share name will be used.')
 
+    with self.argument_context('storage share-rm policy', resource_type=ResourceType.MGMT_STORAGE) as c:
+        c.argument('share_name', share_name_type, options_list=('--share', '-s'), id_part='child_name_2')
+        c.argument('policy_name', options_list=('--name', '-n'), help='The stored access policy name.')
+        c.argument('permission', options_list='--permissions',
+                   help='Allowed values: (d)elete (l)ist (r)ead (w)rite. Can be combined.')
+
+        c.argument('start', type=get_datetime_type(True),
+                   help='Start UTC datetime (Y-m-d\'T\'H:M:S\'Z\') of the access policy.')
+        c.argument('expiry', type=get_datetime_type(True),
+                   help='Expiry UTC datetime (Y-m-d\'T\'H:M:S\'Z\') of the access policy.')
+
     with self.argument_context('storage share url') as c:
         c.argument('unc', action='store_true', help='Output UNC network path.')
         c.argument('protocol', arg_type=get_enum_type(['http', 'https'], 'https'), help='Protocol to use.')

@@ -17,6 +17,7 @@ from azure.cli.command_modules.storage.util import (filter_none, collect_blobs, 
 from azure.cli.command_modules.storage.url_quote_util import encode_for_url, make_encoded_file_url_and_params
 from azure.cli.core.profiles import ResourceType
 
+logger = get_logger(__name__)
 
 def create_share_rm(cmd, client, resource_group_name, account_name, share_name, metadata=None, share_quota=None,
                     enabled_protocols=None, root_squash=None, access_tier=None):
@@ -412,3 +413,74 @@ def _file_share_exists(client, resource_group_name, account_name, share_name):
         return file_share is not None
     except HttpResponseError:
         return False
+
+
+def create_share_rm_policy(cmd, client, resource_group_name, account_name, share_name, policy_name, start=None, expiry=None, permission=None):
+    FileShare = cmd.get_models('FileShare', resource_type=ResourceType.MGMT_STORAGE)
+    SignedIdentifier = cmd.get_models('SignedIdentifier', resource_type=ResourceType.MGMT_STORAGE)
+    AccessPolicy = cmd.get_models('AccessPolicy', resource_type=ResourceType.MGMT_STORAGE)
+
+    file_share = client.get(resource_group_name, account_name, share_name)
+    signed_identifiers = file_share.signed_identifiers if file_share.signed_identifiers else []
+
+    new_acl = AccessPolicy(start=start, expiry=expiry, permission=permission)
+    for existing_identifier in signed_identifiers:
+        if existing_identifier.id == policy_name:
+            logger.warning("Policy {} already exists, will be updated.".format(policy_name))
+            existing_identifier.access_policy = new_acl
+            return client.update(resource_group_name, account_name, share_name,
+                                 FileShare(signed_identifiers=signed_identifiers)).signed_identifiers
+
+    signed_identifiers.append(SignedIdentifier(id=policy_name, access_policy=new_acl))
+    return client.update(resource_group_name, account_name, share_name,
+                         FileShare(signed_identifiers=signed_identifiers)).signed_identifiers
+
+
+def delete_share_rm_policy(cmd, client, resource_group_name, account_name, share_name, policy_name):
+    file_share = client.get(resource_group_name, account_name, share_name)
+    signed_identifiers = file_share.signed_identifiers if file_share.signed_identifiers else []
+
+    for existing_identifier in signed_identifiers:
+        if existing_identifier.id == policy_name:
+            signed_identifiers.remove(existing_identifier)
+            FileShare = cmd.get_models('FileShare', resource_type=ResourceType.MGMT_STORAGE)
+            return client.update(resource_group_name, account_name, share_name,
+                                 FileShare(signed_identifiers=signed_identifiers)).signed_identifiers
+    return signed_identifiers
+
+
+def get_share_rm_policy(client, resource_group_name, account_name, share_name, policy_name):
+    file_share = client.get(resource_group_name, account_name, share_name)
+    signed_identifiers = file_share.signed_identifiers if file_share.signed_identifiers else []
+    for existing_identifier in signed_identifiers:
+        if existing_identifier.id == policy_name:
+            return existing_identifier.access_policy
+    from azure.cli.core.azclierror import ResourceNotFoundError
+    raise ResourceNotFoundError("Policy {} doesn't exist for file share {}".format(policy_name, share_name))
+
+
+def list_share_rm_policies(client, resource_group_name, account_name, share_name):
+    file_share = client.get(resource_group_name, account_name, share_name)
+    return file_share.signed_identifiers if file_share.signed_identifiers else []
+
+
+def update_share_rm_policy(cmd, client, resource_group_name, account_name, share_name, policy_name, start=None, expiry=None, permission=None):
+    if not (start or expiry or permission):
+        from azure.cli.core.azclierror import InvalidArgumentValueError
+        raise InvalidArgumentValueError('Must specify at least one property when updating an access policy.')
+
+    FileShare = cmd.get_models('FileShare', resource_type=ResourceType.MGMT_STORAGE)
+    AccessPolicy = cmd.get_models('AccessPolicy', resource_type=ResourceType.MGMT_STORAGE)
+
+    file_share = client.get(resource_group_name, account_name, share_name)
+    signed_identifiers = file_share.signed_identifiers if file_share.signed_identifiers else []
+
+    new_acl = AccessPolicy(start=start, expiry=expiry, permission=permission)
+    for existing_identifier in signed_identifiers:
+        if existing_identifier.id == policy_name:
+            existing_identifier.access_policy = new_acl
+            return client.update(resource_group_name, account_name, share_name,
+                                 FileShare(signed_identifiers=signed_identifiers)).signed_identifiers
+
+    from azure.cli.core.azclierror import ResourceNotFoundError
+    raise ResourceNotFoundError("Policy {} doesn't exist for file share {}".format(policy_name, share_name))

@@ -514,6 +514,19 @@ def load_command_table(self, _):  # pylint: disable=too-many-locals, too-many-st
         g.custom_command('snapshot', 'snapshot_share_rm', min_api='2020-08-01-preview', is_preview=True,
                          transform=transform_share_rm_output)
 
+    with self.command_group('storage share-rm policy', command_type=file_shares_mgmt_sdk, is_preview=True,
+                            custom_command_type=get_custom_sdk('file',
+                                                               cf_mgmt_file_shares,
+                                                               resource_type=ResourceType.MGMT_STORAGE),
+                            resource_type=ResourceType.MGMT_STORAGE, min_api='2021-04-01') as g:
+        g.custom_command('create', 'create_share_rm_policy')
+        g.custom_command('delete', 'delete_share_rm_policy')
+        g.custom_command(
+            'show', 'get_share_rm_policy', exception_handler=show_exception_handler)
+        g.custom_command(
+            'list', 'list_share_rm_policies', table_transformer=transform_acl_list_output)
+        g.custom_command('update', 'update_share_rm_policy')
+
     with self.command_group('storage share', command_type=file_sdk,
                             custom_command_type=get_custom_sdk('file', file_data_service_factory)) as g:
         from ._format import (transform_share_list,
