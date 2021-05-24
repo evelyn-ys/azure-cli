@@ -3,6 +3,20 @@
 Release History
 ===============
 
+2.24.0
+++++++
+* Fix issue #16798: Azure CLI output is corrupted! (#18065)
+
+2.23.0
+++++++
+* Display allowed values in error message when enum validation fails (#17621)
+* Refactor AzCommandGroup (#17387)
+* Add a linter rule for `service_name.json` (#17428)
+
+2.22.1
+++++++
+* Minor fixes
+
 2.22.0
 ++++++
 * Add spinner progress bar for long running operation (#17262)
