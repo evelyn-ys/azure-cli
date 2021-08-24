@@ -10,7 +10,7 @@ import platform
 
 from argcomplete.completers import FilesCompleter
 from azure.cli.core.commands.parameters import (
-    file_type, get_enum_type, get_resource_name_completion_list, name_type, tags_type, zones_type)
+    file_type, get_enum_type, get_resource_name_completion_list, name_type, tags_type, zones_type, edge_zone_type)
 from azure.cli.core.commands.validators import validate_file_or_dict
 from azure.cli.core.profiles import ResourceType
 from knack.arguments import CLIArgumentType
@@ -189,6 +189,7 @@ def load_arguments(self, _):
         c.argument('aad_tenant_id')
         c.argument('dns_service_ip')
         c.argument('docker_bridge_address')
+        c.argument('edge_zone', edge_zone_type)
         c.argument('load_balancer_sku', type=str,
                    validator=validate_load_balancer_sku)
         c.argument('load_balancer_managed_outbound_ip_count', type=int)
@@ -233,6 +234,7 @@ def load_arguments(self, _):
         c.argument('enable_private_cluster', action='store_true')
         c.argument('private_dns_zone')
         c.argument('fqdn_subdomain')
+        c.argument('disable_public_fqdn', action='store_true')
         c.argument('nodepool_tags', nargs='*', validator=validate_nodepool_tags,
                    help='space-separated tags: key[=value] [key[=value] ...]. Use "" to clear existing tags.')
         c.argument('enable_managed_identity', action='store_true')
@@ -299,6 +301,8 @@ def load_arguments(self, _):
                    type=str, validator=validate_ip_ranges)
         c.argument('enable_ahub', options_list=['--enable-ahub'])
         c.argument('disable_ahub', options_list=['--disable-ahub'])
+        c.argument('enable_public_fqdn', action='store_true')
+        c.argument('disable_public_fqdn', action='store_true')
         c.argument('windows_admin_password', options_list=[
                    '--windows-admin-password'])
         c.argument('enable_managed_identity', action='store_true')
@@ -332,6 +336,7 @@ def load_arguments(self, _):
                    help='If specified, overwrite the default context name.')
         c.argument('path', options_list=['--file', '-f'], type=file_type, completer=FilesCompleter(),
                    default=os.path.join(os.path.expanduser('~'), '.kube', 'config'))
+        c.argument('public_fqdn', default=False, action='store_true')
 
     for scope in ['aks', 'acs kubernetes', 'acs dcos']:
         with self.argument_context('{} install-cli'.format(scope)) as c:
