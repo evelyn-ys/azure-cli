@@ -729,13 +729,10 @@ def get_user_member_groups(cmd, upn_or_object_id, security_enabled_only=False):
     return [{'objectId': x, 'displayName': stubs.get(x)} for x in results]
 
 
-def create_group(cmd, display_name, mail_nickname, force=None, description=None):
-    graph_client = _graph_client_factory(cmd.cli_ctx)
-
+def create_group(client, display_name, mail_nickname, force=None, description=None):
     # workaround to ensure idempotent even AAD graph service doesn't support it
     if not force:
-        matches = list(graph_client.groups.list(filter="displayName eq '{}' and mailNickname eq '{}'".format(
-            display_name, mail_nickname)))
+        matches = client.group_list(filter="displayName eq '{}' and mailNickname eq '{}'".format(display_name, mail_nickname))
         if matches:
             if len(matches) > 1:
                 err = ('There is more than one group with the same display and nick names: "{}". '
@@ -743,10 +740,13 @@ def create_group(cmd, display_name, mail_nickname, force=None, description=None)
                 raise CLIError(err.format(', '.join([x.object_id for x in matches])))
             logger.warning('A group with the same display name and mail nickname already exists, returning.')
             return matches[0]
-        group_create_parameters = GroupCreateParameters(display_name=display_name, mail_nickname=mail_nickname)
-        if description is not None:
-            group_create_parameters.additional_properties = {'description': description}
-    group = graph_client.groups.create(group_create_parameters)
+    body = {
+        "displayName": display_name,
+        "mailNickname": mail_nickname
+    }
+    if description is not None:
+        body["description"] = description
+    group = client.group_create(body=body)
 
     return group
 
@@ -757,15 +757,30 @@ def check_group_membership(cmd, client, group_id, member_object_id):  # pylint: 
 
 
 def list_groups(client, display_name=None, query_filter=None):
-    '''
+    """
     list groups in the directory
-    '''
+    """
     sub_filters = []
     if query_filter:
         sub_filters.append(query_filter)
     if display_name:
         sub_filters.append("startswith(displayName,'{}')".format(display_name))
-    return client.list(filter=' and '.join(sub_filters) if sub_filters else None)
+    return client.group_list(filter=' and '.join(sub_filters) if sub_filters else None)
+
+
+def get_group(client, object_id):
+    return client.group_get(id=object_id)
+
+
+def delete_group(client, object_id):
+    return client.group_delete(id=object_id)
+
+
+def get_member_groups(client, object_id, security_enabled_only):
+    body = {
+        "securityEnabledOnly": security_enabled_only
+    }
+    return client.directory_object_get_member_groups(object_id=object_id, body=body)
 
 
 def list_group_owners(cmd, group_id):

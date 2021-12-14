@@ -164,6 +164,31 @@ class GraphClient:
         result = self._send("POST", "/directoryObjects/getByIds", body=body)
         return result
 
+    def directory_object_get_member_groups(self, id, body):
+        # https://docs.microsoft.com/en-us/graph/api/directoryobject-getmembergroups
+        result = self._send("POST", "/groups/{id}/getMemberGroups".format(id=id), body=body)
+        return result
+
+    def group_create(self, body):
+        # https://docs.microsoft.com/en-us/graph/api/group-post-groups
+        result = self._send("POST", "/groups", body=body)
+        return result
+
+    def group_get(self, id):
+        # https://docs.microsoft.com/en-us/graph/api/group-get
+        result = self._send("GET", "/groups/{id}".format(id=id))
+        return result
+
+    def group_list(self, filter=None):
+        # https://docs.microsoft.com/en-us/graph/api/group-list
+        result = self._send("GET", "/groups" + _filter_to_query(filter))
+        return result
+
+    def group_delete(self, id):
+        # https://docs.microsoft.com/en-us/graph/api/group-delete
+        result = self._send("DELETE", "/groups/{id}".format(id=id))
+        return result
+
 
 def _filter_to_query(filter):
     if filter is not None:

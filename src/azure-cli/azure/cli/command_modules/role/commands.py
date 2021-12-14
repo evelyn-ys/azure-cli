@@ -221,11 +221,11 @@ def load_command_table(self, _):
         g.custom_command('show', 'show_signed_in_user')
         g.custom_command('list-owned-objects', 'list_owned_objects')
 
-    with self.command_group('ad group', role_group_sdk, exception_handler=graph_err_handler) as g:
-        g.command('delete', 'delete')
-        g.show_command('show', 'get')
-        g.command('get-member-groups', 'get_member_groups')
-        g.custom_command('list', 'list_groups', client_factory=get_graph_client_groups)
+    with self.command_group('ad group', graph_sdk, exception_handler=graph_err_handler) as g:
+        g.custom_command('delete', 'delete_group')
+        g.custom_show_command('show', 'get_group')
+        g.custom_command('get-member-groups', 'get_member_groups')
+        g.custom_command('list', 'list_groups')
         g.custom_command('create', 'create_group')
 
     with self.command_group('ad group owner', exception_handler=graph_err_handler) as g:
