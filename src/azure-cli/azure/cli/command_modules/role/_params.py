@@ -202,8 +202,8 @@ def load_arguments(self, _):
         c.argument('security_enabled_only', arg_type=get_three_state_flag(), default=False, required=False)
         c.extra('cmd')
 
-    with self.argument_context('ad group member add') as c:
-        c.argument('url', options_list='--member-id', validator=validate_member_id, help=member_id_help_msg)
+    # with self.argument_context('ad group member add') as c:
+    #     c.argument('url', options_list='--member-id', validator=validate_member_id, help=member_id_help_msg)
 
     for item in ['member add', 'member check', 'member list', 'member remove', 'delete']:
         with self.argument_context('ad group {}'.format(item)) as c:

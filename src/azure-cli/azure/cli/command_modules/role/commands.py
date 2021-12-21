@@ -221,23 +221,23 @@ def load_command_table(self, _):
         g.custom_command('show', 'show_signed_in_user')
         g.custom_command('list-owned-objects', 'list_owned_objects')
 
-    with self.command_group('ad group', graph_sdk, exception_handler=graph_err_handler) as g:
+    with self.command_group('ad group', client_factory=get_graph_client, exception_handler=graph_err_handler) as g:
         g.custom_command('delete', 'delete_group')
         g.custom_show_command('show', 'get_group')
         g.custom_command('get-member-groups', 'get_member_groups')
         g.custom_command('list', 'list_groups')
         g.custom_command('create', 'create_group')
 
-    with self.command_group('ad group owner', exception_handler=graph_err_handler) as g:
+    with self.command_group('ad group owner', client_factory=get_graph_client, exception_handler=graph_err_handler) as g:
         g.custom_command('list', 'list_group_owners')
         g.custom_command('add', 'add_group_owner')
         g.custom_command('remove', 'remove_group_owner')
 
-    with self.command_group('ad group member', role_group_sdk, exception_handler=graph_err_handler) as g:
-        g.command('list', 'get_group_members')
-        g.command('add', 'add_member')
-        g.command('remove', 'remove_member')
-        g.custom_command('check', 'check_group_membership', client_factory=get_graph_client_groups)
+    with self.command_group('ad group member', client_factory=get_graph_client, exception_handler=graph_err_handler) as g:
+        g.custom_command('list', 'list_group_members')
+        g.custom_command('add', 'add_group_member')
+        g.custom_command('remove', 'remove_group_member')
+        g.custom_command('check', 'check_group_membership')
 
     with self.command_group('identity', identity_sdk, min_api='2017-12-01') as g:
         g.command('create', 'create_or_update', validator=process_msi_namespace)

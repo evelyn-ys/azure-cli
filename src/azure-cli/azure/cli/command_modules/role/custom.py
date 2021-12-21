@@ -751,15 +751,8 @@ def create_group(client, display_name, mail_nickname, force=None, description=No
     return group
 
 
-def check_group_membership(cmd, client, group_id, member_object_id):  # pylint: disable=unused-argument
-    return client.is_member_of(CheckGroupMembershipParameters(group_id=group_id,
-                                                              member_id=member_object_id))
-
-
 def list_groups(client, display_name=None, query_filter=None):
-    """
-    list groups in the directory
-    """
+    """List groups in the directory"""
     sub_filters = []
     if query_filter:
         sub_filters.append(query_filter)
@@ -769,37 +762,64 @@ def list_groups(client, display_name=None, query_filter=None):
 
 
 def get_group(client, object_id):
+    """Get group information from the directory."""
     return client.group_get(id=object_id)
 
 
 def delete_group(client, object_id):
+    """Delete a group from the directory."""
     return client.group_delete(id=object_id)
 
 
 def get_member_groups(client, object_id, security_enabled_only):
+    """Get a collection of object IDs of groups of which the specified group is a member."""
     body = {
         "securityEnabledOnly": security_enabled_only
     }
     return client.directory_object_get_member_groups(object_id=object_id, body=body)
 
 
-def list_group_owners(cmd, group_id):
-    client = _graph_client_factory(cmd.cli_ctx).groups
-    return client.list_owners(_resolve_group(client, group_id))
+def list_group_owners(client, group_id):
+    return client.group_owner_list(_resolve_group(client, group_id))
 
 
-def add_group_owner(cmd, owner_object_id, group_id):
-    graph_client = _graph_client_factory(cmd.cli_ctx)
-    group_object_id = _resolve_group(graph_client.groups, group_id)
-    owners = graph_client.groups.list_owners(group_object_id)
+def add_group_owner(client, owner_object_id, group_id):
+    group_object_id = _resolve_group(client, group_id)
+    owners = client.group_owner_list(group_object_id)
     if not next((x for x in owners if x.object_id == owner_object_id), None):
-        owner_url = _get_owner_url(cmd.cli_ctx, owner_object_id)
-        graph_client.groups.add_owner(group_object_id, owner_url)
+        owner_url = client.base_url + '/users/{id}'.format(id=owner_object_id)
+        body = {
+            "@odata.id": owner_url
+        }
+        return client.group_owner_add(id=group_object_id, body=body)
 
 
-def remove_group_owner(cmd, owner_object_id, group_id):
-    client = _graph_client_factory(cmd.cli_ctx).groups
-    return client.remove_owner(_resolve_group(client, group_id), owner_object_id)
+def remove_group_owner(client, owner_object_id, group_id):
+    return client.group_owner_remove(_resolve_group(client, group_id), owner_object_id)
+
+
+def check_group_membership(client, group_id, member_object_id):
+    return client.is_member_of(CheckGroupMembershipParameters(group_id=group_id,
+                                                              member_id=member_object_id))
+
+
+def list_group_members(client, group_id):
+    """Get the members of a group."""
+    return client.group_member_list(id=group_id)
+
+
+def add_group_member(client, group_id, member_object_id):
+    """Add a member to a group."""
+    member_url = client.base_url + '/directoryObjects/{id}'.format(id=member_object_id)
+    body = {
+        "@odata.id": member_url
+    }
+    return client.group_member_add(id=group_id, body=body)
+
+
+def remove_group_member(client, group_id, member_object_id):
+    """Remove a member from a group."""
+    return client.group_member_remove(id=group_id, member_id=member_object_id)
 
 
 def _resolve_group(client, identifier):
