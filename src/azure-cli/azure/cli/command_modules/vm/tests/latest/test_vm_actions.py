@@ -109,13 +109,13 @@ class TestActions(unittest.TestCase):
 
     def test_figure_out_storage_source(self):
         test_data = 'https://av123images.blob.core.windows.net/images/TDAZBET.vhd'
-        src_blob_uri, src_disk, src_snapshot = _figure_out_storage_source(DummyCli(), 'tg1', test_data)
+        src_blob_uri, src_disk, src_snapshot, _ = _figure_out_storage_source(DummyCli(), 'tg1', test_data)
         self.assertFalse(src_disk)
         self.assertFalse(src_snapshot)
         self.assertEqual(src_blob_uri, test_data)
 
         test_data = '/subscriptions/0b1f6471-1bf0-4dda-aec3-cb9272f09590/resourceGroups/JAVACSMRG6017/providers/Microsoft.Compute/disks/ex.vhd'
-        src_blob_uri, src_disk, src_snapshot = _figure_out_storage_source(None, 'tg1', test_data)
+        src_blob_uri, src_disk, src_snapshot, _ = _figure_out_storage_source(None, 'tg1', test_data)
         self.assertEqual(src_disk, test_data)
         self.assertFalse(src_snapshot)
         self.assertFalse(src_blob_uri)
@@ -429,7 +429,6 @@ class TestActions(unittest.TestCase):
             'lun': 0,
             'managedDisk': {'storageAccountType': 'premium_lrs'},
             'createOption': 'empty',
-            'deleteOption': None,
             'diskSizeGB': data_disk_sizes[0]
         })
 
@@ -437,7 +436,6 @@ class TestActions(unittest.TestCase):
             'lun': 1,
             'managedDisk': {'storageAccountType': 'premium_lrs'},
             'createOption': 'empty',
-            'deleteOption': None,
             'diskSizeGB': data_disk_sizes[1]
         })
 
@@ -465,7 +463,8 @@ class TestActions(unittest.TestCase):
         self.assertEqual(r[5], {
             'lun': 5,
             'managedDisk': {'id': attach_data_disks[1]},
-            'createOption': 'attach'
+            'createOption': 'attach',
+            'name': 'disk'
         })
 
         # last image data disk
@@ -496,7 +495,6 @@ class TestActions(unittest.TestCase):
             'lun': 1,
             'managedDisk': {'storageAccountType': 'premium_lrs'},
             'createOption': 'empty',
-            'deleteOption': None,
             'diskSizeGB': data_disk_sizes[0]
         })
 
@@ -516,7 +514,6 @@ class TestActions(unittest.TestCase):
             'lun': 4,
             'managedDisk': {'storageAccountType': 'premium_lrs'},
             'createOption': 'empty',
-            'deleteOption': None,
             'diskSizeGB': data_disk_sizes[1]
         })
 
@@ -536,7 +533,8 @@ class TestActions(unittest.TestCase):
         self.assertEqual(r[7], {
             'lun': 7,
             'managedDisk': {'id': attach_data_disks[1]},
-            'createOption': 'attach'
+            'createOption': 'attach',
+            'name': 'disk'
         })
 
         self.assertEqual(r[10], {

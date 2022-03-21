@@ -20,7 +20,7 @@ from ._flexible_server_util import generate_missing_parameters, resolve_poller,\
     generate_password, parse_maintenance_window
 from .flexible_server_custom_common import create_firewall_rule
 from .flexible_server_virtual_network import prepare_private_network, prepare_private_dns_zone, prepare_public_network
-from .validators import pg_arguments_validator, validate_server_name
+from .validators import pg_arguments_validator, validate_server_name, validate_and_format_restore_point_in_time
 
 logger = get_logger(__name__)
 DEFAULT_DB_NAME = 'flexibleserverdb'
@@ -177,12 +177,15 @@ def flexible_server_restore(cmd, client,
     else:
         source_server_id = source_server
 
+    restore_point_in_time = validate_and_format_restore_point_in_time(restore_point_in_time)
+
     try:
         id_parts = parse_resource_id(source_server_id)
         source_server_object = client.get(id_parts['resource_group'], id_parts['name'])
 
+        location = ''.join(source_server_object.location.lower().split())
         parameters = postgresql_flexibleservers.models.Server(
-            location=source_server_object.location,
+            location=location,
             point_in_time_utc=restore_point_in_time,
             source_server_resource_id=source_server_id,  # this should be the source server name, not id
             create_mode="PointInTimeRestore",
@@ -190,29 +193,37 @@ def flexible_server_restore(cmd, client,
         )
 
         if source_server_object.network.public_network_access == 'Disabled':
+            network = postgresql_flexibleservers.models.Network()
             if subnet is not None or vnet is not None:
-                network = postgresql_flexibleservers.models.Network()
                 subnet_id = prepare_private_network(cmd,
                                                     resource_group_name,
                                                     server_name,
                                                     vnet=vnet,
                                                     subnet=subnet,
-                                                    location=source_server_object.location,
+                                                    location=location,
                                                     delegation_service_name=DELEGATION_SERVICE_NAME,
                                                     vnet_address_pref=vnet_address_prefix,
                                                     subnet_address_pref=subnet_address_prefix,
                                                     yes=yes)
+            else:
+                subnet_id = source_server_object.network.delegated_subnet_resource_id
+
+            if private_dns_zone_arguments is not None:
                 private_dns_zone_id = prepare_private_dns_zone(db_context,
                                                                'PostgreSQL',
                                                                resource_group_name,
                                                                server_name,
                                                                private_dns_zone=private_dns_zone_arguments,
                                                                subnet_id=subnet_id,
-                                                               location=source_server_object.location,
+                                                               location=location,
                                                                yes=yes)
-                network.delegated_subnet_resource_id = subnet_id
-                network.private_dns_zone_arm_resource_id = private_dns_zone_id
-                parameters.network = network
+            else:
+                private_dns_zone_id = source_server_object.network.private_dns_zone_arm_resource_id
+
+            network.delegated_subnet_resource_id = subnet_id
+            network.private_dns_zone_arm_resource_id = private_dns_zone_id
+            parameters.network = network
+
     except Exception as e:
         raise ResourceNotFoundError(e)
 
@@ -277,22 +288,24 @@ def flexible_server_update_custom_func(cmd, client, instance,
         instance.maintenance_window.start_minute = start_minute
         instance.maintenance_window.custom_window = custom_window
 
-    if high_availability:
-        if high_availability.lower() == "enabled":
-            high_availability = "ZoneRedundant"
-            instance.high_availability.mode = high_availability
-            if standby_availability_zone:
-                instance.high_availability.standby_availability_zone = standby_availability_zone
-        else:
-            instance.high_availability = postgresql_flexibleservers.models.HighAvailability(mode=high_availability)
-
     params = ServerForUpdate(sku=instance.sku,
                              storage=instance.storage,
                              backup=instance.backup,
                              administrator_login_password=administrator_login_password,
-                             high_availability=instance.high_availability,
                              maintenance_window=instance.maintenance_window,
                              tags=tags)
+
+    # High availability can't be updated with existing properties
+    high_availability_param = postgresql_flexibleservers.models.HighAvailability()
+    if high_availability:
+        if high_availability.lower() == "enabled":
+            high_availability_param.mode = "ZoneRedundant"
+            if standby_availability_zone:
+                high_availability_param.standby_availability_zone = standby_availability_zone
+        else:
+            high_availability_param.mode = high_availability
+
+        params.high_availability = high_availability_param
 
     return params
 
@@ -318,7 +331,7 @@ def flexible_server_restart(cmd, client, resource_group_name, server_name, fail_
         client.begin_restart(resource_group_name, server_name, parameters), cmd.cli_ctx, 'PostgreSQL Server Restart')
 
 
-def flexible_server_delete(cmd, client, resource_group_name=None, server_name=None, yes=False):
+def flexible_server_delete(cmd, client, resource_group_name, server_name, yes=False):
     result = None
     if not yes:
         user_confirmation(
@@ -417,7 +430,7 @@ def _create_database(db_context, cmd, resource_group_name, server_name, database
         '{} Database Create/Update'.format(logging_name))
 
 
-def database_create_func(client, resource_group_name=None, server_name=None, database_name=None, charset=None, collation=None):
+def database_create_func(client, resource_group_name, server_name, database_name=None, charset=None, collation=None):
 
     if charset is None and collation is None:
         charset = 'utf8'
