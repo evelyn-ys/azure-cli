@@ -4,6 +4,7 @@
 # --------------------------------------------------------------------------------------------
 
 import importlib
+import os
 import unittest
 from unittest.mock import Mock, call, patch
 
@@ -31,6 +32,7 @@ from azure.cli.command_modules.acs._consts import (
     CONST_SECRET_ROTATION_ENABLED,
     CONST_VIRTUAL_NODE_ADDON_NAME,
     CONST_VIRTUAL_NODE_SUBNET_NAME,
+    CONST_MONITORING_USING_AAD_MSI_AUTH,
     DecoratorEarlyExitException,
     DecoratorMode,
 )
@@ -66,7 +68,6 @@ from azure.cli.core.profiles import ResourceType
 from azure.core.exceptions import HttpResponseError
 from knack.prompting import NoTTYException
 from knack.util import CLIError
-from msrestazure.azure_exceptions import CloudError
 
 
 class DecoratorFunctionsTestCase(unittest.TestCase):
@@ -1076,6 +1077,56 @@ class AKSContextTestCase(unittest.TestCase):
         ctx_1.attach_mc(mc)
         self.assertEqual(ctx_1.get_enable_fips_image(), True)
 
+    def test_get_nat_gateway_managed_outbound_ip_count(self):
+        # default
+        ctx_1 = AKSContext(
+            self.cmd,
+            {"nat_gateway_managed_outbound_ip_count": None},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        self.assertEqual(
+            ctx_1.get_nat_gateway_managed_outbound_ip_count(), None
+        )
+        nat_gateway_profile = self.models.nat_gateway_models.ManagedClusterNATGatewayProfile(
+            managed_outbound_ip_profile=self.models.nat_gateway_models.ManagedClusterManagedOutboundIPProfile(
+                count=10
+            )
+        )
+        network_profile = self.models.ContainerServiceNetworkProfile(
+            nat_gateway_profile=nat_gateway_profile
+        )
+        mc = self.models.ManagedCluster(
+            location="test_location",
+            network_profile=network_profile,
+        )
+        ctx_1.attach_mc(mc)
+        self.assertEqual(ctx_1.get_nat_gateway_managed_outbound_ip_count(), 10)
+
+    def test_get_nat_gateway_idle_timeout(self):
+        # default
+        ctx_1 = AKSContext(
+            self.cmd,
+            {"nat_gateway_idle_timeout": None},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        self.assertEqual(ctx_1.get_nat_gateway_idle_timeout(), None)
+        nat_gateway_profile = (
+            self.models.nat_gateway_models.ManagedClusterNATGatewayProfile(
+                idle_timeout_in_minutes=20,
+            )
+        )
+        network_profile = self.models.ContainerServiceNetworkProfile(
+            nat_gateway_profile=nat_gateway_profile
+        )
+        mc = self.models.ManagedCluster(
+            location="test_location",
+            network_profile=network_profile,
+        )
+        ctx_1.attach_mc(mc)
+        self.assertEqual(ctx_1.get_nat_gateway_idle_timeout(), 20)
+
     def test_get_enable_encryption_at_host(self):
         # default
         ctx_1 = AKSContext(
@@ -1591,12 +1642,16 @@ class AKSContextTestCase(unittest.TestCase):
         ctx_2.set_intermediate(
             "subscription_id", "1234-5678", overwrite_exists=True
         )
+        principal_obj_2 = {
+            "service_principal": "test_service_principal",
+            "client_secret": "test_client_secret",
+        }
         with patch(
             "azure.cli.command_modules.acs.decorator.get_rg_location",
             return_value="test_location",
         ), patch(
-            "azure.cli.command_modules.acs.custom.get_graph_rbac_management_client",
-            return_value=None,
+            "azure.cli.command_modules.acs.decorator.ensure_aks_service_principal",
+            return_value=principal_obj_2,
         ):
             self.assertEqual(
                 ctx_2.get_service_principal_and_client_secret(),
@@ -1619,15 +1674,16 @@ class AKSContextTestCase(unittest.TestCase):
         ctx_3.set_intermediate(
             "subscription_id", "1234-5678", overwrite_exists=True
         )
+        principal_obj_3 = {
+            "service_principal": "test_service_principal",
+            "client_secret": "test_client_secret",
+        }
         with patch(
             "azure.cli.command_modules.acs.decorator.get_rg_location",
             return_value="test_location",
         ), patch(
-            "azure.cli.command_modules.acs.custom.get_graph_rbac_management_client",
-            return_value=None,
-        ), patch(
-            "azure.cli.command_modules.acs.custom._build_service_principal",
-            return_value=("test_service_principal", "test_aad_session_key"),
+            "azure.cli.command_modules.acs.decorator.ensure_aks_service_principal",
+            return_value=principal_obj_3,
         ):
             self.assertEqual(
                 ctx_3.get_service_principal_and_client_secret(),
@@ -1666,12 +1722,16 @@ class AKSContextTestCase(unittest.TestCase):
         ctx_4.set_intermediate(
             "subscription_id", "1234-5678", overwrite_exists=True
         )
+        principal_obj_4 = {
+            "service_principal": "test_service_principal",
+            "client_secret": "test_client_secret",
+        }
         with patch(
             "azure.cli.command_modules.acs.decorator.get_rg_location",
             return_value="test_location",
         ), patch(
-            "azure.cli.command_modules.acs.custom.get_graph_rbac_management_client",
-            return_value=None,
+            "azure.cli.command_modules.acs.decorator.ensure_aks_service_principal",
+            side_effect=[CLIError],
         ):
             # fail on client_secret not specified
             with self.assertRaises(CLIError):
@@ -2457,20 +2517,6 @@ class AKSContextTestCase(unittest.TestCase):
         ctx_2 = AKSContext(
             self.cmd,
             {
-                "network_plugin": "azure",
-                "pod_cidr": "test_pod_cidr",
-            },
-            self.models,
-            decorator_mode=DecoratorMode.CREATE,
-        )
-        # fail on invalid network_plugin (azure) when pod_cidr is specified
-        with self.assertRaises(InvalidArgumentValueError):
-            ctx_2.get_network_plugin()
-
-        # invalid parameter
-        ctx_3 = AKSContext(
-            self.cmd,
-            {
                 "pod_cidr": "test_pod_cidr",
             },
             self.models,
@@ -2478,7 +2524,7 @@ class AKSContextTestCase(unittest.TestCase):
         )
         # fail on network_plugin not specified
         with self.assertRaises(RequiredArgumentMissingError):
-            ctx_3.get_network_plugin()
+            ctx_2.get_network_plugin()
 
     def test_get_pod_cidr_and_service_cidr_and_dns_service_ip_and_docker_bridge_address_and_network_policy(
         self,
@@ -2526,20 +2572,6 @@ class AKSContextTestCase(unittest.TestCase):
         ctx_2 = AKSContext(
             self.cmd,
             {
-                "network_plugin": "azure",
-                "pod_cidr": "test_pod_cidr",
-            },
-            self.models,
-            decorator_mode=DecoratorMode.CREATE,
-        )
-        # fail on invalid network_plugin (azure) when pod_cidr is specified
-        with self.assertRaises(InvalidArgumentValueError):
-            ctx_2.get_pod_cidr_and_service_cidr_and_dns_service_ip_and_docker_bridge_address_and_network_policy()
-
-        # invalid parameter
-        ctx_3 = AKSContext(
-            self.cmd,
-            {
                 "pod_cidr": "test_pod_cidr",
             },
             self.models,
@@ -2547,10 +2579,10 @@ class AKSContextTestCase(unittest.TestCase):
         )
         # fail on network_plugin not specified
         with self.assertRaises(RequiredArgumentMissingError):
-            ctx_3.get_pod_cidr_and_service_cidr_and_dns_service_ip_and_docker_bridge_address_and_network_policy()
+            ctx_2.get_pod_cidr_and_service_cidr_and_dns_service_ip_and_docker_bridge_address_and_network_policy()
 
         # invalid parameter
-        ctx_4 = AKSContext(
+        ctx_3 = AKSContext(
             self.cmd,
             {
                 "service_cidr": "test_service_cidr",
@@ -2563,7 +2595,7 @@ class AKSContextTestCase(unittest.TestCase):
         )
         # fail on network_plugin not specified
         with self.assertRaises(RequiredArgumentMissingError):
-            ctx_4.get_pod_cidr_and_service_cidr_and_dns_service_ip_and_docker_bridge_address_and_network_policy()
+            ctx_3.get_pod_cidr_and_service_cidr_and_dns_service_ip_and_docker_bridge_address_and_network_policy()
 
     def test_get_addon_consts(self):
         # default
@@ -2595,6 +2627,7 @@ class AKSContextTestCase(unittest.TestCase):
             "CONST_AZURE_KEYVAULT_SECRETS_PROVIDER_ADDON_NAME": CONST_AZURE_KEYVAULT_SECRETS_PROVIDER_ADDON_NAME,
             "CONST_SECRET_ROTATION_ENABLED": CONST_SECRET_ROTATION_ENABLED,
             "CONST_ROTATION_POLL_INTERVAL": CONST_ROTATION_POLL_INTERVAL,
+            "CONST_MONITORING_USING_AAD_MSI_AUTH": CONST_MONITORING_USING_AAD_MSI_AUTH
         }
         self.assertEqual(addon_consts, ground_truth_addon_consts)
 
@@ -4818,6 +4851,7 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
             os_type="Linux",
             os_sku=None,
             vnet_subnet_id=None,
+            pod_subnet_id=None,
             proximity_placement_group_id=None,
             availability_zones=None,
             enable_node_public_ip=False,
@@ -5083,12 +5117,16 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
         dec_2.context.set_intermediate(
             "subscription_id", "1234-5678", overwrite_exists=True
         )
+        principal_obj_2 = {
+            "service_principal": "test_service_principal",
+            "client_secret": "test_client_secret",
+        }
         with patch(
             "azure.cli.command_modules.acs.decorator.get_rg_location",
             return_value="test_location",
         ), patch(
-            "azure.cli.command_modules.acs.custom.get_graph_rbac_management_client",
-            return_value=None,
+            "azure.cli.command_modules.acs.decorator.ensure_aks_service_principal",
+            return_value=principal_obj_2,
         ):
             dec_mc_2 = dec_2.set_up_service_principal_profile(mc_2)
 
@@ -5323,10 +5361,10 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
         )
         registry = Mock(id="test_registry_id")
         with patch(
-            "azure.cli.command_modules.acs.custom.get_resource_by_name",
+            "azure.cli.command_modules.acs._roleassignments.get_resource_by_name",
             return_value=registry,
         ), patch(
-            "azure.cli.command_modules.acs.custom._ensure_aks_acr_role_assignment"
+            "azure.cli.command_modules.acs._roleassignments.ensure_aks_acr_role_assignment"
         ) as ensure_assignment:
             dec_3.process_attach_acr(mc_3)
         ensure_assignment.assert_called_once_with(
@@ -5528,6 +5566,7 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
                 "location": "test_location",
                 "enable_addons": "monitoring",
                 "workspace_resource_id": "test_workspace_resource_id",
+                "enable-msi-auth-for-monitoring": False
             },
             ResourceType.MGMT_CONTAINERSERVICE,
         )
@@ -5547,7 +5586,8 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
             ground_truth_monitoring_addon_profile = self.models.ManagedClusterAddonProfile(
                 enabled=True,
                 config={
-                    CONST_MONITORING_LOG_ANALYTICS_WORKSPACE_RESOURCE_ID: "/test_workspace_resource_id"
+                    CONST_MONITORING_LOG_ANALYTICS_WORKSPACE_RESOURCE_ID: "/test_workspace_resource_id",
+                    CONST_MONITORING_USING_AAD_MSI_AUTH: None
                 },
             )
             self.assertEqual(
@@ -5807,6 +5847,7 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
                 "enable_sgxquotehelper": False,
                 "enable_secret_rotation": False,
                 "rotation_poll_interval": None,
+                "enable-msi-auth-for-monitoring": None
             },
             ResourceType.MGMT_CONTAINERSERVICE,
         )
@@ -5845,7 +5886,8 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
                 "appgw_watch_namespace": "test_appgw_watch_namespace",
                 "enable_sgxquotehelper": True,
                 "enable_secret_rotation": True,
-                "rotation_poll_interval": "30m",
+                "rotation_poll_interval": "30m" ,
+                "enable-msi-auth-for-monitoring": False
             },
             ResourceType.MGMT_CONTAINERSERVICE,
         )
@@ -5869,7 +5911,8 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
             CONST_MONITORING_ADDON_NAME: self.models.ManagedClusterAddonProfile(
                 enabled=True,
                 config={
-                    CONST_MONITORING_LOG_ANALYTICS_WORKSPACE_RESOURCE_ID: "/test_workspace_resource_id"
+                    CONST_MONITORING_LOG_ANALYTICS_WORKSPACE_RESOURCE_ID: "/test_workspace_resource_id",
+                    CONST_MONITORING_USING_AAD_MSI_AUTH: None
                 },
             ),
             CONST_VIRTUAL_NODE_ADDON_NAME
@@ -5935,6 +5978,7 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
                 "appgw_subnet_id": None,
                 "appgw_watch_namespace": None,
                 "enable_sgxquotehelper": False,
+                "useAADAuth": None
             },
             ResourceType.MGMT_CONTAINERSERVICE,
         )
@@ -6312,7 +6356,7 @@ class AKSCreateDecoratorTestCase(unittest.TestCase):
             "azure.cli.command_modules.acs.decorator.AKSContext.get_identity_by_msi_client",
             side_effect=[identity_obj_1, identity_obj_2],
         ), patch(
-            "azure.cli.command_modules.acs.decorator._ensure_cluster_identity_permission_on_kubelet_identity"
+            "azure.cli.command_modules.acs.decorator.ensure_cluster_identity_permission_on_kubelet_identity"
         ) as mock_ensure_method:
             dec_2 = AKSCreateDecorator(
                 self.cmd,
@@ -6998,7 +7042,7 @@ class AKSUpdateDecoratorTestCase(unittest.TestCase):
             "subscription_id", "test_subscription_id"
         )
         with patch(
-            "azure.cli.command_modules.acs.decorator._ensure_aks_acr"
+            "azure.cli.command_modules.acs.decorator.ensure_aks_acr"
         ) as ensure_acr:
             dec_2.process_attach_detach_acr(mc_2)
             ensure_acr.assert_has_calls(
@@ -8314,7 +8358,98 @@ class AKSUpdateDecoratorTestCase(unittest.TestCase):
             {},
             False,
         )
+    
+    def test_get_kubelet_config(self):
+        # default
+        ctx_1 = AKSContext(
+            self.cmd,
+            {"kubelet_config": None},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        self.assertEqual(ctx_1.get_kubelet_config(), None)
+        agent_pool_profile = self.models.ManagedClusterAgentPoolProfile(
+            name="test_nodepool_name",
+            kubelet_config=self.models.KubeletConfig(pod_max_pids=100),
+        )
+        mc = self.models.ManagedCluster(
+            location="test_location", agent_pool_profiles=[agent_pool_profile]
+        )
+        ctx_1.attach_mc(mc)
+        self.assertEqual(
+            ctx_1.get_kubelet_config(),
+            self.models.KubeletConfig(pod_max_pids=100),
+        )
 
+        # custom value
+        ctx_2 = AKSContext(
+            self.cmd,
+            {"kubelet_config": "fake-path"},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        # fail on invalid file path
+        with self.assertRaises(InvalidArgumentValueError):
+            ctx_2.get_kubelet_config()
+
+        # custom value
+        ctx_3 = AKSContext(
+            self.cmd,
+            {"kubelet_config": _get_test_data_file("invalidconfig.json")},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        # fail on invalid file content
+        with self.assertRaises(InvalidArgumentValueError):
+            ctx_3.get_kubelet_config()
+
+    def test_get_linux_os_config(self):
+        # default
+        ctx_1 = AKSContext(
+            self.cmd,
+            {"linux_os_config": None},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        self.assertEqual(ctx_1.get_linux_os_config(), None)
+        agent_pool_profile = self.models.ManagedClusterAgentPoolProfile(
+            name="test_nodepool_name",
+            linux_os_config=self.models.LinuxOSConfig(swap_file_size_mb=200),
+        )
+        mc = self.models.ManagedCluster(
+            location="test_location", agent_pool_profiles=[agent_pool_profile]
+        )
+        ctx_1.attach_mc(mc)
+        self.assertEqual(
+            ctx_1.get_linux_os_config(),
+            self.models.LinuxOSConfig(swap_file_size_mb=200),
+        )
+
+        # custom value
+        ctx_2 = AKSContext(
+            self.cmd,
+            {"linux_os_config": "fake-path"},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        # fail on invalid file path
+        with self.assertRaises(InvalidArgumentValueError):
+            ctx_2.get_linux_os_config()
+
+        # custom value
+        ctx_3 = AKSContext(
+            self.cmd,
+            {"linux_os_config": _get_test_data_file("invalidconfig.json")},
+            self.models,
+            decorator_mode=DecoratorMode.CREATE,
+        )
+        # fail on invalid file content
+        with self.assertRaises(InvalidArgumentValueError):
+            ctx_3.get_linux_os_config()
+
+def _get_test_data_file(filename):
+    curr_dir = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(curr_dir, 'data', filename)
 
 if __name__ == "__main__":
     unittest.main()

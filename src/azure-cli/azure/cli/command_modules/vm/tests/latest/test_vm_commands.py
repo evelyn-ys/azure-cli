@@ -16,7 +16,7 @@ import uuid
 from azure.cli.testsdk.exceptions import JMESPathCheckAssertionError
 from knack.util import CLIError
 from azure.cli.testsdk.scenario_tests import AllowLargeResponse, record_only, live_only
-from azure.cli.core.azclierror import ArgumentUsageError
+from azure.cli.core.azclierror import ArgumentUsageError, RequiredArgumentMissingError, MutuallyExclusiveArgumentError
 from azure.cli.core.profiles import ResourceType
 from azure.cli.testsdk import (
     ScenarioTest, ResourceGroupPreparer, LiveScenarioTest, api_version_constraint,
@@ -744,14 +744,14 @@ class VMAttachDisksOnCreate(ScenarioTest):
     def test_vm_create_data_disk_delete_option(self, resource_group):
         self.cmd('vm create -n Delete_CLI1 -g {rg} --image RedHat:RHEL:7-RAW:7.4.2018010506 -l northeurope '
                  '--size Standard_E8as_v4 --generate-ssh-keys --public-ip-address "" --os-disk-size-gb 64 '
-                 '--data-disk-sizes-gb 200 --data-disk-delete-option Delete',
+                 '--data-disk-sizes-gb 200 --data-disk-delete-option Delete --admin-username vmtest',
                  checks=self.check('powerState', 'VM running'))
         result = self.cmd('vm show -g {rg} -n Delete_CLI1').get_output_in_json()
         self.assertEqual(result['storageProfile']['dataDisks'][0]['deleteOption'], 'Delete')
 
         # creating a vm
         self.cmd(
-            'vm create -g {rg} -n vm1 --image centos --admin-username centosadmin --admin-password testPassword0 --authentication-type password --data-disk-sizes-gb 2 --nsg-rule NONE')
+            'vm create -g {rg} -n vm1 --image centos --admin-username centosadmin --admin-password testPassword0 --authentication-type password --data-disk-sizes-gb 2 --nsg-rule NONE --admin-username vmtest')
         result = self.cmd('vm show -g {rg} -n vm1').get_output_in_json()
 
         self.kwargs.update({
@@ -1116,7 +1116,7 @@ class VMCreateAndStateModificationsScenarioTest(ScenarioTest):
             'vmss': self.create_random_name('vmss', 10)
         })
 
-        self.cmd('vm create -g {rg} -n {vm} --image UbuntuLTS --size Standard_D2s_v3 --v-cpus-available 1 --v-cpus-per-core 1')
+        self.cmd('vm create -g {rg} -n {vm} --image UbuntuLTS --size Standard_D2s_v3 --v-cpus-available 1 --v-cpus-per-core 1 --admin-username vmtest --admin-username vmtest')
         self.cmd('vm show -g {rg} -n {vm} ', checks=[
             self.check('hardwareProfile.vmSizeProperties.vCpusAvailable', 1),
             self.check('hardwareProfile.vmSizeProperties.vCpusPerCore', 1)
@@ -1126,7 +1126,7 @@ class VMCreateAndStateModificationsScenarioTest(ScenarioTest):
             self.check('hardwareProfile.vmSizeProperties.vCpusPerCore', 2)
         ])
 
-        self.cmd('vmss create -g {rg} -n {vmss} --image UbuntuLTS --vm-sku Standard_D2s_v3 --v-cpus-available 1 --v-cpus-per-core 1')
+        self.cmd('vmss create -g {rg} -n {vmss} --image UbuntuLTS --vm-sku Standard_D2s_v3 --v-cpus-available 1 --v-cpus-per-core 1 --admin-username vmtest --admin-username vmtest')
         self.cmd('vmss show -g {rg} -n {vmss} ', checks=[
             self.check('virtualMachineProfile.hardwareProfile.vmSizeProperties.vCpusAvailable', 1),
             self.check('virtualMachineProfile.hardwareProfile.vmSizeProperties.vCpusPerCore', 1)
@@ -1487,7 +1487,7 @@ class VMCreateEphemeralOsDisk(ScenarioTest):
         })
 
         # check base
-        self.cmd('vm create -n {base} -g {rg} --image {image} --size Standard_DS4_v2 --location {loc} --ephemeral-os-disk --ephemeral-os-disk-placement {placement1}')
+        self.cmd('vm create -n {base} -g {rg} --image {image} --size Standard_DS4_v2 --location {loc} --ephemeral-os-disk --ephemeral-os-disk-placement {placement1} --admin-username {user}')
         self.cmd('vm show -g {rg} -n {base}', checks=[
             self.check('provisioningState', 'Succeeded'),
             self.check('storageProfile.osDisk.caching', 'ReadOnly'),
@@ -1531,7 +1531,7 @@ class VMUpdateTests(ScenarioTest):
         })
 
         # check base
-        self.cmd('vm create -n {base} -g {rg} --image {image} --size Standard_DS4_v2 --location {loc}')
+        self.cmd('vm create -n {base} -g {rg} --image {image} --size Standard_DS4_v2 --location {loc} --admin-username vmtest')
         self.cmd('vm show -g {rg} -n {base}', checks=[
             self.check('provisioningState', 'Succeeded'),
         ])
@@ -1553,7 +1553,7 @@ class VMUpdateTests(ScenarioTest):
         ])
 
         # check create with default size
-        self.cmd('vm create -n {base2} -g {rg} --image {image}  --location {loc}')
+        self.cmd('vm create -n {base2} -g {rg} --image {image}  --location {loc} --admin-username vmtest')
         self.cmd('vm show -g {rg} -n {base2}', checks=[
             self.check('provisioningState', 'Succeeded'),
         ])
@@ -1581,7 +1581,7 @@ class VMUpdateTests(ScenarioTest):
         })
 
         # check create base1
-        self.cmd('vm create -n {vm1} -g {rg} --image {image} --size Standard_DS4_v2 --location {loc} --ephemeral-os-disk')
+        self.cmd('vm create -n {vm1} -g {rg} --image {image} --size Standard_DS4_v2 --location {loc} --ephemeral-os-disk --admin-username vmtest')
         self.cmd('vm show -g {rg} -n {vm1}', checks=[
             self.check('provisioningState', 'Succeeded'),
             self.check('storageProfile.osDisk.diffDiskSettings.placement', 'CacheDisk'),
@@ -2385,6 +2385,46 @@ class VMDiskAttachDetachTest(ScenarioTest):
             self.check('storageProfile.dataDisks[0].lun', 0)
         ])
 
+    @ResourceGroupPreparer(name_prefix='cli-test-disk-attach-multiple-disks')
+    def test_vm_disk_attach_multiple_disks(self, resource_group):
+
+        self.kwargs.update({
+            'loc': 'westus',
+            'vm': 'vm-attach-multiple-disks-test',
+            'disk1': 'd1',
+            'disk2': 'd2',
+            'disk3': 'd3'
+        })
+
+        self.cmd('vm create -g {rg} --location {loc} -n {vm} --admin-username admin123 --image centos --admin-password testPassword0 --authentication-type password --nsg-rule NONE')
+
+        with self.assertRaisesRegex(RequiredArgumentMissingError, 'Please use --name or --disks to specify the disk names'):
+            self.cmd('vm disk attach -g {rg} --vm-name {vm} --new --size-gb 1 ')
+
+        with self.assertRaisesRegex(MutuallyExclusiveArgumentError, 'You can only specify one of --name and --disks'):
+            self.cmd('vm disk attach -g {rg} --name {disk1} --disks {disk1} {disk2} {disk3} --vm-name {vm} --new --size-gb 1 ')
+
+        with self.assertRaisesRegex(MutuallyExclusiveArgumentError, 'You cannot specify the --lun for multiple disks'):
+            self.cmd('vm disk attach -g {rg} --disks {disk1} {disk2} {disk3} --vm-name {vm} --new --size-gb 1 --lun 2')
+
+        self.cmd('vm disk attach -g {rg} --vm-name {vm} --disks {disk1} {disk2} {disk3} --new --size-gb 1 ')
+
+        self.cmd('vm show -g {rg} -n {vm}', checks=[
+            self.check('length(storageProfile.dataDisks)', 3),
+            self.check('storageProfile.dataDisks[0].name', '{disk1}'),
+            self.check('storageProfile.dataDisks[0].lun', 0),
+            self.check('storageProfile.dataDisks[1].name', '{disk2}'),
+            self.check('storageProfile.dataDisks[1].lun', 1),
+            self.check('storageProfile.dataDisks[2].name', '{disk3}'),
+            self.check('storageProfile.dataDisks[2].lun', 2)
+        ])
+
+        self.cmd('vm disk detach -g {rg} --vm-name {vm} -n {disk1}')
+        self.cmd('vm disk detach -g {rg} --vm-name {vm} -n {disk2}')
+        self.cmd('vm disk detach -g {rg} --vm-name {vm} -n {disk3}')
+        self.cmd('vm show -g {rg} -n {vm}',
+                 checks=self.check('length(storageProfile.dataDisks)', 0))
+
     @ResourceGroupPreparer(name_prefix='cli-test-stdssdk', location='eastus2')
     def test_vm_disk_storage_sku(self, resource_group):
 
@@ -2507,7 +2547,7 @@ class VMDiskAttachDetachTest(ScenarioTest):
             'vm': self.create_random_name('vm-', 10)
         })
 
-        self.cmd('vm create -g {rg} -n {vm} --image UbuntuLTS --enable-hibernation True')
+        self.cmd('vm create -g {rg} -n {vm} --image UbuntuLTS --enable-hibernation True --admin-username vmtest')
         self.cmd('vm show -g {rg} -n {vm}', checks=[
             self.check('additionalCapabilities.hibernationEnabled', True)
         ])
@@ -2852,7 +2892,7 @@ class VMSSCreateOptions(ScenarioTest):
 
         # check base
         self.cmd(
-            'vmss create -n {base} -g {rg} --image {image} --vm-sku Standard_DS4_v2 --ephemeral-os-disk --ephemeral-os-disk-placement {placement1}')
+            'vmss create -n {base} -g {rg} --image {image} --vm-sku Standard_DS4_v2 --ephemeral-os-disk --ephemeral-os-disk-placement {placement1} --admin-username vmtest')
         self.cmd('vmss show -g {rg} -n {base}', checks=[
             self.check('virtualMachineProfile.storageProfile.osDisk.caching', '{caching}'),
             self.check('virtualMachineProfile.storageProfile.osDisk.createOption', 'FromImage'),
@@ -2863,7 +2903,7 @@ class VMSSCreateOptions(ScenarioTest):
         # check that we can create a vmss with ResourceDisk.
         self.cmd(
             'vmss create --resource-group {rg} --name {vmss} --image {image} --vm-sku Standard_DS4_v2 --ephemeral-os-disk --ephemeral-os-disk-placement {placement1} --disable-overprovision '
-            '--instance-count {count} --data-disk-sizes-gb 1 --storage-sku os=standard_lrs 0=premium_lrs --admin-username {user} --admin-password {password}')
+            '--instance-count {count} --data-disk-sizes-gb 1 --storage-sku os=standard_lrs 0=premium_lrs --admin-username {user} --admin-password {password} --admin-username vmtest')
         self.cmd('vmss show -g {rg} -n {vmss}', checks=[
             self.check('virtualMachineProfile.storageProfile.osDisk.caching', '{caching}'),
             self.check('virtualMachineProfile.storageProfile.osDisk.createOption', 'FromImage'),
@@ -2877,7 +2917,7 @@ class VMSSCreateOptions(ScenarioTest):
 
         # check that we can create a vmss with CacheDisk.
         self.cmd('vmss create --resource-group {rg} --name {vmss_2} --image {image} --ephemeral-os-disk --ephemeral-os-disk-placement {placement2} '
-                 '--os-disk-caching {caching} --disable-overprovision --instance-count {count} --admin-username {user} --admin-password {password}')
+                 '--os-disk-caching {caching} --disable-overprovision --instance-count {count} --admin-username {user} --admin-password {password} --admin-username vmtest')
         self.cmd('vmss show -g {rg} -n {vmss_2}', checks=[
             self.check('virtualMachineProfile.storageProfile.osDisk.caching', '{caching}'),
             self.check('virtualMachineProfile.storageProfile.osDisk.createOption', 'FromImage'),
@@ -3030,7 +3070,7 @@ class VMSSCreatePublicIpPerVm(ScenarioTest):  # pylint: disable=too-many-instanc
             'dns_label': self.create_random_name('clivmss', 20)
         })
         nsg_result = self.cmd('network nsg create -g {rg} -n {nsg}').get_output_in_json()
-        self.cmd("vmss create -n {vmss} -g {rg} --image Debian --admin-username clittester --ssh-key-value '{ssh_key}' --vm-domain-name {dns_label} --public-ip-per-vm --dns-servers 10.0.0.6 10.0.0.5 --nsg {nsg}",
+        self.cmd("vmss create -n {vmss} -g {rg} --image Debian --admin-username clittester --ssh-key-value '{ssh_key}' --vm-domain-name {dns_label} --public-ip-per-vm --dns-servers 10.0.0.6 10.0.0.5 --nsg {nsg} --admin-username vmtest",
                  checks=self.check('vmss.provisioningState', 'Succeeded'))
         result = self.cmd("vmss show -n {vmss} -g {rg}", checks=[
             self.check('length(virtualMachineProfile.networkProfile.networkInterfaceConfigurations[0].dnsSettings.dnsServers)', 2),
@@ -3043,7 +3083,7 @@ class VMSSCreatePublicIpPerVm(ScenarioTest):  # pylint: disable=too-many-instanc
         self.assertEqual(len(result[0]['ipAddress'].split('.')), 4)
         self.assertTrue(result[0]['dnsSettings']['domainNameLabel'].endswith(self.kwargs['dns_label']))
 
-        self.cmd('vmss create -g {rg} -n {flex_vmss} --image UbuntuLTS --orchestration-mode Flexible')
+        self.cmd('vmss create -g {rg} -n {flex_vmss} --image UbuntuLTS --orchestration-mode Flexible --admin-username vmtest')
         from azure.cli.core.azclierror import ArgumentUsageError
         with self.assertRaises(ArgumentUsageError):
             self.cmd('vmss list-instance-public-ips -n {flex_vmss} -g {rg}')
@@ -3120,7 +3160,7 @@ class VMSSUpdateTests(ScenarioTest):
             'img': 'img1',
             'vmss': 'vmss1'
         })
-        self.cmd('vm create -g {rg} -n {vm} --image centos --admin-username clitest1 --generate-ssh-key --nsg-rule None')
+        self.cmd('vm create -g {rg} -n {vm} --image centos --admin-username clitest1 --generate-ssh-key --nsg-rule None --admin-username vmtest')
         self.cmd('vm run-command invoke -g {rg} -n {vm} --command-id RunShellScript --scripts "echo \'sudo waagent -deprovision+user --force\' | at -M now + 1 minutes"')
         time.sleep(70)
         self.cmd('vm deallocate -g {rg} -n {vm}')
@@ -3129,7 +3169,7 @@ class VMSSUpdateTests(ScenarioTest):
         self.kwargs.update({
             'image_id': res['id']
         })
-        self.cmd('vmss create -g {rg} -n {vmss} --image {image_id}')
+        self.cmd('vmss create -g {rg} -n {vmss} --image {image_id} --admin-username vmtest')
         self.cmd('vmss update -g {rg} -n {vmss} --set tags.foo=bar', checks=[
             self.check('tags.foo', 'bar')
         ])
@@ -3145,7 +3185,7 @@ class VMSSUpdateTests(ScenarioTest):
         })
 
         # check base
-        self.cmd('vmss create -n {base} -g {rg} --image {image} --vm-sku Standard_DS4_v2')
+        self.cmd('vmss create -n {base} -g {rg} --image {image} --vm-sku Standard_DS4_v2 --admin-username vmtest')
         self.cmd('vmss show -g {rg} -n {base}', checks=[
             self.check('provisioningState', 'Succeeded'),
         ])
@@ -3167,7 +3207,7 @@ class VMSSUpdateTests(ScenarioTest):
         ])
 
         # check create with default size
-        self.cmd('vmss create -n {base2} -g {rg} --image {image}  --location {loc}')
+        self.cmd('vmss create -n {base2} -g {rg} --image {image}  --location {loc} --admin-username vmtest')
         self.cmd('vmss show -g {rg} -n {base2}', checks=[
             self.check('provisioningState', 'Succeeded'),
         ])
@@ -3194,7 +3234,7 @@ class VMSSUpdateTests(ScenarioTest):
         })
 
         # check create base1
-        self.cmd('vmss create -n {vm1} -g {rg} --image {image} --vm-sku Standard_DS4_v2 --ephemeral-os-disk')
+        self.cmd('vmss create -n {vm1} -g {rg} --image {image} --vm-sku Standard_DS4_v2 --ephemeral-os-disk --admin-username vmtest')
         self.cmd('vmss show -g {rg} -n {vm1}', checks=[
             self.check('provisioningState', 'Succeeded'),
             self.check('virtualMachineProfile.storageProfile.osDisk.diffDiskSettings.option', 'Local'),
@@ -3485,7 +3525,7 @@ class VMSSVMsScenarioTest(ScenarioTest):
         self.cmd('vmss delete-instances --resource-group {rg} --name {vmss} --instance-ids *')
         self.cmd('vmss list-instances --resource-group {rg} --name {vmss}')
 
-        self.cmd('vmss create -g {rg} -n {flex_vmss} --image UbuntuLTS --orchestration-mode Flexible')
+        self.cmd('vmss create -g {rg} -n {flex_vmss} --image UbuntuLTS --orchestration-mode Flexible --admin-username vmtest')
         from azure.cli.core.azclierror import ArgumentUsageError
         with self.assertRaises(ArgumentUsageError):
             self.cmd('vmss list-instance-connection-info --resource-group {rg} --name {flex_vmss}')
@@ -3505,14 +3545,14 @@ class VMSSSimulateEvictionScenarioTest(ScenarioTest):
         })
 
         # simulate-eviction on a Regular VMSS, expect failure
-        self.cmd('vmss create --resource-group {rg} --name {vmss1} --location {loc} --instance-count 2 --image Centos --priority Regular')
+        self.cmd('vmss create --resource-group {rg} --name {vmss1} --location {loc} --instance-count 2 --image Centos --priority Regular --admin-username vmtest')
         instance_list = self.cmd('vmss list-instances --resource-group {rg} --name {vmss1}').get_output_in_json()
         self.kwargs['instance_ids'] = [x['instanceId'] for x in instance_list]
         self.kwargs['id'] = self.kwargs['instance_ids'][0]
         self.cmd('vmss simulate-eviction --resource-group {rg} --name {vmss1} --instance-id {id}', expect_failure=True)
 
         # simulate-eviction on a Spot VMSS with Deallocate policy, expect VMSS instance to be deallocated
-        self.cmd('vmss create --resource-group {rg} --name {vmss2} --location {loc} --instance-count 2 --image Centos --priority Spot --eviction-policy Deallocate --single-placement-group True')
+        self.cmd('vmss create --resource-group {rg} --name {vmss2} --location {loc} --instance-count 2 --image Centos --priority Spot --eviction-policy Deallocate --single-placement-group True --admin-username vmtest')
         instance_list = self.cmd('vmss list-instances --resource-group {rg} --name {vmss2}').get_output_in_json()
         self.kwargs['instance_ids'] = [x['instanceId'] for x in instance_list]
         self.kwargs['id'] = self.kwargs['instance_ids'][0]
@@ -3525,7 +3565,7 @@ class VMSSSimulateEvictionScenarioTest(ScenarioTest):
         ])
 
         # simulate-eviction on a Spot VMSS with Delete policy, expect VMSS instance to be deleted
-        self.cmd('vmss create --resource-group {rg} --name {vmss3} --location {loc} --instance-count 2 --image Centos --priority Spot --eviction-policy Delete --single-placement-group True')
+        self.cmd('vmss create --resource-group {rg} --name {vmss3} --location {loc} --instance-count 2 --image Centos --priority Spot --eviction-policy Delete --single-placement-group True --admin-username vmtest')
         instance_list = self.cmd('vmss list-instances --resource-group {rg} --name {vmss3}').get_output_in_json()
         self.kwargs['instance_ids'] = [x['instanceId'] for x in instance_list]
         self.kwargs['id'] = self.kwargs['instance_ids'][0]
@@ -3545,7 +3585,7 @@ class VMSSSimulateEvictionScenarioTest(ScenarioTest):
             'restore_timeout2': 'PT2H'
 
         })
-        self.cmd('vmss create -g {rg} -n {spot_vmss_name} --location NorthEurope --instance-count 2 --image Centos --priority Spot --eviction-policy Deallocate --single-placement-group True --enable-spot-restore {enabled_1} --spot-restore-timeout {restore_timeout1}', checks=[
+        self.cmd('vmss create -g {rg} -n {spot_vmss_name} --location NorthEurope --instance-count 2 --image Centos --priority Spot --eviction-policy Deallocate --single-placement-group True --enable-spot-restore {enabled_1} --spot-restore-timeout {restore_timeout1} --admin-username vmtest', checks=[
             self.check('vmss.spotRestorePolicy.enabled', True),
             self.check('vmss.spotRestorePolicy.restoreTimeout', '{restore_timeout1}')
         ])
@@ -3752,9 +3792,15 @@ class MSIScenarioTest(ScenarioTest):
             'sub': subscription_id
         })
 
+        with self.assertRaisesRegex(ArgumentUsageError, "please specify both --role and --scope"):
+            self.cmd('vm create -g {rg} -n {vm1} --image debian --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --nsg-rule NONE --scope {scope}')
+
+        with self.assertRaisesRegex(ArgumentUsageError, "please specify both --role and --scope"):
+            self.cmd('vm create -g {rg} -n {vm1} --image debian --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --nsg-rule NONE --role Contributor')
+
         with mock.patch('azure.cli.core.commands.arm._gen_guid', side_effect=self.create_guid):
             # create a linux vm with default configuration
-            self.cmd('vm create -g {rg} -n {vm1} --image debian --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --scope {scope} --nsg-rule NONE', checks=[
+            self.cmd('vm create -g {rg} -n {vm1} --image debian --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --scope {scope} --role Contributor --nsg-rule NONE', checks=[
                 self.check('identity.role', 'Contributor'),
                 self.check('identity.scope', '/subscriptions/{sub}/resourceGroups/{rg}'),
             ])
@@ -3790,9 +3836,16 @@ class MSIScenarioTest(ScenarioTest):
             'vmss3': 'vmss3',
             'sub': subscription_id
         })
+
+        with self.assertRaisesRegex(ArgumentUsageError, "please specify both --role and --scope"):
+            self.cmd('vmss create -g {rg} -n {vmss1} --image debian --instance-count 1 --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --scope {scope}')
+
+        with self.assertRaisesRegex(ArgumentUsageError, "please specify both --role and --scope"):
+            self.cmd('vmss create -g {rg} -n {vmss1} --image debian --instance-count 1 --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --role Contributor')
+
         with mock.patch('azure.cli.core.commands.arm._gen_guid', side_effect=self.create_guid):
             # create linux vm with default configuration
-            self.cmd('vmss create -g {rg} -n {vmss1} --image debian --instance-count 1 --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --scope {scope}', checks=[
+            self.cmd('vmss create -g {rg} -n {vmss1} --image debian --instance-count 1 --assign-identity --admin-username admin123 --admin-password PasswordPassword1! --scope {scope} --role Contributor', checks=[
                 self.check('vmss.identity.role', 'Contributor'),
                 self.check('vmss.identity.scope', '/subscriptions/{sub}/resourceGroups/{rg}'),
             ])
@@ -4166,7 +4219,7 @@ class VMRunCommandScenarioTest(ScenarioTest):
             'vm': self.create_random_name('vm-', 10),
             'run_cmd': self.create_random_name('cmd-', 10)
         })
-        self.cmd('vm create -g {rg} -n {vm} --image ubuntults')
+        self.cmd('vm create -g {rg} -n {vm} --image ubuntults --admin-username vmtest')
         self.cmd('vm run-command create -g {rg} --vm-name {vm} --name {run_cmd}', checks=[
             self.check('resourceGroup', '{rg}'),
             self.check('name', '{run_cmd}'),
@@ -4670,6 +4723,78 @@ class VMGalleryImage(ScenarioTest):
             self.check('sharingProfile.permissions', 'Private')
         ])
 
+    @ResourceGroupPreparer(name_prefix='cli_test_image_version_create_', location='westus')
+    def test_image_version_create_for_diff_source(self, resource_group_location):
+        self.kwargs.update({
+            'vm': 'vm1',
+            'gallery': self.create_random_name('gallery', 16),
+            'image1': 'image1',
+            'image2': 'image2',
+            'version1': '1.1.2',
+            'version2': '1.1.1',
+            'captured': 'managedImage1',
+            'subId': '0b1f6471-1bf0-4dda-aec3-cb9272f09590'
+            # share the gallery to tester's subscription, so the tester can get shared galleries
+        })
+
+        self.cmd('sig create -g {rg} --gallery-name {gallery}')
+        self.cmd('sig image-definition create -g {rg} --gallery-name {gallery} --gallery-image-definition {image1} '
+                 '--os-type linux --os-state Specialized -p publisher1 -f offer1 -s sku1')
+        vm_id = self.cmd('vm create -g {rg} -n {vm} --image ubuntults --data-disk-sizes-gb 10 --admin-username clitest1'
+                         ' --generate-ssh-key --nsg-rule NONE').get_output_in_json()['id']
+        time.sleep(70)
+        self.kwargs.update({"vm_id": vm_id})
+
+        # test the result of creating image version for virtual machine source
+        image_version_id = self.cmd(
+            'sig image-version create -g {rg} --gallery-name {gallery} --gallery-image-definition {image1} '
+            '--gallery-image-version {version1} --virtual-machine {vm_id}',
+            checks=[
+                self.check('location', resource_group_location),
+                self.check('name', self.kwargs['version1']),
+                self.check('provisioningState', 'Succeeded')
+            ]).get_output_in_json()['id']
+
+        self.cmd('sig image-definition create -g {rg} --gallery-name {gallery} --gallery-image-definition {image2} '
+                 '--os-type linux -p publisher2 -f offer2 -s sku2')
+        self.kwargs.update({"image_version_id": image_version_id})
+
+        # test the format check of virtual machine source and image version source
+        from azure.cli.core.azclierror import InvalidArgumentValueError
+        with self.assertRaises(InvalidArgumentValueError):
+            self.cmd('sig image-version create -g {rg} --gallery-name {gallery} --gallery-image-definition {image1} '
+                     '--gallery-image-version {version1} --image-version {vm_id}')
+        with self.assertRaises(InvalidArgumentValueError):
+            self.cmd('sig image-version create -g {rg} --gallery-name {gallery} --gallery-image-definition {image2} '
+                     '--gallery-image-version {version1} --virtual-machine {image_version_id}')
+
+        # test the result of more than one source are provided
+        from azure.cli.core.azclierror import MutuallyExclusiveArgumentError
+        with self.assertRaises(MutuallyExclusiveArgumentError):
+            self.cmd('sig image-version create -g {rg} --gallery-name {gallery} --gallery-image-definition {image1} '
+                     '--gallery-image-version {version1} --virtual-machine {vm_id} --image-version {image_version_id}')
+
+        # test the result of creating image version for gallery image version source
+        self.cmd('sig image-version create -g {rg} --gallery-name {gallery} --gallery-image-definition {image1} '
+                 '--gallery-image-version {version2} --image-version {image_version_id}',
+                 checks=[
+                     self.check('location', resource_group_location),
+                     self.check('name', self.kwargs['version2']),
+                     self.check('provisioningState', 'Succeeded')
+                 ])
+
+        # test the result of creating image version for managed image source
+        self.cmd('vm deallocate -g {rg} -n {vm}')
+        self.cmd('vm generalize -g {rg} -n {vm}')
+        self.cmd('image create -g {rg} -n {captured} --source {vm}')
+        self.cmd('sig image-version create -g {rg} --gallery-name {gallery} --gallery-image-definition {image2} '
+                 '--gallery-image-version {version1} --managed-image {captured}',
+                 checks=[
+                     self.check('location', resource_group_location),
+                     self.check('name', self.kwargs['version1']),
+                     self.check('provisioningState', 'Succeeded')
+                 ])
+
     @ResourceGroupPreparer(location='eastus2')
     @KeyVaultPreparer(name_prefix='vault-', name_len=20, key='vault', location='eastus2', additional_params='--enable-purge-protection true --enable-soft-delete true')
     def test_gallery_e2e(self, resource_group, resource_group_location, key_vault):
@@ -4774,7 +4899,7 @@ class VMGalleryImage(ScenarioTest):
             'gallery': self.create_random_name(prefix='gallery_', length=20)
         })
 
-        self.cmd('vm create -g {rg} -n vm1 --image centos --use-unmanaged-disk --nsg-rule NONE --generate-ssh-key')
+        self.cmd('vm create -g {rg} -n vm1 --image centos --use-unmanaged-disk --nsg-rule NONE --generate-ssh-key --admin-username vmtest')
         vhd_uri = self.cmd('vm show -g {rg} -n vm1').get_output_in_json()['storageProfile']['osDisk']['vhd']['uri']
         storage_account_os = vhd_uri.split('.')[0].split('/')[-1]
         self.kwargs.update({
@@ -4798,6 +4923,70 @@ class VMGalleryImage(ScenarioTest):
                      self.check('storageProfile.dataDiskImages[0].lun', 0),
                      self.check('storageProfile.dataDiskImages[1].source.uri', vhd_uri),
                      self.check('storageProfile.dataDiskImages[1].lun', 1)])
+
+    @ResourceGroupPreparer(random_name_length=15, location='CentralUSEUAP')
+    @KeyVaultPreparer(name_prefix='vault-', name_len=20, key='vault', location='CentralUSEUAP',
+                      additional_params='--enable-purge-protection true --enable-soft-delete true')
+    def test_create_image_version_with_region_cvm_encryptio(self, resource_group, resource_group_location, key_vault):
+        self.kwargs.update({
+            'vm': 'vm1',
+            'gallery': self.create_random_name(prefix='gallery_', length=20),
+            'image': 'image1',
+            'version': '1.1.1',
+            'captured': 'managedImage1',
+            'location': resource_group_location,
+            'key': self.create_random_name(prefix='key-', length=20),
+            'disk1': self.create_random_name(prefix='disk', length=20),
+            'snapshot1': self.create_random_name(prefix='snp', length=20),
+            'des1': self.create_random_name(prefix='des1-', length=20),
+        })
+
+        self.cmd('sig create -g {rg} --gallery-name {gallery}', checks=self.check('name', self.kwargs['gallery']))
+        self.cmd('sig image-definition create -g {rg} --gallery-name {gallery} --gallery-image-definition {image} --os-type windows -p publisher1 -f offer1 -s sku1 --os-state Specialized --features SecurityType=ConfidentialVm --hyper-v-generation v2', checks=[
+            self.check('name', self.kwargs['image']),
+            self.check('features[0].name', 'SecurityType'),
+            self.check('features[0].value', 'ConfidentialVM'),
+            self.check('hyperVGeneration', 'V2')
+        ])
+
+        # Create disk encryption set
+        vault_id = self.cmd('keyvault show -g {rg} -n {vault}').get_output_in_json()['id']
+        kid = self.cmd('keyvault key create -n {key} --vault {vault} --protection software').get_output_in_json()['key']['kid']
+        self.kwargs.update({
+            'vault_id': vault_id,
+            'kid': kid
+        })
+
+        self.cmd('disk-encryption-set create -g {rg} -n {des1} --key-url {kid} --source-vault {vault}')
+        des1_show_output = self.cmd('disk-encryption-set show -g {rg} -n {des1}').get_output_in_json()
+        des1_sp_id = des1_show_output['identity']['principalId']
+        des1_id = des1_show_output['id']
+        self.kwargs.update({
+            'des1_sp_id': des1_sp_id,
+            'des1_id': des1_id
+        })
+
+        self.cmd('keyvault set-policy -n {vault} --object-id {des1_sp_id} --key-permissions wrapKey unwrapKey get')
+
+        time.sleep(15)
+
+        with mock.patch('azure.cli.command_modules.role.custom._gen_guid', side_effect=self.create_guid):
+            self.cmd('role assignment create --assignee {des1_sp_id} --role Reader --scope {vault_id}')
+
+        self.cmd('disk create -g {rg} -n {disk1} --image-reference MicrosoftWindowsServer:WindowsServer:2022-datacenter-smalldisk-g2:latest --hyper-v-generation V2  --security-type ConfidentialVM_VMGuestStateOnlyEncryptedWithPlatformKey --disk-encryption-set {des1_id}')
+        self.cmd('snapshot create -g {rg} -n {snapshot1} --source {disk1}')
+        self.cmd('sig image-version create -g {rg} --gallery-name {gallery} --gallery-image-definition {image} --gallery-image-version {version} --target-regions {location}=1 --target-region-encryption {des1},0,{des1} --target-region-cvm-encryption EncryptedVMGuestStateOnlyWithPmk, --os-snapshot {snapshot1} --replica-count 1', checks=[
+            self.check('publishingProfile.targetRegions[0].name', 'Central US EUAP'),
+            self.check('publishingProfile.targetRegions[0].regionalReplicaCount', 1),
+            self.check('publishingProfile.targetRegions[0].encryption.osDiskImage.diskEncryptionSetId', '{des1_id}'),
+            self.check('publishingProfile.targetRegions[0].encryption.dataDiskImages[0].lun', 0),
+            self.check('publishingProfile.targetRegions[0].encryption.dataDiskImages[0].diskEncryptionSetId', '{des1_id}')
+        ])
+
+        self.cmd('sig image-version delete -g {rg} --gallery-name {gallery} --gallery-image-definition {image} --gallery-image-version {version}')
+        time.sleep(60)  # service end latency
+        self.cmd('sig image-definition delete -g {rg} --gallery-name {gallery} --gallery-image-definition {image}')
+        self.cmd('sig delete -g {rg} --gallery-name {gallery}')
 
     @ResourceGroupPreparer(name_prefix='cli_test_gallery_specialized_', location='eastus2')
     def test_gallery_specialized(self, resource_group):
@@ -4938,15 +5127,11 @@ class VMGalleryImage(ScenarioTest):
             self.check('storageProfile.imageReference.sharedGalleryImageId', '{shared_gallery_image_version}'),
         ])
 
-        self.cmd('vm create -g {rg} -n {vm_with_shared_gallery_version2} --image {shared_gallery_image_version} --admin-username clitest1 --generate-ssh-key --nsg-rule None --os-type linux')
+        from azure.cli.core.azclierror import ArgumentUsageError
+        with self.assertRaises(ArgumentUsageError):
+            self.cmd('vm create -g {rg} -n {vm_with_shared_gallery_version2} --image {shared_gallery_image_version} --admin-username clitest1 --generate-ssh-key --nsg-rule None --os-type windows')
 
-        self.cmd('vm show -g {rg} -n {vm_with_shared_gallery_version2}', checks=[
-            self.check('provisioningState', 'Succeeded'),
-            self.check('storageProfile.imageReference.sharedGalleryImageId', '{shared_gallery_image_version}'),
-            self.check('storageProfile.osDisk.osType', 'Linux'),
-        ])
-
-        self.cmd('vmss create -g {rg} -n {vmss_with_shared_gallery_version} --image {shared_gallery_image_version} --generate-ssh-keys --upgrade-policy-mode automatic --admin-username clitest1 ')
+        self.cmd('vmss create -g {rg} -n {vmss_with_shared_gallery_version} --image {shared_gallery_image_version} --generate-ssh-keys --admin-username clitest1 ')
 
         self.cmd('vmss show -g {rg} -n {vmss_with_shared_gallery_version}', checks=[
             self.check('provisioningState', 'Succeeded'),
@@ -4973,11 +5158,12 @@ class VMGalleryImage(ScenarioTest):
             self.check('softDeletePolicy.isSoftDeleteEnabled', True)
         ])
 
-        self.cmd('sig show -g {rg} -r {gallery_name}', checks=[
+        self.cmd('sig show -g {rg} -r {gallery_name} --sharing-groups', checks=[
             self.check('location', 'westus'),
             self.check('name', '{gallery_name}'),
             self.check('resourceGroup', '{rg}'),
-            self.check('softDeletePolicy.isSoftDeleteEnabled', True)
+            self.check('softDeletePolicy.isSoftDeleteEnabled', True),
+            self.check('sharingProfile.groups', None)
         ])
 
         self.cmd('sig update -g {rg} -r {gallery_name} --soft-delete False', checks=[
@@ -5012,7 +5198,7 @@ class VMGalleryImage(ScenarioTest):
         self.cmd('sig create -g {rg} -r {sig_name}')
         self.cmd('sig image-definition create -g {rg} --gallery-name {sig_name} '
                  '--gallery-image-definition {img_def_name} --os-type linux -p {pub_name} -f {of_name} -s {sku_name}')
-        self.cmd('vm create -g {rg} -n {vm_name} --image Ubuntults')
+        self.cmd('vm create -g {rg} -n {vm_name} --image Ubuntults --admin-username vmtest')
         self.cmd('vm deallocate -g {rg} -n {vm_name}')
         self.cmd('vm generalize -g {rg} -n {vm_name}')
         self.cmd('image create -g {rg} -n {img_name} --source {vm_name}')
@@ -5273,7 +5459,7 @@ class DedicatedHostScenarioTest(ScenarioTest):
     def test_vm_host_management(self, resource_group):
         self.kwargs.update({
             'host-group': 'my-host-group',
-            'host': 'my-host'
+            'host': 'my-host',
         })
 
         self.cmd('vm host group create -n {host-group} -c 3 -g {rg}')
@@ -5296,6 +5482,15 @@ class DedicatedHostScenarioTest(ScenarioTest):
 
         self.cmd('vm host delete -n {host} --host-group {host-group} -g {rg} --yes')
         self.cmd('vm host group delete -n {host-group} -g {rg} --yes')
+
+    @ResourceGroupPreparer(name_prefix='cli_test_vm_host_ultra_ssd_')
+    def test_vm_host_ultra_ssd(self, resource_group):
+        self.kwargs.update({
+            'host-group': self.create_random_name('host', 10)
+        })
+        self.cmd('vm host group create -n {host-group} -g {rg} --ultra-ssd-enabled true -c 1 -l eastus2euap --zone 3', checks=[
+            self.check('additionalCapabilities.ultraSsdEnabled', True)
+        ])
 
     @ResourceGroupPreparer(name_prefix='cli_test_dedicated_host_', location='westeurope')
     @ResourceGroupPreparer(name_prefix='cli_test_dedicated_host2_', location='centraluseuap', key='rg2')
@@ -5941,14 +6136,16 @@ class DiskEncryptionSetTest(ScenarioTest):
             self.check('rotationToLatestKeyVersionEnabled', False)
         ])
 
-    @ResourceGroupPreparer(name_prefix='cli_test_disk_encryption_set_disk_update_', location='westcentralus')
-    @KeyVaultPreparer(name_prefix='vault3-', name_len=20, key='vault', location='westcentralus', additional_params='--enable-purge-protection')
+    @ResourceGroupPreparer(name_prefix='cli_test_disk_encryption_set_disk_update_', location='eastus')
+    @KeyVaultPreparer(name_prefix='vault3-', name_len=20, key='vault', location='eastus', additional_params='--enable-purge-protection')
     @AllowLargeResponse(size_kb=99999)
     def test_disk_encryption_set_disk_update(self, resource_group, key_vault):
         self.kwargs.update({
             'key': self.create_random_name(prefix='key-', length=20),
             'des1': self.create_random_name(prefix='des1-', length=20),
+            'image-reference': 'Debian:debian-10:10:latest',
             'disk': self.create_random_name(prefix='disk-', length=20),
+            'disk2': self.create_random_name(prefix='disk-', length=20),
         })
 
         vault_id = self.cmd('keyvault show -g {rg} -n {vault}').get_output_in_json()['id']
@@ -5980,10 +6177,19 @@ class DiskEncryptionSetTest(ScenarioTest):
             'des1_pattern': '.*/{}$'.format(self.kwargs['des1'])
         })
 
-        self.cmd('disk create -g {rg} -n {disk} --size-gb 10')
+        self.cmd('disk create -g {rg} -n {disk} --image-reference {image-reference}')
         self.cmd('disk update -g {rg} -n {disk} --disk-encryption-set {des1} --encryption-type EncryptionAtRestWithCustomerKey', checks=[
             self.check_pattern('encryption.diskEncryptionSetId', self.kwargs['des1_pattern']),
             self.check('encryption.type', 'EncryptionAtRestWithCustomerKey')
+        ])
+
+        self.cmd('disk create -g {rg} -n {disk2} --source {disk} --encryption-type EncryptionAtRestWithPlatformKey', checks=[
+            self.check('encryption.diskEncryptionSetId', 'None'),
+            self.check('encryption.type', 'EncryptionAtRestWithPlatformKey')
+        ])
+        self.cmd('disk update -g {rg} -n {disk} --encryption-type EncryptionAtRestWithPlatformKey', checks=[
+            self.check('encryption.diskEncryptionSetId', 'None'),
+            self.check('encryption.type', 'EncryptionAtRestWithPlatformKey')
         ])
 
     @ResourceGroupPreparer(name_prefix='cli_test_disk_encryption_set_snapshot_', location='westcentralus')
@@ -6442,16 +6648,30 @@ class VMSSOrchestrationModeScenarioTest(ScenarioTest):
 
         self.cmd('ppg create -g {rg} -n {ppg}')
         self.cmd('vmss create -g {rg} -n {vmss} --orchestration-mode Flexible --single-placement-group false '
-                 '--ppg {ppg} --platform-fault-domain-count 3 ',
+                 '--ppg {ppg} --platform-fault-domain-count 3',
                  checks=[
                      self.check('vmss.singlePlacementGroup', False),
                      self.check('vmss.platformFaultDomainCount', 3)
                  ])
 
-        self.cmd('vm create -g {rg} -n {vm} --image centos --platform-fault-domain 0 --vmss {vmss} --generate-ssh-keys --nsg-rule None')
+        self.cmd('vm create -g {rg} -n {vm} --image centos --platform-fault-domain 0 --vmss {vmss} --generate-ssh-keys --nsg-rule None --admin-username vmtest')
         self.cmd('vm show -g {rg} -n {vm}', checks=[
             self.check('platformFaultDomain', 0)
         ])
+
+
+    @ResourceGroupPreparer(name_prefix='cli_test_simple_placement')
+    def test_vmss_simple_placement(self, resource_group):
+        self.kwargs.update({
+            'vmss': self.create_random_name('vmss', 10),
+        })
+        self.cmd('vmss create -g {rg} -n {vmss} --orchestration-mode Flexible --platform-fault-domain-count 2 '
+                 '--single-placement-group true --image UbuntuLTS --vm-sku Standard_M8ms --admin-username clitest '
+                 '-l eastus2euap --upgrade-policy-mode automatic', checks=[
+            self.check('vmss.singlePlacementGroup', True),
+            self.check('vmss.platformFaultDomainCount', 2),
+        ])
+
 
     @AllowLargeResponse()
     @ResourceGroupPreparer(name_prefix='cli_test_vmss_orchestration_mode_', location='eastus2euap')
@@ -6595,7 +6815,11 @@ class VMSSOrchestrationModeScenarioTest(ScenarioTest):
             'vmss': 'vmsslongnametest',
         })
 
-        self.cmd('vmss create -n {vmss} -g {rg} --image ubuntults --orchestration-mode flexible')
+        from azure.cli.core.azclierror import ArgumentUsageError
+        with self.assertRaisesRegex(ArgumentUsageError, 'please specify the --image when you want to specify the VM SKU'):
+            self.cmd('vmss create -n {vmss} -g {rg} --orchestration-mode Flexible --platform-fault-domain-count 1 --zones 1 --instance-count 3 --vm-sku Standard_D1_v2')
+
+        self.cmd('vmss create -n {vmss} -g {rg} --image ubuntults --orchestration-mode flexible --admin-username vmtest')
 
         self.cmd('vmss show -g {rg} -n {vmss}', checks=[
             self.check('orchestrationMode', 'Flexible'),
@@ -6741,7 +6965,7 @@ class VMAutoUpdateScenarioTest(ScenarioTest):
 
     @ResourceGroupPreparer(name_prefix='cli_test_linux_vm_patch_mode_')
     def test_linux_vm_patch_mode(self, resource_group):
-        self.cmd('vm create -g {rg} -n vm1 --image UbuntuLTS --enable-agent --patch-mode AutomaticByPlatform --generate-ssh-keys --nsg-rule NONE')
+        self.cmd('vm create -g {rg} -n vm1 --image UbuntuLTS --enable-agent --patch-mode AutomaticByPlatform --generate-ssh-keys --nsg-rule NONE --admin-username vmtest')
         self.cmd('vm show -g {rg} -n vm1', checks=[
             self.check('osProfile.linuxConfiguration.patchSettings.patchMode', 'AutomaticByPlatform')
         ])
@@ -6773,7 +6997,7 @@ class VMSSPatchModeScenarioTest(ScenarioTest):
             'rg': resource_group
         })
 
-        self.cmd('vmss create -g {rg} -n {vmss} --image UbuntuLTS --enable-agent --patch-mode ImageDefault --orchestration-mode Flexible --generate-ssh-keys --instance-count 0')
+        self.cmd('vmss create -g {rg} -n {vmss} --image UbuntuLTS --enable-agent --patch-mode ImageDefault --orchestration-mode Flexible --generate-ssh-keys --instance-count 0 --admin-username vmtest')
 
         curr_dir = os.path.dirname(os.path.realpath(__file__))
         health_extension_file = os.path.join(curr_dir, 'health_extension.json').replace('\\', '\\\\')
@@ -6812,7 +7036,7 @@ class VMSSReimageScenarioTest(ScenarioTest):
 
     @ResourceGroupPreparer(name_prefix='cli_test_vmss_reimage_')
     def test_vmss_reimage(self, resource_group):
-        self.cmd('vmss create -g {rg} -n vmss1 --image centos')
+        self.cmd('vmss create -g {rg} -n vmss1 --image centos --admin-username vmtest')
         self.cmd('vmss reimage -g {rg} -n vmss1 --instance-id 1')
         self.cmd('vmss reimage -g {rg} -n vmss1')
 
@@ -6842,10 +7066,10 @@ class VMSSHKeyScenarioTest(ScenarioTest):
         ])
 
         # Use existing key
-        self.cmd('vm create -g {rg} -n vm1 --image centos --nsg-rule None --ssh-key-name k1')
+        self.cmd('vm create -g {rg} -n vm1 --image centos --nsg-rule None --ssh-key-name k1 --admin-username vmtest')
 
         # Create new one
-        self.cmd('vm create -g {rg} -n vm3 --image centos --nsg-rule None --ssh-key-name k3 --generate-ssh-keys')
+        self.cmd('vm create -g {rg} -n vm3 --image centos --nsg-rule None --ssh-key-name k3 --generate-ssh-keys --admin-username vmtest')
         self.cmd('sshkey show -g {rg} -n k3')
 
 
@@ -6868,7 +7092,7 @@ class VMInstallPatchesScenarioTest(ScenarioTest):
 class VMTrustedLaunchScenarioTest(ScenarioTest):
     @ResourceGroupPreparer(name_prefix='cli_test_vm_trusted_launch_', location='southcentralus')
     def test_vm_trusted_launch(self, resource_group):
-        self.cmd('vm create -g {rg} -n vm --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --enable-secure-boot true --enable-vtpm true --admin-username azureuser --admin-password testPassword0 --nsg-rule None')
+        self.cmd('vm create -g {rg} -n vm --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --enable-secure-boot true --enable-vtpm true --admin-username azureuser --admin-password testPassword0 --nsg-rule None --disable-integrity-monitoring')
         self.cmd('vm show -g {rg} -n vm', checks=[
             self.check('securityProfile.securityType', 'TrustedLaunch'),
             self.check('securityProfile.uefiSettings.secureBootEnabled', True),
@@ -6877,7 +7101,7 @@ class VMTrustedLaunchScenarioTest(ScenarioTest):
 
     @ResourceGroupPreparer(name_prefix='cli_test_vm_trusted_launch_update_', location='southcentralus')
     def test_vm_trusted_launch_update(self, resource_group):
-        self.cmd('vm create -g {rg} -n vm --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --admin-username azureuser --admin-password testPassword0 --nsg-rule None')
+        self.cmd('vm create -g {rg} -n vm --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --admin-username azureuser --admin-password testPassword0 --nsg-rule None --disable-integrity-monitoring')
         self.cmd('vm update -g {rg} -n vm --enable-secure-boot true --enable-vtpm true')
         self.cmd('vm show -g {rg} -n vm', checks=[
             self.check('securityProfile.securityType', 'TrustedLaunch'),
@@ -6894,9 +7118,72 @@ class VMTrustedLaunchScenarioTest(ScenarioTest):
 
     @ResourceGroupPreparer(name_prefix='cli_test_vmss_trusted_launch_', location='southcentralus')
     def test_vmss_trusted(self, resource_group):
-        self.cmd('vmss create -g {rg} -n vm --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --admin-username azureuser --admin-password testPassword0')
+        self.cmd('vmss create -g {rg} -n vm --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --admin-username azureuser --admin-password testPassword0 --disable-integrity-monitoring')
         self.cmd('vmss update -g {rg} -n vm --enable-secure-boot true --enable-vtpm true')
         self.cmd('vmss show -g {rg} -n vm', checks=[
+            self.check('virtualMachineProfile.securityProfile.securityType', 'TrustedLaunch'),
+            self.check('virtualMachineProfile.securityProfile.uefiSettings.secureBootEnabled', True),
+            self.check('virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled', True)
+        ])
+
+    @ResourceGroupPreparer(name_prefix='cli_test_guest_attestation_extension_and_msi', location='westus')
+    @AllowLargeResponse()
+    def test_guest_attestation_extension_and_msi(self, resource_group):
+        self.kwargs.update({
+            'vm1': self.create_random_name('vm', 10),
+            'vm2': self.create_random_name('vm', 10),
+            'vm3': self.create_random_name('vm', 10),
+            'id1': self.create_random_name('id', 10),
+            'vmss1': self.create_random_name('vmss', 10),
+            'vmss2': self.create_random_name('vmss', 10),
+
+        })
+        self.cmd('identity create -g {rg} -n {id1}')
+        self.cmd('vm create --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --assign-identity {id1} [system] --admin-username azureuser -g {rg} -n {vm1} --enable-secure-boot --enable-vtpm')
+        self.cmd('vm show -g {rg} -n {vm1}', checks=[
+            self.check('identity.type', 'SystemAssigned, UserAssigned'),
+            self.check('resources[0].name', 'GuestAttestation'),
+            self.check('resources[0].publisher', 'Microsoft.Azure.Security.LinuxAttestation'),
+            self.check('securityProfile.securityType', 'TrustedLaunch'),
+            self.check('securityProfile.uefiSettings.secureBootEnabled', True),
+            self.check('securityProfile.uefiSettings.vTpmEnabled', True)
+
+        ])
+        self.cmd('vm create --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --admin-username azureuser -g {rg} -n {vm2} --enable-secure-boot --enable-vtpm --disable-integrity-monitoring')
+        self.cmd('vm show -g {rg} -n {vm2}', checks=[
+            self.check('resources', None),
+            self.check('identity', None),
+            self.check('securityProfile.securityType', 'TrustedLaunch'),
+            self.check('securityProfile.uefiSettings.secureBootEnabled', True),
+            self.check('securityProfile.uefiSettings.vTpmEnabled', True)
+        ])
+        self.cmd('vm create --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --security-type TrustedLaunch --assign-identity {id1} --admin-username azureuser -g {rg} -n {vm3} --enable-secure-boot --enable-vtpm')
+        self.cmd('vm show -g {rg} -n {vm3}', checks=[
+            self.check('identity.type', 'SystemAssigned, UserAssigned'),
+            self.check('resources[0].name', 'GuestAttestation'),
+            self.check('resources[0].publisher', 'Microsoft.Azure.Security.LinuxAttestation'),
+            self.check('securityProfile.securityType', 'TrustedLaunch'),
+            self.check('securityProfile.uefiSettings.secureBootEnabled', True),
+            self.check('securityProfile.uefiSettings.vTpmEnabled', True)
+
+        ])
+        self.cmd('vmss create -g {rg} -n {vmss1} --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --admin-username azureuser --security-type TrustedLaunch --enable-secure-boot --enable-vtpm')
+        self.cmd('vmss show -g {rg} -n {vmss1}', checks=[
+            self.check('identity.type', 'SystemAssigned'),
+            self.check('virtualMachineProfile.extensionProfile.extensions[0].name', 'GuestAttestation'),
+            self.check('virtualMachineProfile.extensionProfile.extensions[0].publisher', 'Microsoft.Azure.Security.LinuxAttestation'),
+            self.check('virtualMachineProfile.securityProfile.securityType', 'TrustedLaunch'),
+            self.check('virtualMachineProfile.securityProfile.uefiSettings.secureBootEnabled', True),
+            self.check('virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled', True)
+        ])
+        self.cmd('vmss list-instances -n {vmss1} -g {rg}', checks=[
+            self.check('[0].resources[0].name', 'GuestAttestation'),
+            self.check('[0].resources[0].publisher', 'Microsoft.Azure.Security.LinuxAttestation')
+        ])
+        self.cmd('vmss create -g {rg} -n {vmss2} --image canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest --admin-username azureuser --security-type TrustedLaunch --enable-secure-boot --enable-vtpm --disable-integrity-monitoring')
+        self.cmd('vmss show -g {rg} -n {vmss2}', checks=[
+            self.check('identity', None),
+            self.check('virtualMachineProfile.extensionProfile', 'None'),
             self.check('virtualMachineProfile.securityProfile.securityType', 'TrustedLaunch'),
             self.check('virtualMachineProfile.securityProfile.uefiSettings.secureBootEnabled', True),
             self.check('virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled', True)
@@ -6910,6 +7197,19 @@ class DiskHibernationScenarioTest(ScenarioTest):
             self.check('supportsHibernation', True)
         ])
 
+    @ResourceGroupPreparer(name_prefix='cli_test_disk_data_access_auth_mode_', location='eastus2euap')
+    def test_disk_data_access_auth_mode(self):
+        self.kwargs.update({
+            'disk': self.create_random_name('disk-', 10),
+            'disk1': self.create_random_name('disk-', 10)
+        })
+        self.cmd('disk create -g {rg} -n {disk} --size-gb 10 --data-access-auth-mode AzureActiveDirectory', checks=[
+            self.check('dataAccessAuthMode', 'AzureActiveDirectory')
+        ])
+        self.cmd('disk create -g {rg} -n {disk1} --size-gb 10 --data-access-auth-mode None', checks=[
+            self.check('dataAccessAuthMode', 'None')
+        ])
+
 
 class VMCreateCountScenarioTest(ScenarioTest):
     @AllowLargeResponse()
@@ -6919,7 +7219,7 @@ class VMCreateCountScenarioTest(ScenarioTest):
         self.cmd('az network vnet subnet create -g {rg} --vnet-name vnet -n subnet1 --address-prefixes 10.0.0.0/24')
         self.cmd('az network vnet subnet create -g {rg} --vnet-name vnet -n subnet2 --address-prefixes 10.0.1.0/24')
         self.cmd('vm create -g {rg} -n vma --image ubuntults --count 3 --vnet-name vnet --subnet subnet1 --nsg-rule None '
-                 '--generate-ssh-keys --nic-delete-option Delete')
+                 '--generate-ssh-keys --nic-delete-option Delete --admin-username vmtest')
         self.cmd('vm list -g {rg}', checks=[
             self.check('length(@)', 3),
             self.check('[0].networkProfile.networkInterfaces[0].deleteOption', 'Delete'),
@@ -6927,7 +7227,7 @@ class VMCreateCountScenarioTest(ScenarioTest):
             self.check('[2].networkProfile.networkInterfaces[0].deleteOption', 'Delete')
         ])
 
-        self.cmd('vm create -g {rg} -n vmb --image ubuntults --count 3 --vnet-name vnet --subnet subnet2 --nsg-rule None --generate-ssh-keys')
+        self.cmd('vm create -g {rg} -n vmb --image ubuntults --count 3 --vnet-name vnet --subnet subnet2 --nsg-rule None --generate-ssh-keys --admin-username vmtest')
         self.cmd('vm list -g {rg}', checks=[
             self.check('length(@)', 6)
         ])
@@ -6936,7 +7236,7 @@ class VMCreateCountScenarioTest(ScenarioTest):
 class ExtendedLocation(ScenarioTest):
     @ResourceGroupPreparer(name_prefix='cli_test_vm_extended_location_')
     def test_vm_extended_location(self, resource_group):
-        self.cmd('vm create -g {rg} -n vm --image ubuntults --nsg-rule None --generate-ssh-keys '
+        self.cmd('vm create -g {rg} -n vm --image ubuntults --nsg-rule None --generate-ssh-keys --admin-username vmtest '
                  '--edge-zone microsoftlosangeles1 --public-ip-sku Standard')
         self.cmd('vm show -g {rg} -n vm', checks=[
             self.check('extendedLocation.name', 'microsoftlosangeles1'),
@@ -6960,7 +7260,7 @@ class ExtendedLocation(ScenarioTest):
 
     @ResourceGroupPreparer(name_prefix='cli_test_vmss_extended_location_')
     def test_vmss_extended_location(self, resource_group):
-        self.cmd('vmss create -g {rg} -n vmss --image ubuntults --generate-ssh-keys '
+        self.cmd('vmss create -g {rg} -n vmss --image ubuntults --generate-ssh-keys --admin-username vmtest '
                  '--edge-zone microsoftlosangeles1 --lb-sku Standard')
         self.cmd('vmss show -g {rg} -n vmss', checks=[
             self.check('extendedLocation.name', 'microsoftlosangeles1'),
@@ -7000,7 +7300,7 @@ class ExtendedLocation(ScenarioTest):
 
 class DiskZRSScenarioTest(ScenarioTest):
     @AllowLargeResponse(size_kb=99999)
-    @ResourceGroupPreparer(name_prefix='cli_test_disk_zrs_', location='eastus2euap')
+    @ResourceGroupPreparer(name_prefix='cli_test_disk_zrs_', location='westus2')
     def test_disk_zrs(self, resource_group):
         # az feature register --namespace Microsoft.Compute -n SharedDisksForStandardSSD
         # az provider register -n Microsoft.Compute
@@ -7010,7 +7310,7 @@ class DiskZRSScenarioTest(ScenarioTest):
         self.cmd('disk update -g {rg} -n d1 --sku Premium_ZRS', checks=[
             self.check('sku.name', 'Premium_ZRS')
         ])
-        self.cmd('vm create -g {rg} -n d1 --image ubuntults --zone 1 --attach-data-disks d1 --generate-ssh-keys --nsg-rule None')
+        self.cmd('vm create -g {rg} -n d1 --image ubuntults --zone 1 --attach-data-disks d1 --generate-ssh-keys --nsg-rule None --admin-username vmtest')
         # ZRS disks cannot be pinned with a zone
         self.cmd('disk create -g {rg} -n d1 --size-gb 10 --sku StandardSSD_ZRS --zone 1', expect_failure=True)
 
@@ -7486,13 +7786,13 @@ class RestorePointScenarioTest(ScenarioTest):
             'vm_name': self.create_random_name('vm_', 15)
         })
 
-        vm = self.cmd('vm create -n {vm_name} -g {rg} --image UbuntuLTS').get_output_in_json()
+        vm = self.cmd('vm create -n {vm_name} -g {rg} --image UbuntuLTS --admin-username vmtest').get_output_in_json()
         self.kwargs.update({
             'vm_id': vm['id']
         })
 
-        self.cmd('restore-point collection create -g {rg} --collection-name {collection_name} --source-id {vm_id}', checks=[
-            self.check('location', 'westus'),
+        self.cmd('restore-point collection create -g {rg} --collection-name {collection_name} --source-id {vm_id} -l eastus', checks=[
+            self.check('location', 'eastus'),
             self.check('name', '{collection_name}'),
             self.check('resourceGroup', '{rg}')
         ])
@@ -7506,14 +7806,15 @@ class RestorePointScenarioTest(ScenarioTest):
             'point_id': point['id']
         })
 
-        self.cmd('restore-point show -g {rg} -n {point_name} --collection-name {collection_name}', checks=[
+        self.cmd('restore-point show -g {rg} -n {point_name} --collection-name {collection_name} --instance-view', checks=[
             self.check('id', '{point_id}'),
             self.check('name', '{point_name}'),
-            self.check('resourceGroup', '{rg}')
+            self.check('resourceGroup', '{rg}'),
+            self.check('instanceView.diskRestorePoints[0].replicationStatus.status.code', 'ReplicationState/replicating')
         ])
 
-        self.cmd('restore-point collection show -g {rg} --collection-name {collection_name}', checks=[
-            self.check('location', 'westus'),
+        self.cmd('restore-point collection show -g {rg} --collection-name {collection_name} --restore-points', checks=[
+            self.check('location', 'eastus'),
             self.check('name', '{collection_name}'),
             self.check('restorePoints[0].id', '{point_id}'),
             self.check('restorePoints[0].name', '{point_name}'),
@@ -7532,7 +7833,7 @@ class RestorePointScenarioTest(ScenarioTest):
             'vm_name': self.create_random_name('vm_', 15)
         })
 
-        vm = self.cmd('vm create -n {vm_name} -g {rg} --image UbuntuLTS').get_output_in_json()
+        vm = self.cmd('vm create -n {vm_name} -g {rg} --image UbuntuLTS --admin-username vmtest').get_output_in_json()
         self.kwargs.update({
             'vm_id': vm['id']
         })
@@ -7573,6 +7874,74 @@ class RestorePointScenarioTest(ScenarioTest):
         ])
 
         self.cmd('restore-point collection delete -g {rg} --collection-name {collection_name} -y')
+
+    @ResourceGroupPreparer(name_prefix='cli_test_copy_vm_restore_point', location='westus')
+    def test_copy_vm_restore_point(self, resource_group):
+        self.kwargs.update({
+            'rg': resource_group,
+            'collection_name': self.create_random_name('collection_', 20),
+            'collection_name1': self.create_random_name('collection_', 20),
+            'point_name': self.create_random_name('point_', 15),
+            'point_name1': self.create_random_name('point_', 15),
+            'vm_name': self.create_random_name('vm_', 15)
+        })
+
+        vm = self.cmd('vm create -n {vm_name} -g {rg} --image UbuntuLTS --admin-username vmtest').get_output_in_json()
+        self.kwargs.update({
+            'vm_id': vm['id']
+        })
+
+        collection = self.cmd('restore-point collection create -g {rg} --collection-name {collection_name} --source-id {vm_id}').get_output_in_json()
+        self.kwargs.update({
+            'collection_id': collection['id']
+        })
+
+        self.cmd('restore-point collection create -g {rg} --collection-name {collection_name1} --source-id {collection_id} -l eastus', checks=[
+            self.check('location', 'eastus'),
+            self.check('source.id', '{collection_id}'),
+            self.check('source.location', 'westus')
+        ])
+
+        point = self.cmd('restore-point create -g {rg} -n {point_name} --collection-name {collection_name}').get_output_in_json()
+        self.kwargs.update({
+            'point_id': point['id']
+        })
+
+        self.cmd('restore-point create -g {rg} -n {point_name1} --collection-name {collection_name1} --source-restore-point {point_id}', checks=[
+            self.check('sourceRestorePoint.id', '{point_id}')
+        ])
+
+
+class ArchitectureScenarioTest(ScenarioTest):
+    @ResourceGroupPreparer(location='westus')
+    def test_architecture(self, resource_group):
+        self.kwargs.update({
+            'sig_name': self.create_random_name('sig_', 10),
+            'img_def_name': self.create_random_name('def_', 10),
+            'pub_name': self.create_random_name('pub_', 10),
+            'of_name': self.create_random_name('of_', 10),
+            'sku_name': self.create_random_name('sku_', 10),
+            'disk_name': self.create_random_name('disk_', 10),
+            'snap_name': self.create_random_name('snap_', 10)
+        })
+        self.cmd('sig create -g {rg} -r {sig_name}')
+        self.cmd('sig image-definition create -g {rg} --gallery-name {sig_name} --architecture x64 --gallery-image-definition {img_def_name} --os-type linux -p {pub_name} -f {of_name} -s {sku_name}', checks=[
+            self.check('architecture', 'x64')
+        ])
+
+        self.cmd('disk create -g {rg} -n {disk_name} --architecture x64 --size-gb 20', checks=[
+            self.check('supportedCapabilities.architecture', 'x64')
+        ])
+        self.cmd('disk update -g {rg} -n {disk_name} --architecture Arm64', checks=[
+            self.check('supportedCapabilities.architecture', 'Arm64')
+        ])
+
+        self.cmd('snapshot create -n {snap_name} -g {rg} --size-gb 1 --architecture x64', checks=[
+            self.check('supportedCapabilities.architecture', 'x64')
+        ])
+        self.cmd('snapshot update -n {snap_name} -g {rg} --architecture Arm64', checks=[
+            self.check('supportedCapabilities.architecture', 'Arm64')
+        ])
 
 
 if __name__ == '__main__':

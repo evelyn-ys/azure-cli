@@ -254,6 +254,18 @@ class WebappQuickCreateTest(ScenarioTest):
             JMESPathCheck('name', webapp_name)
         ])
 
+    @AllowLargeResponse()
+    @ResourceGroupPreparer(parameter_name='resource_group', parameter_name_for_location='resource_group_location', location=WINDOWS_ASP_LOCATION_WEBAPP)
+    @ResourceGroupPreparer(parameter_name='resource_group2', parameter_name_for_location='resource_group_location2', location=WINDOWS_ASP_LOCATION_WEBAPP)
+    def test_create_in_different_group_name(self, resource_group, resource_group_location, resource_group2, resource_group_location2):
+        plan = self.create_random_name(prefix='planInOneRG', length=15)
+        webapp_name = self.create_random_name(prefix='webInOtherRG', length=24)
+        self.cmd('group create -n {} -l {}'.format(resource_group2, resource_group_location))
+        self.cmd('appservice plan create -g {} -n {}'.format(resource_group, plan))
+        self.cmd('webapp create -g {} -n {} --plan {}'.format(resource_group2, webapp_name, plan), checks=[
+            JMESPathCheck('name', webapp_name)
+        ])
+
     @unittest.skip("This test needs to be updated first to have unique names & re-tested before recording")
     @AllowLargeResponse()
     @ResourceGroupPreparer(parameter_name="resource_group_one", name_prefix="clitest", random_name_length=24, location=WINDOWS_ASP_LOCATION_WEBAPP)
@@ -315,6 +327,46 @@ class BackupWithName(ScenarioTest):
             JMESPathCheck('length(@)', 1),
             JMESPathCheck('[0].namePropertiesName', backup_name)
         ])
+
+        slot_name = "slot"
+        slot_backup_name = self.create_random_name(prefix='sbn-', length=24)
+        self.cmd(f"webapp deployment slot create -g {resource_group} -n {webapp} -s {slot_name}")
+        self.cmd(f"webapp config backup create -g {resource_group} --webapp-name {webapp} --backup-name {slot_backup_name} --container-url {sasurl} -s {slot_name}", checks=[
+            JMESPathCheck('blobName', slot_backup_name)
+        ])
+        self.cmd(f"webapp config backup list -g {resource_group} --webapp-name {webapp} -s {slot_name}", checks=[
+            JMESPathCheck('length(@)', 1),
+            JMESPathCheck('[0].namePropertiesName', slot_backup_name)
+        ])
+
+    @ResourceGroupPreparer(parameter_name='resource_group', location=WINDOWS_ASP_LOCATION_WEBAPP)
+    def test_config_backup_restore(self, resource_group):
+        plan = self.create_random_name(prefix='plan-backup', length=24)
+        webapp = self.create_random_name(prefix='backup-webapp', length=24)
+        storage_account = self.create_random_name(prefix='backup', length=24)
+        container = self.create_random_name(prefix='backupcontainer', length=24)
+        backup_name = self.create_random_name(prefix='backup-name', length=24)
+
+        expirydate = (datetime.datetime.now() + datetime.timedelta(days=1, hours=3)).strftime("\"%Y-%m-%dT%H:%MZ\"")
+        slot_name = "slot"
+
+        self.cmd(f'storage account create -n {storage_account} -g {resource_group} --sku Standard_LRS')
+        self.cmd(f'storage container create --account-name {storage_account} --name {container}')
+        sastoken = self.cmd(f'storage container generate-sas --account-name {storage_account} --name {container} --expiry {expirydate} --permissions rwdl -otsv').output.strip()
+        sasurl = f'\"https://{storage_account}.blob.core.windows.net/{container}?{sastoken}\"'
+
+        self.cmd(f'appservice plan create -g {resource_group} -n {plan} --sku S1')
+        self.cmd(f'webapp create -g {resource_group} -n {webapp} --plan {plan}')
+        self.cmd(f"webapp deployment slot create -g {resource_group} -n {webapp} -s {slot_name}")
+
+        self.cmd(f"webapp config backup create -g {resource_group} --webapp-name {webapp} --backup-name {backup_name} --container-url {sasurl}")
+        time.sleep(240)
+
+        # restore a backup
+        self.cmd(f"webapp config backup restore -g {resource_group} --webapp-name {webapp} --target-name {webapp} --backup-name {backup_name} --container-url {sasurl} --overwrite --ignore-hostname-conflict")
+
+        # restore a backup to a slot
+        self.cmd(f"webapp config backup restore -g {resource_group} --webapp-name {webapp} --target-name {webapp} --slot {slot_name} --backup-name {backup_name} --container-url {sasurl} --overwrite --ignore-hostname-conflict")
 
 
 # Test Framework is not able to handle binary file format, hence, only run live
@@ -964,6 +1016,21 @@ class LinuxWebappScenarioTest(ScenarioTest):
             (x for x in result if x['name'] == 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'))
         self.assertEqual(sample, {
                          'name': 'WEBSITES_ENABLE_APP_SERVICE_STORAGE', 'slotSetting': False, 'value': 'false'})
+
+        result = self.cmd('webapp config container set -g {} -n {} --docker-custom-image-name {} --docker-registry-server-password {} --docker-registry-server-user {} --docker-registry-server-url {} --enable-app-service-storage {}'.format(
+            resource_group, webapp, 'foo-image', 'foo-password', 'foo-user', 'foo-url', 'true')).get_output_in_json()
+        self.assertEqual(set(x['value'] for x in result if x['name'] ==
+                             'DOCKER_REGISTRY_SERVER_PASSWORD'), set([None]))  # we mask the password
+        sample = next(
+            (x for x in result if x['name'] == 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'))
+        self.assertEqual(sample, {
+                         'name': 'WEBSITES_ENABLE_APP_SERVICE_STORAGE', 'slotSetting': False, 'value': 'true'})
+
+        result = self.cmd('webapp config container show -g {} -n {} '.format(
+            resource_group, webapp)).get_output_in_json()
+        self.assertEqual(set(x['name'] for x in result), set(['DOCKER_REGISTRY_SERVER_URL', 'DOCKER_REGISTRY_SERVER_USERNAME',
+                                                              'DOCKER_CUSTOM_IMAGE_NAME', 'DOCKER_REGISTRY_SERVER_PASSWORD', 'WEBSITES_ENABLE_APP_SERVICE_STORAGE']))
+
         self.cmd(
             'webapp config container delete -g {} -n {}'.format(resource_group, webapp))
         result2 = self.cmd('webapp config container show -g {} -n {} '.format(

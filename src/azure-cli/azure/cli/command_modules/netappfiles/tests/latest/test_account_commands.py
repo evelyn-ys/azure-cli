@@ -5,7 +5,6 @@
 
 from azure.cli.testsdk import ScenarioTest, ResourceGroupPreparer
 LOCATION = "southcentralusstage"
-VAULT_LOCATION = "southcentralus"
 
 # No tidy up of tests required. The resource group is automatically removed
 
