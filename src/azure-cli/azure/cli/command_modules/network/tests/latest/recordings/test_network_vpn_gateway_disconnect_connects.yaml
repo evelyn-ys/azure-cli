@@ -13,12 +13,13 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -27,21 +28,23 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:57:51 GMT
+      - Sat, 01 Oct 2022 19:37:45 GMT
       expires:
       - '-1'
       pragma:
       - no-cache
       strict-transport-security:
       - max-age=31536000; includeSubDomains
+      vary:
+      - Accept-Encoding
       x-content-type-options:
       - nosniff
     status:
       code: 200
       message: OK
 - request:
-    body: '{"location": "westus", "properties": {"publicIPAllocationMethod": "Dynamic",
-      "publicIPAddressVersion": "IPv4", "idleTimeoutInMinutes": 4}}'
+    body: '{"location": "westus", "properties": {"idleTimeoutInMinutes": 4, "publicIPAddressVersion":
+      "IPv4", "publicIPAllocationMethod": "Dynamic"}}'
     headers:
       Accept:
       - application/json
@@ -58,32 +61,33 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) (AAZ) azsdk-python-core/1.24.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1?api-version=2022-05-01
   response:
     body:
       string: "{\r\n  \"name\": \"pubip1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\",\r\n
-        \ \"etag\": \"W/\\\"4d3db206-b405-44e2-80d6-a3ac9bf63b4b\\\"\",\r\n  \"location\":
+        \ \"etag\": \"W/\\\"6c3fc146-def6-4a37-acb2-4fce3b23a02c\\\"\",\r\n  \"location\":
         \"westus\",\r\n  \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n
-        \   \"resourceGuid\": \"28e57a32-e429-44fe-858b-b2272eb5ed25\",\r\n    \"publicIPAddressVersion\":
+        \   \"resourceGuid\": \"fced5847-b570-41a7-8810-839d0d7bfba4\",\r\n    \"publicIPAddressVersion\":
         \"IPv4\",\r\n    \"publicIPAllocationMethod\": \"Dynamic\",\r\n    \"idleTimeoutInMinutes\":
-        4,\r\n    \"ipTags\": []\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
+        4,\r\n    \"ipTags\": [],\r\n    \"ddosSettings\": {\r\n      \"protectionMode\":
+        \"VirtualNetworkInherited\"\r\n    }\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
         \ \"sku\": {\r\n    \"name\": \"Basic\",\r\n    \"tier\": \"Regional\"\r\n
         \ }\r\n}"
     headers:
       azure-asyncnotification:
       - Enabled
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/df83efd1-f842-40a5-ad2b-edd11f291ca8?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/73631ed6-3d7d-4bd5-a0ae-3a1617534601?api-version=2022-05-01
       cache-control:
       - no-cache
       content-length:
-      - '657'
+      - '739'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:57:54 GMT
+      - Sat, 01 Oct 2022 19:37:50 GMT
       expires:
       - '-1'
       pragma:
@@ -96,9 +100,9 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - cc92c940-4223-4576-be6d-a0e76522f21a
+      - 539ea4ba-8d24-4611-b62b-7172304893c9
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1190'
+      - '1198'
     status:
       code: 201
       message: Created
@@ -116,9 +120,9 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) (AAZ) azsdk-python-core/1.24.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/df83efd1-f842-40a5-ad2b-edd11f291ca8?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/73631ed6-3d7d-4bd5-a0ae-3a1617534601?api-version=2022-05-01
   response:
     body:
       string: "{\r\n  \"status\": \"Succeeded\"\r\n}"
@@ -130,7 +134,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:57:55 GMT
+      - Sat, 01 Oct 2022 19:37:52 GMT
       expires:
       - '-1'
       pragma:
@@ -140,10 +144,14 @@ interactions:
       - Microsoft-HTTPAPI/2.0
       strict-transport-security:
       - max-age=31536000; includeSubDomains
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - cf4dd611-6b08-41ec-9ec2-4988c2eb8b38
+      - cc18f026-522f-420b-9842-858a81739d06
     status:
       code: 200
       message: OK
@@ -161,30 +169,31 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) (AAZ) azsdk-python-core/1.24.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1?api-version=2022-05-01
   response:
     body:
       string: "{\r\n  \"name\": \"pubip1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\",\r\n
-        \ \"etag\": \"W/\\\"57ee4134-f432-4cfa-8ce8-1abd35aa60ab\\\"\",\r\n  \"location\":
+        \ \"etag\": \"W/\\\"44cd7057-5f28-4ab7-9b4e-fb54a6f6318f\\\"\",\r\n  \"location\":
         \"westus\",\r\n  \"properties\": {\r\n    \"provisioningState\": \"Succeeded\",\r\n
-        \   \"resourceGuid\": \"28e57a32-e429-44fe-858b-b2272eb5ed25\",\r\n    \"publicIPAddressVersion\":
+        \   \"resourceGuid\": \"fced5847-b570-41a7-8810-839d0d7bfba4\",\r\n    \"publicIPAddressVersion\":
         \"IPv4\",\r\n    \"publicIPAllocationMethod\": \"Dynamic\",\r\n    \"idleTimeoutInMinutes\":
-        4,\r\n    \"ipTags\": []\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
+        4,\r\n    \"ipTags\": [],\r\n    \"ddosSettings\": {\r\n      \"protectionMode\":
+        \"VirtualNetworkInherited\"\r\n    }\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
         \ \"sku\": {\r\n    \"name\": \"Basic\",\r\n    \"tier\": \"Regional\"\r\n
         \ }\r\n}"
     headers:
       cache-control:
       - no-cache
       content-length:
-      - '658'
+      - '740'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:57:56 GMT
+      - Sat, 01 Oct 2022 19:37:52 GMT
       etag:
-      - W/"57ee4134-f432-4cfa-8ce8-1abd35aa60ab"
+      - W/"44cd7057-5f28-4ab7-9b4e-fb54a6f6318f"
       expires:
       - '-1'
       pragma:
@@ -194,10 +203,14 @@ interactions:
       - Microsoft-HTTPAPI/2.0
       strict-transport-security:
       - max-age=31536000; includeSubDomains
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 8ea0a3a9-08fc-4b47-9f5b-5f8c37c7cdd5
+      - d378ba48-8525-4959-8213-299552fb55e5
     status:
       code: 200
       message: OK
@@ -215,12 +228,13 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -229,21 +243,23 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:57:57 GMT
+      - Sat, 01 Oct 2022 19:37:53 GMT
       expires:
       - '-1'
       pragma:
       - no-cache
       strict-transport-security:
       - max-age=31536000; includeSubDomains
+      vary:
+      - Accept-Encoding
       x-content-type-options:
       - nosniff
     status:
       code: 200
       message: OK
 - request:
-    body: '{"location": "westus", "properties": {"publicIPAllocationMethod": "Dynamic",
-      "publicIPAddressVersion": "IPv4", "idleTimeoutInMinutes": 4}}'
+    body: '{"location": "westus", "properties": {"idleTimeoutInMinutes": 4, "publicIPAddressVersion":
+      "IPv4", "publicIPAllocationMethod": "Dynamic"}}'
     headers:
       Accept:
       - application/json
@@ -260,32 +276,33 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) (AAZ) azsdk-python-core/1.24.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2?api-version=2022-05-01
   response:
     body:
       string: "{\r\n  \"name\": \"pubip2\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2\",\r\n
-        \ \"etag\": \"W/\\\"6f28c52d-8249-4a38-9f29-11ce3c4ec503\\\"\",\r\n  \"location\":
+        \ \"etag\": \"W/\\\"0e94a95b-c884-4163-9823-d14dc49ff969\\\"\",\r\n  \"location\":
         \"westus\",\r\n  \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n
-        \   \"resourceGuid\": \"c8aa394e-92f5-4c5f-9d7b-cd4043398def\",\r\n    \"publicIPAddressVersion\":
+        \   \"resourceGuid\": \"5426c3b8-29c6-4ded-aa34-5023edf3f2f9\",\r\n    \"publicIPAddressVersion\":
         \"IPv4\",\r\n    \"publicIPAllocationMethod\": \"Dynamic\",\r\n    \"idleTimeoutInMinutes\":
-        4,\r\n    \"ipTags\": []\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
+        4,\r\n    \"ipTags\": [],\r\n    \"ddosSettings\": {\r\n      \"protectionMode\":
+        \"VirtualNetworkInherited\"\r\n    }\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
         \ \"sku\": {\r\n    \"name\": \"Basic\",\r\n    \"tier\": \"Regional\"\r\n
         \ }\r\n}"
     headers:
       azure-asyncnotification:
       - Enabled
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/df2af778-540c-4475-a9f9-7ec6477651cf?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/2006c6d1-0497-4af9-8172-81f67c647a23?api-version=2022-05-01
       cache-control:
       - no-cache
       content-length:
-      - '657'
+      - '739'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:02 GMT
+      - Sat, 01 Oct 2022 19:37:59 GMT
       expires:
       - '-1'
       pragma:
@@ -298,9 +315,9 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 24ca8940-ba62-4958-9110-d3b8db81906d
+      - e3a5d3be-145e-4c21-ba14-675d2f7d5ecf
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1192'
+      - '1198'
     status:
       code: 201
       message: Created
@@ -318,9 +335,9 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) (AAZ) azsdk-python-core/1.24.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/df2af778-540c-4475-a9f9-7ec6477651cf?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/2006c6d1-0497-4af9-8172-81f67c647a23?api-version=2022-05-01
   response:
     body:
       string: "{\r\n  \"status\": \"Succeeded\"\r\n}"
@@ -332,7 +349,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:05 GMT
+      - Sat, 01 Oct 2022 19:38:00 GMT
       expires:
       - '-1'
       pragma:
@@ -349,7 +366,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 1952a644-01b0-49a3-945b-621194e7bd86
+      - e64c3041-4159-4b2c-aa26-429bfd0d32b7
     status:
       code: 200
       message: OK
@@ -367,30 +384,31 @@ interactions:
       ParameterSetName:
       - -n -g
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) (AAZ) azsdk-python-core/1.24.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2?api-version=2022-05-01
   response:
     body:
       string: "{\r\n  \"name\": \"pubip2\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2\",\r\n
-        \ \"etag\": \"W/\\\"279c50c7-c230-4076-9137-6a9a2b532ae8\\\"\",\r\n  \"location\":
+        \ \"etag\": \"W/\\\"0facb694-688b-4dc9-9eb9-97fb86f95fe4\\\"\",\r\n  \"location\":
         \"westus\",\r\n  \"properties\": {\r\n    \"provisioningState\": \"Succeeded\",\r\n
-        \   \"resourceGuid\": \"c8aa394e-92f5-4c5f-9d7b-cd4043398def\",\r\n    \"publicIPAddressVersion\":
+        \   \"resourceGuid\": \"5426c3b8-29c6-4ded-aa34-5023edf3f2f9\",\r\n    \"publicIPAddressVersion\":
         \"IPv4\",\r\n    \"publicIPAllocationMethod\": \"Dynamic\",\r\n    \"idleTimeoutInMinutes\":
-        4,\r\n    \"ipTags\": []\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
+        4,\r\n    \"ipTags\": [],\r\n    \"ddosSettings\": {\r\n      \"protectionMode\":
+        \"VirtualNetworkInherited\"\r\n    }\r\n  },\r\n  \"type\": \"Microsoft.Network/publicIPAddresses\",\r\n
         \ \"sku\": {\r\n    \"name\": \"Basic\",\r\n    \"tier\": \"Regional\"\r\n
         \ }\r\n}"
     headers:
       cache-control:
       - no-cache
       content-length:
-      - '658'
+      - '740'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:09 GMT
+      - Sat, 01 Oct 2022 19:38:01 GMT
       etag:
-      - W/"279c50c7-c230-4076-9137-6a9a2b532ae8"
+      - W/"0facb694-688b-4dc9-9eb9-97fb86f95fe4"
       expires:
       - '-1'
       pragma:
@@ -407,7 +425,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 8d1bcaf9-4919-43cb-b3fb-3d884c6feb49
+      - 2df17ae6-705c-4909-9db7-7c433da264ea
     status:
       code: 200
       message: OK
@@ -425,12 +443,13 @@ interactions:
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -439,7 +458,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:10 GMT
+      - Sat, 01 Oct 2022 19:38:02 GMT
       expires:
       - '-1'
       pragma:
@@ -456,7 +475,7 @@ interactions:
 - request:
     body: '{"location": "westus", "tags": {}, "properties": {"addressSpace": {"addressPrefixes":
       ["10.0.0.0/16"]}, "dhcpOptions": {}, "subnets": [{"name": "GatewaySubnet", "properties":
-      {"addressPrefix": "10.0.0.0/24", "privateEndpointNetworkPolicies": "Enabled",
+      {"addressPrefix": "10.0.0.0/24", "privateEndpointNetworkPolicies": "Disabled",
       "privateLinkServiceNetworkPolicies": "Enabled"}}]}}'
     headers:
       Accept:
@@ -468,30 +487,31 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '304'
+      - '305'
       Content-Type:
       - application/json
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"myvnet1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1\",\r\n
-        \ \"etag\": \"W/\\\"e5f2c4fe-6c66-4477-92ab-8a1d723c7123\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"6e82ced9-13d6-4832-b7f6-9c6e0e00da4a\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworks\",\r\n  \"location\": \"westus\",\r\n
         \ \"tags\": {},\r\n  \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n
-        \   \"resourceGuid\": \"56d08b90-a132-4fff-9771-0e2a0af2ed5d\",\r\n    \"addressSpace\":
+        \   \"resourceGuid\": \"925508c6-1281-4b96-b004-f024f3c07f46\",\r\n    \"addressSpace\":
         {\r\n      \"addressPrefixes\": [\r\n        \"10.0.0.0/16\"\r\n      ]\r\n
         \   },\r\n    \"dhcpOptions\": {\r\n      \"dnsServers\": []\r\n    },\r\n
         \   \"subnets\": [\r\n      {\r\n        \"name\": \"GatewaySubnet\",\r\n
         \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\",\r\n
-        \       \"etag\": \"W/\\\"e5f2c4fe-6c66-4477-92ab-8a1d723c7123\\\"\",\r\n
+        \       \"etag\": \"W/\\\"6e82ced9-13d6-4832-b7f6-9c6e0e00da4a\\\"\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"addressPrefix\": \"10.0.0.0/24\",\r\n          \"delegations\":
-        [],\r\n          \"privateEndpointNetworkPolicies\": \"Enabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
+        [],\r\n          \"privateEndpointNetworkPolicies\": \"Disabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
         \"Enabled\"\r\n        },\r\n        \"type\": \"Microsoft.Network/virtualNetworks/subnets\"\r\n
         \     }\r\n    ],\r\n    \"virtualNetworkPeerings\": [],\r\n    \"enableDdosProtection\":
         false\r\n  }\r\n}"
@@ -499,15 +519,15 @@ interactions:
       azure-asyncnotification:
       - Enabled
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/3561923f-65ba-488d-97ce-8b82a9de919e?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/d06129ec-efa6-443e-a003-56b1513eeaf3?api-version=2022-01-01
       cache-control:
       - no-cache
       content-length:
-      - '1365'
+      - '1366'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:14 GMT
+      - Sat, 01 Oct 2022 19:38:08 GMT
       expires:
       - '-1'
       pragma:
@@ -520,9 +540,9 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 8fd332c5-7d08-4667-9712-6610a98dabd9
+      - 3201db44-1a5a-48ed-9f36-90765ccfe3aa
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1182'
+      - '1195'
     status:
       code: 201
       message: Created
@@ -540,9 +560,10 @@ interactions:
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/3561923f-65ba-488d-97ce-8b82a9de919e?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/d06129ec-efa6-443e-a003-56b1513eeaf3?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"status\": \"Succeeded\"\r\n}"
@@ -554,7 +575,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:18 GMT
+      - Sat, 01 Oct 2022 19:38:11 GMT
       expires:
       - '-1'
       pragma:
@@ -571,7 +592,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 09e86628-b13f-4563-a870-017b7b7c8478
+      - f001ba3a-4546-47ea-935e-f6b6497a92e6
     status:
       code: 200
       message: OK
@@ -589,24 +610,25 @@ interactions:
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"myvnet1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1\",\r\n
-        \ \"etag\": \"W/\\\"b62f7944-792b-4a61-b7fd-5ea57b8665c7\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"9ed2e67f-7a8f-405c-9438-2fb2d54a0f52\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworks\",\r\n  \"location\": \"westus\",\r\n
         \ \"tags\": {},\r\n  \"properties\": {\r\n    \"provisioningState\": \"Succeeded\",\r\n
-        \   \"resourceGuid\": \"56d08b90-a132-4fff-9771-0e2a0af2ed5d\",\r\n    \"addressSpace\":
+        \   \"resourceGuid\": \"925508c6-1281-4b96-b004-f024f3c07f46\",\r\n    \"addressSpace\":
         {\r\n      \"addressPrefixes\": [\r\n        \"10.0.0.0/16\"\r\n      ]\r\n
         \   },\r\n    \"dhcpOptions\": {\r\n      \"dnsServers\": []\r\n    },\r\n
         \   \"subnets\": [\r\n      {\r\n        \"name\": \"GatewaySubnet\",\r\n
         \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\",\r\n
-        \       \"etag\": \"W/\\\"b62f7944-792b-4a61-b7fd-5ea57b8665c7\\\"\",\r\n
+        \       \"etag\": \"W/\\\"9ed2e67f-7a8f-405c-9438-2fb2d54a0f52\\\"\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Succeeded\",\r\n
         \         \"addressPrefix\": \"10.0.0.0/24\",\r\n          \"delegations\":
-        [],\r\n          \"privateEndpointNetworkPolicies\": \"Enabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
+        [],\r\n          \"privateEndpointNetworkPolicies\": \"Disabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
         \"Enabled\"\r\n        },\r\n        \"type\": \"Microsoft.Network/virtualNetworks/subnets\"\r\n
         \     }\r\n    ],\r\n    \"virtualNetworkPeerings\": [],\r\n    \"enableDdosProtection\":
         false\r\n  }\r\n}"
@@ -614,13 +636,13 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '1367'
+      - '1368'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:18 GMT
+      - Sat, 01 Oct 2022 19:38:11 GMT
       etag:
-      - W/"b62f7944-792b-4a61-b7fd-5ea57b8665c7"
+      - W/"9ed2e67f-7a8f-405c-9438-2fb2d54a0f52"
       expires:
       - '-1'
       pragma:
@@ -637,7 +659,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - ef070d71-e2c1-4ebd-b3e7-0a83f12a030c
+      - b981f395-0c60-4265-8902-d8974bb9eaa6
     status:
       code: 200
       message: OK
@@ -655,12 +677,13 @@ interactions:
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -669,7 +692,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:19 GMT
+      - Sat, 01 Oct 2022 19:38:12 GMT
       expires:
       - '-1'
       pragma:
@@ -686,7 +709,7 @@ interactions:
 - request:
     body: '{"location": "westus", "tags": {}, "properties": {"addressSpace": {"addressPrefixes":
       ["10.1.0.0/16"]}, "dhcpOptions": {}, "subnets": [{"name": "GatewaySubnet", "properties":
-      {"addressPrefix": "10.1.0.0/24", "privateEndpointNetworkPolicies": "Enabled",
+      {"addressPrefix": "10.1.0.0/24", "privateEndpointNetworkPolicies": "Disabled",
       "privateLinkServiceNetworkPolicies": "Enabled"}}]}}'
     headers:
       Accept:
@@ -698,30 +721,31 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '304'
+      - '305'
       Content-Type:
       - application/json
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"myvnet2\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2\",\r\n
-        \ \"etag\": \"W/\\\"bc4965eb-93af-4d83-b910-7ff4f26f00d2\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"4b64ad42-0708-47c5-8144-eb6df65e31fc\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworks\",\r\n  \"location\": \"westus\",\r\n
         \ \"tags\": {},\r\n  \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n
-        \   \"resourceGuid\": \"54999bbc-e618-420f-94ed-fceda073bb5b\",\r\n    \"addressSpace\":
+        \   \"resourceGuid\": \"cb2b1441-8997-4094-b25d-b03bac088115\",\r\n    \"addressSpace\":
         {\r\n      \"addressPrefixes\": [\r\n        \"10.1.0.0/16\"\r\n      ]\r\n
         \   },\r\n    \"dhcpOptions\": {\r\n      \"dnsServers\": []\r\n    },\r\n
         \   \"subnets\": [\r\n      {\r\n        \"name\": \"GatewaySubnet\",\r\n
         \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2/subnets/GatewaySubnet\",\r\n
-        \       \"etag\": \"W/\\\"bc4965eb-93af-4d83-b910-7ff4f26f00d2\\\"\",\r\n
+        \       \"etag\": \"W/\\\"4b64ad42-0708-47c5-8144-eb6df65e31fc\\\"\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"addressPrefix\": \"10.1.0.0/24\",\r\n          \"delegations\":
-        [],\r\n          \"privateEndpointNetworkPolicies\": \"Enabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
+        [],\r\n          \"privateEndpointNetworkPolicies\": \"Disabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
         \"Enabled\"\r\n        },\r\n        \"type\": \"Microsoft.Network/virtualNetworks/subnets\"\r\n
         \     }\r\n    ],\r\n    \"virtualNetworkPeerings\": [],\r\n    \"enableDdosProtection\":
         false\r\n  }\r\n}"
@@ -729,15 +753,15 @@ interactions:
       azure-asyncnotification:
       - Enabled
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/75ff6b70-b4bc-4314-a928-b88c275f6351?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/70376472-7712-439b-9448-b471a1562a8f?api-version=2022-01-01
       cache-control:
       - no-cache
       content-length:
-      - '1365'
+      - '1366'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:23 GMT
+      - Sat, 01 Oct 2022 19:38:17 GMT
       expires:
       - '-1'
       pragma:
@@ -750,9 +774,9 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 7b3ae2b5-3734-460a-a3e4-e614273c61fa
+      - 795cfa3c-50d3-4a99-a849-938a01d49c5c
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1191'
+      - '1194'
     status:
       code: 201
       message: Created
@@ -770,9 +794,10 @@ interactions:
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/75ff6b70-b4bc-4314-a928-b88c275f6351?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/70376472-7712-439b-9448-b471a1562a8f?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"status\": \"Succeeded\"\r\n}"
@@ -784,7 +809,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:26 GMT
+      - Sat, 01 Oct 2022 19:38:21 GMT
       expires:
       - '-1'
       pragma:
@@ -801,7 +826,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - ca9a541a-eef5-4d96-abe8-cb129170f2f3
+      - 7ac0b63a-aa77-4f79-a366-0bb381397d0d
     status:
       code: 200
       message: OK
@@ -819,24 +844,25 @@ interactions:
       ParameterSetName:
       - -g -n --subnet-name --address-prefix
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"myvnet2\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2\",\r\n
-        \ \"etag\": \"W/\\\"3e80f377-77f9-4720-9186-1170e50222b0\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"e337ce0d-0db9-4064-ae91-f6e856299d50\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworks\",\r\n  \"location\": \"westus\",\r\n
         \ \"tags\": {},\r\n  \"properties\": {\r\n    \"provisioningState\": \"Succeeded\",\r\n
-        \   \"resourceGuid\": \"54999bbc-e618-420f-94ed-fceda073bb5b\",\r\n    \"addressSpace\":
+        \   \"resourceGuid\": \"cb2b1441-8997-4094-b25d-b03bac088115\",\r\n    \"addressSpace\":
         {\r\n      \"addressPrefixes\": [\r\n        \"10.1.0.0/16\"\r\n      ]\r\n
         \   },\r\n    \"dhcpOptions\": {\r\n      \"dnsServers\": []\r\n    },\r\n
         \   \"subnets\": [\r\n      {\r\n        \"name\": \"GatewaySubnet\",\r\n
         \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2/subnets/GatewaySubnet\",\r\n
-        \       \"etag\": \"W/\\\"3e80f377-77f9-4720-9186-1170e50222b0\\\"\",\r\n
+        \       \"etag\": \"W/\\\"e337ce0d-0db9-4064-ae91-f6e856299d50\\\"\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Succeeded\",\r\n
         \         \"addressPrefix\": \"10.1.0.0/24\",\r\n          \"delegations\":
-        [],\r\n          \"privateEndpointNetworkPolicies\": \"Enabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
+        [],\r\n          \"privateEndpointNetworkPolicies\": \"Disabled\",\r\n          \"privateLinkServiceNetworkPolicies\":
         \"Enabled\"\r\n        },\r\n        \"type\": \"Microsoft.Network/virtualNetworks/subnets\"\r\n
         \     }\r\n    ],\r\n    \"virtualNetworkPeerings\": [],\r\n    \"enableDdosProtection\":
         false\r\n  }\r\n}"
@@ -844,13 +870,13 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '1367'
+      - '1368'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:27 GMT
+      - Sat, 01 Oct 2022 19:38:21 GMT
       etag:
-      - W/"3e80f377-77f9-4720-9186-1170e50222b0"
+      - W/"e337ce0d-0db9-4064-ae91-f6e856299d50"
       expires:
       - '-1'
       pragma:
@@ -867,7 +893,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - f4ba6390-1c25-4da8-a53e-4f803f368024
+      - c8b69ea7-506c-4fe4-92f5-e0d70c68a57a
     status:
       code: 200
       message: OK
@@ -886,12 +912,13 @@ interactions:
       - -g -n --vnet --public-ip-address --vpn-gateway-generation --address-prefixes
         --no-wait
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -900,7 +927,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:28 GMT
+      - Sat, 01 Oct 2022 19:38:22 GMT
       expires:
       - '-1'
       pragma:
@@ -938,35 +965,37 @@ interactions:
       - -g -n --vnet --public-ip-address --vpn-gateway-generation --address-prefixes
         --no-wait
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"0eabc27a-0682-4335-8969-d84c6dc54e99\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"cf744f69-095f-42dd-8462-b2b5dfadf674\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"0eabc27a-0682-4335-8969-d84c6dc54e99\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"cf744f69-095f-42dd-8462-b2b5dfadf674\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
         {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
         [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
@@ -977,15 +1006,15 @@ interactions:
       azure-asyncnotification:
       - Enabled
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/3d3da11c-26fa-46b9-934f-fd4ca8fdd2e6?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/25a1bf7a-3caf-4ed8-9c25-308427fc2e27?api-version=2022-01-01
       cache-control:
       - no-cache
       content-length:
-      - '2839'
+      - '2964'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:33 GMT
+      - Sat, 01 Oct 2022 19:38:27 GMT
       expires:
       - '-1'
       pragma:
@@ -998,9 +1027,9 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - e6521fb4-9c92-4418-97d1-5f72b6e34bb2
+      - 5b2843f6-293b-4ec9-9803-4b8e739732de
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1189'
+      - '1198'
     status:
       code: 201
       message: Created
@@ -1018,12 +1047,13 @@ interactions:
       ParameterSetName:
       - -g -n --vnet --public-ip-address --vpn-gateway-generation --no-wait
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -1032,7 +1062,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:34 GMT
+      - Sat, 01 Oct 2022 19:38:29 GMT
       expires:
       - '-1'
       pragma:
@@ -1068,37 +1098,38 @@ interactions:
       ParameterSetName:
       - -g -n --vnet --public-ip-address --vpn-gateway-generation --no-wait
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway2\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2\",\r\n
-        \ \"etag\": \"W/\\\"0a5ebca3-c1b2-4956-bd67-be326c30bb8c\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"b6732cbd-db66-46b8-8407-cd1c3898744a\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"7d58af21-695f-481b-9dcd-ea0c4f52864a\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"0a5ebca3-c1b2-4956-bd67-be326c30bb8c\\\"\",\r\n
+        \"c617d36a-3c9c-4be2-8867-c9d5f560767d\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"b6732cbd-db66-46b8-8407-cd1c3898744a\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientProtocols\":
-        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
-        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
-        [],\r\n      \"radiusServers\": [],\r\n      \"vpnClientIpsecPolicies\": []\r\n
-        \   },\r\n    \"bgpSettings\": {\r\n      \"asn\": 0,\r\n      \"peerWeight\":
-        0,\r\n      \"bgpPeeringAddresses\": [\r\n        {\r\n          \"ipconfigurationId\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\":
+        [],\r\n      \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
+        [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
+        {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
+        [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
         \         \"defaultBgpIpAddresses\": [],\r\n          \"customBgpIpAddresses\":
         []\r\n        }\r\n      ]\r\n    },\r\n    \"vpnGatewayGeneration\": \"Generation1\"\r\n
         \ }\r\n}"
@@ -1106,15 +1137,15 @@ interactions:
       azure-asyncnotification:
       - Enabled
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/f7c773ad-8dfc-4f89-a826-829f2a194677?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operations/53b02b28-7760-499e-bf1a-4d4008f2a4d8?api-version=2022-01-01
       cache-control:
       - no-cache
       content-length:
-      - '2727'
+      - '2852'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:38 GMT
+      - Sat, 01 Oct 2022 19:38:33 GMT
       expires:
       - '-1'
       pragma:
@@ -1127,9 +1158,9 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - ee012645-4311-46c0-971c-6518cb3cf90c
+      - 68c69c03-2126-4f1a-bf67-8b72122294e2
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1192'
+      - '1193'
     status:
       code: 201
       message: Created
@@ -1147,35 +1178,37 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"0eabc27a-0682-4335-8969-d84c6dc54e99\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"0eabc27a-0682-4335-8969-d84c6dc54e99\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
         {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
         [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
@@ -1186,11 +1219,11 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '2839'
+      - '2964'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:58:39 GMT
+      - Sat, 01 Oct 2022 19:38:34 GMT
       expires:
       - '-1'
       pragma:
@@ -1207,7 +1240,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - eeb1940b-d179-4c46-ac8f-552a40130366
+      - c4618e26-37a5-41f5-88a8-a2bfc9758bc4
     status:
       code: 200
       message: OK
@@ -1225,35 +1258,37 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
         {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
         [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
@@ -1264,11 +1299,11 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '2839'
+      - '2964'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:59:10 GMT
+      - Sat, 01 Oct 2022 19:39:04 GMT
       expires:
       - '-1'
       pragma:
@@ -1285,7 +1320,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - d07e41ee-9959-442a-b566-d7b3b36b9e09
+      - 8ec82402-87d8-4b30-8068-5b2312d2842d
     status:
       code: 200
       message: OK
@@ -1303,35 +1338,37 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
         {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
         [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
@@ -1342,11 +1379,11 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '2839'
+      - '2964'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 13:59:40 GMT
+      - Sat, 01 Oct 2022 19:39:34 GMT
       expires:
       - '-1'
       pragma:
@@ -1363,7 +1400,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 06ebf4e3-49aa-4c36-8bda-28dcd1b23aba
+      - 1a98533b-caa0-44f7-9e13-ab939e53f493
     status:
       code: 200
       message: OK
@@ -1381,35 +1418,37 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
         {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
         [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
@@ -1420,11 +1459,11 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '2839'
+      - '2964'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:00:11 GMT
+      - Sat, 01 Oct 2022 19:40:05 GMT
       expires:
       - '-1'
       pragma:
@@ -1441,7 +1480,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 036897eb-7dc5-400d-9a3a-7318c1dfa079
+      - 1fec22e9-ed20-4089-8e61-a243bc6a4362
     status:
       code: 200
       message: OK
@@ -1459,35 +1498,37 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
         {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
         [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
@@ -1498,11 +1539,11 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '2839'
+      - '2964'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:00:41 GMT
+      - Sat, 01 Oct 2022 19:40:36 GMT
       expires:
       - '-1'
       pragma:
@@ -1519,7 +1560,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 87bc6425-e599-4b4f-98dc-4ccc96e5b758
+      - 8c9aafa3-5718-42da-ae95-1ed202e11732
     status:
       code: 200
       message: OK
@@ -1537,35 +1578,37 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"6af10eda-4f49-48bf-b6f5-e676cc060230\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
         {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
         [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
@@ -1576,11 +1619,11 @@ interactions:
       cache-control:
       - no-cache
       content-length:
-      - '2839'
+      - '2964'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:01:11 GMT
+      - Sat, 01 Oct 2022 19:41:06 GMT
       expires:
       - '-1'
       pragma:
@@ -1597,7 +1640,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 200ed54c-3979-4dba-861d-a99e14e0ae11
+      - ce438a5b-9b40-47f1-a4ce-95955f6e8242
     status:
       code: 200
       message: OK
@@ -1615,113 +1658,37 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n  \"type\":
-        \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
-        \ \"properties\": {\r\n    \"provisioningState\": \"Updating\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"9a2ecb9e-59f7-4c10-8194-f2fc8fe24a29\\\"\",\r\n
-        \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
-        \       \"properties\": {\r\n          \"provisioningState\": \"Updating\",\r\n
-        \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
-        {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
-        \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
-        \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"radiusServers\":
-        [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
-        {\r\n      \"asn\": 0,\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
-        [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \         \"defaultBgpIpAddresses\": [],\r\n          \"customBgpIpAddresses\":
-        []\r\n        }\r\n      ]\r\n    },\r\n    \"vpnGatewayGeneration\": \"Generation1\"\r\n
-        \ }\r\n}"
-    headers:
-      cache-control:
-      - no-cache
-      content-length:
-      - '2839'
-      content-type:
-      - application/json; charset=utf-8
-      date:
-      - Thu, 12 May 2022 14:01:43 GMT
-      expires:
-      - '-1'
-      pragma:
-      - no-cache
-      server:
-      - Microsoft-HTTPAPI/2.0
-      - Microsoft-HTTPAPI/2.0
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      transfer-encoding:
-      - chunked
-      vary:
-      - Accept-Encoding
-      x-content-type-options:
-      - nosniff
-      x-ms-arm-service-request-id:
-      - 6a4ede62-8af0-4b38-b637-d045fe64c2c0
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      CommandName:
-      - network vnet-gateway wait
-      Connection:
-      - keep-alive
-      ParameterSetName:
-      - -g -n --created
-      User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
-    method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1?api-version=2021-08-01
-  response:
-    body:
-      string: "{\r\n  \"name\": \"gateway1\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1\",\r\n
-        \ \"etag\": \"W/\\\"80814406-4a99-4976-bc4a-0eab2c1f576b\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"1e217fc9-2c32-422f-8afa-f4ffdb6f437b\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Succeeded\",\r\n    \"resourceGuid\":
-        \"5752bb8d-ba4a-444c-a61c-60f213cf4613\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"80814406-4a99-4976-bc4a-0eab2c1f576b\\\"\",\r\n
+        \"3f3fee17-cbef-4981-96fe-83c838e26216\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"1e217fc9-2c32-422f-8afa-f4ffdb6f437b\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Succeeded\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip1\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet1/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"vpnClientConfiguration\": {\r\n      \"vpnClientAddressPool\":
-        {\r\n        \"addressPrefixes\": [\r\n          \"201.169.0.0/16\"\r\n        ]\r\n
-        \     },\r\n      \"vpnClientProtocols\": [\r\n        \"SSTP\"\r\n      ],\r\n
-        \     \"vpnAuthenticationTypes\": [],\r\n      \"vpnClientRootCertificates\":
-        [],\r\n      \"vpnClientRevokedCertificates\": [],\r\n      \"vpnClientConnectionHealth\":
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"vpnClientConfiguration\":
+        {\r\n      \"vpnClientAddressPool\": {\r\n        \"addressPrefixes\": [\r\n
+        \         \"201.169.0.0/16\"\r\n        ]\r\n      },\r\n      \"vpnClientProtocols\":
+        [\r\n        \"SSTP\"\r\n      ],\r\n      \"vpnAuthenticationTypes\": [],\r\n
+        \     \"vpnClientRootCertificates\": [],\r\n      \"vpnClientRevokedCertificates\":
+        [],\r\n      \"vngClientConnectionConfigurations\": [],\r\n      \"vpnClientConnectionHealth\":
         {\r\n        \"vpnClientConnectionsCount\": 0,\r\n        \"totalIngressBytesTransferred\":
         0,\r\n        \"totalEgressBytesTransferred\": 0\r\n      },\r\n      \"radiusServers\":
         [],\r\n      \"vpnClientIpsecPolicies\": []\r\n    },\r\n    \"bgpSettings\":
@@ -1730,17 +1697,17 @@ interactions:
         \         \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/ipConfigurations/vnetGatewayConfig0\",\r\n
         \         \"defaultBgpIpAddresses\": [\r\n            \"10.0.0.254\"\r\n          ],\r\n
         \         \"customBgpIpAddresses\": [],\r\n          \"tunnelIpAddresses\":
-        [\r\n            \"13.64.139.186\"\r\n          ]\r\n        }\r\n      ]\r\n
+        [\r\n            \"20.245.107.206\"\r\n          ]\r\n        }\r\n      ]\r\n
         \   },\r\n    \"vpnGatewayGeneration\": \"Generation1\"\r\n  }\r\n}"
     headers:
       cache-control:
       - no-cache
       content-length:
-      - '3177'
+      - '3303'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:02:14 GMT
+      - Sat, 01 Oct 2022 19:41:37 GMT
       expires:
       - '-1'
       pragma:
@@ -1757,7 +1724,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - 2985c17a-c535-46c6-90ea-001d7d6abc3c
+      - 8be0e61f-1111-4bcd-a4df-ff699ddec9e1
     status:
       code: 200
       message: OK
@@ -1775,46 +1742,48 @@ interactions:
       ParameterSetName:
       - -g -n --created
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2?api-version=2022-01-01
   response:
     body:
       string: "{\r\n  \"name\": \"gateway2\",\r\n  \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2\",\r\n
-        \ \"etag\": \"W/\\\"bf1eab0c-e4ab-4dd0-8c39-7b0975d0fca7\\\"\",\r\n  \"type\":
+        \ \"etag\": \"W/\\\"fe539f5e-b7df-4a53-b942-0b24157671a9\\\"\",\r\n  \"type\":
         \"Microsoft.Network/virtualNetworkGateways\",\r\n  \"location\": \"westus\",\r\n
         \ \"properties\": {\r\n    \"provisioningState\": \"Succeeded\",\r\n    \"resourceGuid\":
-        \"7d58af21-695f-481b-9dcd-ea0c4f52864a\",\r\n    \"packetCaptureDiagnosticState\":
-        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"ipConfigurations\":
-        [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n        \"id\":
-        \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
-        \       \"etag\": \"W/\\\"bf1eab0c-e4ab-4dd0-8c39-7b0975d0fca7\\\"\",\r\n
+        \"c617d36a-3c9c-4be2-8867-c9d5f560767d\",\r\n    \"packetCaptureDiagnosticState\":
+        \"None\",\r\n    \"enablePrivateIpAddress\": false,\r\n    \"isMigrateToCSES\":
+        false,\r\n    \"ipConfigurations\": [\r\n      {\r\n        \"name\": \"vnetGatewayConfig0\",\r\n
+        \       \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \       \"etag\": \"W/\\\"fe539f5e-b7df-4a53-b942-0b24157671a9\\\"\",\r\n
         \       \"type\": \"Microsoft.Network/virtualNetworkGateways/ipConfigurations\",\r\n
         \       \"properties\": {\r\n          \"provisioningState\": \"Succeeded\",\r\n
         \         \"privateIPAllocationMethod\": \"Dynamic\",\r\n          \"publicIPAddress\":
         {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/publicIPAddresses/pubip2\"\r\n
         \         },\r\n          \"subnet\": {\r\n            \"id\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworks/myvnet2/subnets/GatewaySubnet\"\r\n
         \         }\r\n        }\r\n      }\r\n    ],\r\n    \"natRules\": [],\r\n
-        \   \"enableBgpRouteTranslationForNat\": false,\r\n    \"disableIPSecReplayProtection\":
-        false,\r\n    \"sku\": {\r\n      \"name\": \"Basic\",\r\n      \"tier\":
-        \"Basic\",\r\n      \"capacity\": 2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n
-        \   \"vpnType\": \"RouteBased\",\r\n    \"enableBgp\": false,\r\n    \"activeActive\":
-        false,\r\n    \"bgpSettings\": {\r\n      \"asn\": 65515,\r\n      \"bgpPeeringAddress\":
-        \"10.1.0.254\",\r\n      \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\":
-        [\r\n        {\r\n          \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
+        \   \"virtualNetworkGatewayPolicyGroups\": [],\r\n    \"enableBgpRouteTranslationForNat\":
+        false,\r\n    \"disableIPSecReplayProtection\": false,\r\n    \"sku\": {\r\n
+        \     \"name\": \"Basic\",\r\n      \"tier\": \"Basic\",\r\n      \"capacity\":
+        2\r\n    },\r\n    \"gatewayType\": \"Vpn\",\r\n    \"vpnType\": \"RouteBased\",\r\n
+        \   \"enableBgp\": false,\r\n    \"activeActive\": false,\r\n    \"bgpSettings\":
+        {\r\n      \"asn\": 65515,\r\n      \"bgpPeeringAddress\": \"10.1.0.254\",\r\n
+        \     \"peerWeight\": 0,\r\n      \"bgpPeeringAddresses\": [\r\n        {\r\n
+        \         \"ipconfigurationId\": \"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2/ipConfigurations/vnetGatewayConfig0\",\r\n
         \         \"defaultBgpIpAddresses\": [\r\n            \"10.1.0.254\"\r\n          ],\r\n
         \         \"customBgpIpAddresses\": [],\r\n          \"tunnelIpAddresses\":
-        [\r\n            \"20.237.193.213\"\r\n          ]\r\n        }\r\n      ]\r\n
+        [\r\n            \"20.253.231.142\"\r\n          ]\r\n        }\r\n      ]\r\n
         \   },\r\n    \"vpnGatewayGeneration\": \"Generation1\"\r\n  }\r\n}"
     headers:
       cache-control:
       - no-cache
       content-length:
-      - '2609'
+      - '2686'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:02:15 GMT
+      - Sat, 01 Oct 2022 19:41:38 GMT
       expires:
       - '-1'
       pragma:
@@ -1831,7 +1800,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - c937c493-f76a-4768-8cfa-73cea939a3df
+      - b7667eec-2ffc-4096-8bee-95d1d1ef9ff6
     status:
       code: 200
       message: OK
@@ -1849,12 +1818,13 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway1 --vnet-gateway2
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -1863,7 +1833,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:02:17 GMT
+      - Sat, 01 Oct 2022 19:41:38 GMT
       expires:
       - '-1'
       pragma:
@@ -1905,23 +1875,24 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway1 --vnet-gateway2
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: PUT
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_NPzJ3QxZ7l6jNrqAVbwqoUqbi5Gc1yRi","name":"vpn_connection_deploy_NPzJ3QxZ7l6jNrqAVbwqoUqbi5Gc1yRi","type":"Microsoft.Resources/deployments","properties":{"templateHash":"2124309124613312630","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Accepted","timestamp":"2022-05-12T14:02:21.8167202Z","duration":"PT0.0003711S","correlationId":"5bab4529-2b1c-42c8-b03c-0c06a2020c51","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[]}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_CqLuoJYH1NZ6ikrI7YfrDcDE97h0f7ti","name":"vpn_connection_deploy_CqLuoJYH1NZ6ikrI7YfrDcDE97h0f7ti","type":"Microsoft.Resources/deployments","properties":{"templateHash":"1215998618124935991","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Accepted","timestamp":"2022-10-01T19:41:45.7372537Z","duration":"PT0.000092S","correlationId":"585247ad-59d8-4b81-a45c-7dd7d6d22428","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[]}}'
     headers:
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_NPzJ3QxZ7l6jNrqAVbwqoUqbi5Gc1yRi/operationStatuses/08585492427459892577?api-version=2021-04-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_CqLuoJYH1NZ6ikrI7YfrDcDE97h0f7ti/operationStatuses/08585369535822891660?api-version=2021-04-01
       cache-control:
       - no-cache
       content-length:
-      - '742'
+      - '741'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:02:22 GMT
+      - Sat, 01 Oct 2022 19:41:47 GMT
       expires:
       - '-1'
       pragma:
@@ -1931,7 +1902,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1188'
+      - '1196'
     status:
       code: 201
       message: Created
@@ -1949,9 +1920,10 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway1 --vnet-gateway2
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585492427459892577?api-version=2021-04-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585369535822891660?api-version=2021-04-01
   response:
     body:
       string: '{"status":"Running"}'
@@ -1963,7 +1935,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:02:53 GMT
+      - Sat, 01 Oct 2022 19:42:17 GMT
       expires:
       - '-1'
       pragma:
@@ -1991,9 +1963,53 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway1 --vnet-gateway2
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585492427459892577?api-version=2021-04-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585369535822891660?api-version=2021-04-01
+  response:
+    body:
+      string: '{"status":"Running"}'
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '20'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Sat, 01 Oct 2022 19:42:48 GMT
+      expires:
+      - '-1'
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Accept-Encoding
+      x-content-type-options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - network vpn-connection create
+      Connection:
+      - keep-alive
+      ParameterSetName:
+      - -n -g --shared-key --vnet-gateway1 --vnet-gateway2
+      User-Agent:
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
+    method: GET
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585369535822891660?api-version=2021-04-01
   response:
     body:
       string: '{"status":"Succeeded"}'
@@ -2005,7 +2021,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:03:24 GMT
+      - Sat, 01 Oct 2022 19:43:18 GMT
       expires:
       - '-1'
       pragma:
@@ -2033,21 +2049,22 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway1 --vnet-gateway2
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_NPzJ3QxZ7l6jNrqAVbwqoUqbi5Gc1yRi","name":"vpn_connection_deploy_NPzJ3QxZ7l6jNrqAVbwqoUqbi5Gc1yRi","type":"Microsoft.Resources/deployments","properties":{"templateHash":"2124309124613312630","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Succeeded","timestamp":"2022-05-12T14:03:05.0281011Z","duration":"PT43.211752S","correlationId":"5bab4529-2b1c-42c8-b03c-0c06a2020c51","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[],"outputs":{"resource":{"type":"Object","value":{"provisioningState":"Succeeded","resourceGuid":"a0c8209a-8350-4fb6-841c-e39d0697463c","virtualNetworkGateway1":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1"},"virtualNetworkGateway2":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2"},"connectionType":"Vnet2Vnet","connectionProtocol":"IKEv2","routingWeight":10,"sharedKey":"123","enableBgp":false,"useLocalAzureIpAddress":false,"trafficSelectorPolicies":[],"connectionStatus":"Unknown","ingressBytesTransferred":0,"egressBytesTransferred":0,"dpdTimeoutSeconds":0,"connectionMode":"Default"}}},"outputResources":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/connections/conn1to2"}]}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_CqLuoJYH1NZ6ikrI7YfrDcDE97h0f7ti","name":"vpn_connection_deploy_CqLuoJYH1NZ6ikrI7YfrDcDE97h0f7ti","type":"Microsoft.Resources/deployments","properties":{"templateHash":"1215998618124935991","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Succeeded","timestamp":"2022-10-01T19:43:10.3359929Z","duration":"PT1M24.5988312S","correlationId":"585247ad-59d8-4b81-a45c-7dd7d6d22428","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[],"outputs":{"resource":{"type":"Object","value":{"provisioningState":"Succeeded","resourceGuid":"3b8a815e-3de5-48dd-a982-f486aa0e8dd9","virtualNetworkGateway1":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1"},"virtualNetworkGateway2":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2"},"connectionType":"Vnet2Vnet","connectionProtocol":"IKEv2","routingWeight":10,"sharedKey":"123","enableBgp":false,"useLocalAzureIpAddress":false,"trafficSelectorPolicies":[],"connectionStatus":"Unknown","ingressBytesTransferred":0,"egressBytesTransferred":0,"dpdTimeoutSeconds":0,"connectionMode":"Default"}}},"outputResources":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/connections/conn1to2"}]}}'
     headers:
       cache-control:
       - no-cache
       content-length:
-      - '1797'
+      - '1800'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:03:25 GMT
+      - Sat, 01 Oct 2022 19:43:19 GMT
       expires:
       - '-1'
       pragma:
@@ -2075,12 +2092,13 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway2 --vnet-gateway1
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-05-12T13:57:48Z"},"properties":{"provisioningState":"Succeeded"}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001","name":"cli_test_vpn_gateway_disconnect_connects_000001","type":"Microsoft.Resources/resourceGroups","location":"westus","tags":{"product":"azurecli","cause":"automation","date":"2022-10-01T19:37:42Z"},"properties":{"provisioningState":"Succeeded"}}'
     headers:
       cache-control:
       - no-cache
@@ -2089,7 +2107,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:03:25 GMT
+      - Sat, 01 Oct 2022 19:43:20 GMT
       expires:
       - '-1'
       pragma:
@@ -2131,23 +2149,24 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway2 --vnet-gateway1
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: PUT
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_Yj4x1icyQhy0qQdJdkTBKggWxmUlMJ9h","name":"vpn_connection_deploy_Yj4x1icyQhy0qQdJdkTBKggWxmUlMJ9h","type":"Microsoft.Resources/deployments","properties":{"templateHash":"3130629374366047334","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Accepted","timestamp":"2022-05-12T14:03:30.7150596Z","duration":"PT0.0002915S","correlationId":"6182f9c6-9919-48d9-955b-7dcccb50be56","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[]}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_b2z4Qzvq1idrmvbfOtXlOHj1hEwfygDc","name":"vpn_connection_deploy_b2z4Qzvq1idrmvbfOtXlOHj1hEwfygDc","type":"Microsoft.Resources/deployments","properties":{"templateHash":"17372325264385577837","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Accepted","timestamp":"2022-10-01T19:43:27.3721215Z","duration":"PT0.0005635S","correlationId":"97539a75-660e-45a1-8f8d-b0f1f7a97687","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[]}}'
     headers:
       azure-asyncoperation:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_Yj4x1icyQhy0qQdJdkTBKggWxmUlMJ9h/operationStatuses/08585492426769438657?api-version=2021-04-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_b2z4Qzvq1idrmvbfOtXlOHj1hEwfygDc/operationStatuses/08585369534791164396?api-version=2021-04-01
       cache-control:
       - no-cache
       content-length:
-      - '742'
+      - '743'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:03:32 GMT
+      - Sat, 01 Oct 2022 19:43:28 GMT
       expires:
       - '-1'
       pragma:
@@ -2157,7 +2176,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1188'
+      - '1199'
     status:
       code: 201
       message: Created
@@ -2175,9 +2194,10 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway2 --vnet-gateway1
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585492426769438657?api-version=2021-04-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585369534791164396?api-version=2021-04-01
   response:
     body:
       string: '{"status":"Running"}'
@@ -2189,7 +2209,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:04:02 GMT
+      - Sat, 01 Oct 2022 19:43:59 GMT
       expires:
       - '-1'
       pragma:
@@ -2217,51 +2237,10 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway2 --vnet-gateway1
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585492426769438657?api-version=2021-04-01
-  response:
-    body:
-      string: '{"status":"Running"}'
-    headers:
-      cache-control:
-      - no-cache
-      content-length:
-      - '20'
-      content-type:
-      - application/json; charset=utf-8
-      date:
-      - Thu, 12 May 2022 14:04:33 GMT
-      expires:
-      - '-1'
-      pragma:
-      - no-cache
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Accept-Encoding
-      x-content-type-options:
-      - nosniff
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      CommandName:
-      - network vpn-connection create
-      Connection:
-      - keep-alive
-      ParameterSetName:
-      - -n -g --shared-key --vnet-gateway2 --vnet-gateway1
-      User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
-    method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585492426769438657?api-version=2021-04-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment/operationStatuses/08585369534791164396?api-version=2021-04-01
   response:
     body:
       string: '{"status":"Succeeded"}'
@@ -2273,7 +2252,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:05:03 GMT
+      - Sat, 01 Oct 2022 19:44:29 GMT
       expires:
       - '-1'
       pragma:
@@ -2301,21 +2280,22 @@ interactions:
       ParameterSetName:
       - -n -g --shared-key --vnet-gateway2 --vnet-gateway1
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-resource/21.1.0b1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2021-04-01
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_Yj4x1icyQhy0qQdJdkTBKggWxmUlMJ9h","name":"vpn_connection_deploy_Yj4x1icyQhy0qQdJdkTBKggWxmUlMJ9h","type":"Microsoft.Resources/deployments","properties":{"templateHash":"3130629374366047334","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Succeeded","timestamp":"2022-05-12T14:04:53.4562118Z","duration":"PT1M22.7414437S","correlationId":"6182f9c6-9919-48d9-955b-7dcccb50be56","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[],"outputs":{"resource":{"type":"Object","value":{"provisioningState":"Succeeded","resourceGuid":"26512a71-de9e-447b-9c57-30b5b717b106","virtualNetworkGateway1":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2"},"virtualNetworkGateway2":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1"},"connectionType":"Vnet2Vnet","connectionProtocol":"IKEv2","routingWeight":10,"sharedKey":"123","enableBgp":false,"useLocalAzureIpAddress":false,"trafficSelectorPolicies":[],"connectionStatus":"Unknown","ingressBytesTransferred":0,"egressBytesTransferred":0,"dpdTimeoutSeconds":0,"connectionMode":"Default"}}},"outputResources":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/connections/conn2to1"}]}}'
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Resources/deployments/vpn_connection_deploy_b2z4Qzvq1idrmvbfOtXlOHj1hEwfygDc","name":"vpn_connection_deploy_b2z4Qzvq1idrmvbfOtXlOHj1hEwfygDc","type":"Microsoft.Resources/deployments","properties":{"templateHash":"17372325264385577837","parameters":{"sharedKey":{"type":"SecureString"}},"mode":"Incremental","provisioningState":"Succeeded","timestamp":"2022-10-01T19:44:12.593609Z","duration":"PT45.222051S","correlationId":"97539a75-660e-45a1-8f8d-b0f1f7a97687","providers":[{"namespace":"Microsoft.Network","resourceTypes":[{"resourceType":"connections","locations":["westus"]}]}],"dependencies":[],"outputs":{"resource":{"type":"Object","value":{"provisioningState":"Succeeded","resourceGuid":"d1c9bf3f-e16b-4cda-9297-860895d05a19","virtualNetworkGateway1":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway2"},"virtualNetworkGateway2":{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1"},"connectionType":"Vnet2Vnet","connectionProtocol":"IKEv2","routingWeight":10,"sharedKey":"123","enableBgp":false,"useLocalAzureIpAddress":false,"trafficSelectorPolicies":[],"connectionStatus":"Unknown","ingressBytesTransferred":0,"egressBytesTransferred":0,"dpdTimeoutSeconds":0,"connectionMode":"Default"}}},"outputResources":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/connections/conn2to1"}]}}'
     headers:
       cache-control:
       - no-cache
       content-length:
-      - '1800'
+      - '1797'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:05:04 GMT
+      - Sat, 01 Oct 2022 19:44:30 GMT
       expires:
       - '-1'
       pragma:
@@ -2347,23 +2327,26 @@ interactions:
       ParameterSetName:
       - -g -n --vpn-connections
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: POST
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/disconnectVirtualNetworkGatewayVpnConnections?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_vpn_gateway_disconnect_connects_000001/providers/Microsoft.Network/virtualNetworkGateways/gateway1/disconnectVirtualNetworkGatewayVpnConnections?api-version=2022-01-01
   response:
     body:
       string: ''
     headers:
+      azure-asyncnotification:
+      - Enabled
       cache-control:
       - no-cache
       content-length:
       - '0'
       date:
-      - Thu, 12 May 2022 14:05:07 GMT
+      - Sat, 01 Oct 2022 19:44:30 GMT
       expires:
       - '-1'
       location:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operationResults/28a04cd9-abd6-449b-b099-375ff8f44aa5?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operationResults/04d15fab-d2cd-4046-8cff-dd75ec5f2c4c?api-version=2022-01-01
       pragma:
       - no-cache
       server:
@@ -2374,9 +2357,9 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - c09b8038-1e99-4040-9afb-f6eb8ac8583f
+      - 4fdb23f5-00dc-4d64-814b-00db694e4e2b
       x-ms-ratelimit-remaining-subscription-writes:
-      - '1198'
+      - '1199'
     status:
       code: 202
       message: Accepted
@@ -2394,13 +2377,16 @@ interactions:
       ParameterSetName:
       - -g -n --vpn-connections
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-network/20.0.0 Python/3.8.10 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.40.0 (PIP) azsdk-python-azure-mgmt-network/21.0.1 Python/3.8.10
+        (Windows-10-10.0.19044-SP0)
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operationResults/28a04cd9-abd6-449b-b099-375ff8f44aa5?api-version=2021-08-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operationResults/04d15fab-d2cd-4046-8cff-dd75ec5f2c4c?api-version=2022-01-01
   response:
     body:
       string: 'null'
     headers:
+      azure-asyncnotification:
+      - Enabled
       cache-control:
       - no-cache
       content-length:
@@ -2408,11 +2394,11 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 12 May 2022 14:05:17 GMT
+      - Sat, 01 Oct 2022 19:44:41 GMT
       expires:
       - '-1'
       location:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operationResults/28a04cd9-abd6-449b-b099-375ff8f44aa5?api-version=2021-08-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/providers/Microsoft.Network/locations/westus/operationResults/04d15fab-d2cd-4046-8cff-dd75ec5f2c4c?api-version=2022-01-01
       pragma:
       - no-cache
       server:
@@ -2427,7 +2413,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-arm-service-request-id:
-      - c09b8038-1e99-4040-9afb-f6eb8ac8583f
+      - 4fdb23f5-00dc-4d64-814b-00db694e4e2b
     status:
       code: 200
       message: OK

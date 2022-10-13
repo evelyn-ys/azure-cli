@@ -135,11 +135,6 @@ short-summary: Restore a flexible server from backup.
 examples:
   - name: Restore 'testserver' to a specific point-in-time as a new server 'testserverNew'.
     text: az postgres flexible-server restore --resource-group testGroup --name testserverNew --source-server testserver --restore-time "2017-06-15T13:10:00Z"
-  - name: Restore 'testserver2' to 'testserverNew', where 'testserverNew' is in a different resource group from 'testserver2'.
-    text: |
-        az postgres flexible-server restore --resource-group testGroup --name testserverNew \\
-          --source-server "/subscriptions/${SubID}/resourceGroups/${ResourceGroup}/providers/Microsoft.DBforPostgreSQL/servers/testserver2" \\
-          --restore-time "2017-06-15T13:10:00Z"
   - name: Restore 'testserver' to current point-in-time as a new server 'testserverNew'.
     text: az postgres flexible-server restore --resource-group testGroup --name testserverNew --source-server testserver
 """
@@ -301,7 +296,7 @@ type: command
 short-summary: Create a new migration workflow for a flexible server.
 examples:
   - name: Start a migration workflow on the target server identified by the parameters. The configurations of the migration should be specified in the migrationConfig.json file.
-    text: az postgres flexible-server migration create --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --properties "migrationConfig.json"
+    text: az postgres flexible-server migration create --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name testmigration --properties "migrationConfig.json"
 """
 
 helps['postgres flexible-server migration list'] = """
@@ -319,7 +314,7 @@ type: command
 short-summary: Get the details of a specific migration.
 examples:
   - name: Get the details of a specific migration of a target flexible server.
-    text: az postgres flexible-server migration show --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    text: az postgres flexible-server migration show --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name testmigration
 """
 
 helps['postgres flexible-server migration update'] = """
@@ -327,21 +322,15 @@ type: command
 short-summary: Update a specific migration.
 examples:
   - name: Allow the migration workflow to setup logical replication on the source. Note that this command will restart the source server.
-    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --setup-replication
+    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name testmigration --setup-replication
   - name: Space-separated list of DBs to migrate. A minimum of 1 and a maximum of 8 DBs can be specified. You can migrate more DBs concurrently using additional migrations. Note that each additional DB affects the performance of the source server.
-    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --db-names db1 db2
+    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name testmigration --db-names db1 db2
   - name: Allow the migration workflow to overwrite the DB on the target.
-    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --overwrite-dbs
-  - name: This command helps in starting the data migration immediately between the source and target. Any migration scheduled for a future date and time will be cancelled.
-    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --start-data-migration
-"""
-
-helps['postgres flexible-server migration delete'] = """
-type: command
-short-summary: Delete a specific migration.
-examples:
-  - name: Cancel/delete the migration workflow. The migration workflows can be canceled/deleted at any point.
-    text: az postgres flexible-server migration delete --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name testmigration --overwrite-dbs
+  - name: Cut-over the data migration for either all databases or few selected ones. After this is complete, subsequent updates to the selected databases will not be migrated to the target.
+    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name testmigration --cutover db1 db2 db3
+  - name: Cancel the data migration for either all databases or few selected ones.
+    text: az postgres flexible-server migration update --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --resource-group testGroup --name testserver --migration-name testmigration --cutover db1 db2 db3
 """
 
 helps['postgres flexible-server migration check-name-availability'] = """
@@ -403,16 +392,16 @@ examples:
 
 helps['postgres flexible-server deploy'] = """
 type: group
-short-summary: Enable and run github action workflow for PostgreSQL server
+short-summary: Enable and run GitHub Actions workflow for PostgreSQL server
 """
 
 helps['postgres flexible-server deploy setup'] = """
 type: command
-short-summary: Create github action workflow file for PostgreSQL server.
+short-summary: Create GitHub Actions workflow file for PostgreSQL server.
 examples:
-  - name: Create github action workflow file for PostgreSQL server.
+  - name: Create GitHub Actions workflow file for PostgreSQL server.
     text: az postgres flexible-server deploy setup -s testserver -g testGroup -u username -p password --sql-file test.sql --repo username/userRepo -d flexibleserverdb --action-name testAction
-  - name: Create github action workflow file for PostgreSQL server and push it to the remote repository
+  - name: Create GitHub Actions workflow file for PostgreSQL server and push it to the remote repository
     text: az postgres flexible-server deploy setup -s testserver -g testGroup -u username -p password --sql-file test.sql --repo username/userRepo -d flexibleserverdb --action-name testAction --branch userBranch --allow-push
 """
 
@@ -422,4 +411,25 @@ short-summary: Run an existing workflow in your github repository
 examples:
   - name: Run an existing workflow in your github repository
     text: az postgres flexible-server deploy run --action-name testAction --branch userBranch
+"""
+
+helps['postgres flexible-server backup'] = """
+type: group
+short-summary: Manage flexible server backups.
+"""
+
+helps['postgres flexible-server backup list'] = """
+type: command
+short-summary: List all the backups for a given server.
+examples:
+  - name: List all backups for 'testsvr'.
+    text: az postgres flexible-server backup list -g testgroup -n testsvr
+"""
+
+helps['postgres flexible-server backup show'] = """
+type: command
+short-summary: Show the details of a specific backup for a given server.
+examples:
+  - name: Show the details of backup 'testbackup' for 'testsvr'.
+    text: az postgres flexible-server backup show -g testgroup -n testsvr --backup-name testbackup
 """

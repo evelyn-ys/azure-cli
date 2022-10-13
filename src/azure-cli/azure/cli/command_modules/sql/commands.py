@@ -147,8 +147,8 @@ def load_command_table(self, _):
                                  transform=database_lro_transform,
                                  table_transformer=db_table_format)
 
-        g.custom_command('export', 'db_export')
-        g.custom_command('import', 'db_import')
+        g.custom_command('export', 'db_export', supports_no_wait=True)
+        g.custom_command('import', 'db_import', supports_no_wait=True)
 
     capabilities_operations = CliCommandType(
         operations_tmpl='azure.mgmt.sql.operations#CapabilitiesOperations.{}',
@@ -765,6 +765,10 @@ def load_command_table(self, _):
                             client_factory=get_sql_managed_databases_operations) as g:
 
         g.custom_command('create', 'managed_db_create', supports_no_wait=True)
+        g.generic_update_command('update',
+                                 setter_name='begin_create_or_update',
+                                 custom_func_name='managed_db_update',
+                                 supports_no_wait=True)
         g.custom_command('restore', 'managed_db_restore', supports_no_wait=True)
         g.show_command('show', 'get')
         g.command('list', 'list_by_instance')
@@ -823,7 +827,7 @@ def load_command_table(self, _):
                             managed_databases_operations,
                             client_factory=get_sql_managed_databases_operations) as g:
         g.custom_command('start', 'managed_db_log_replay_start', supports_no_wait=True)
-        g.command('stop', 'begin_delete', confirmation=True, supports_no_wait=True)
+        g.custom_command('stop', 'managed_db_log_replay_stop', confirmation=True, supports_no_wait=True)
         g.custom_command('complete', 'managed_db_log_replay_complete_restore')
         g.wait_command('wait')
 

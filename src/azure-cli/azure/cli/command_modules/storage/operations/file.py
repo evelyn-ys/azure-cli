@@ -137,6 +137,30 @@ def list_share_files(cmd, client, directory_name=None, timeout=None, exclude_dir
     return results
 
 
+def storage_file_upload(client, local_file_path, content_settings=None,
+                        metadata=None, validate_content=False, progress_callback=None, max_connections=2, timeout=None):
+    upload_args = {
+        'content_settings': content_settings,
+        'metadata': metadata,
+        'validate_content': validate_content,
+        'max_concurrency': max_connections,
+        'timeout': timeout
+    }
+    if progress_callback:
+        upload_args['progress_hook'] = progress_callback
+    # Because the contents of the uploaded file may be too large, it should be passed into the a stream object,
+    # upload_file() read file data in batches to avoid OOM problems
+    count = os.path.getsize(local_file_path)
+    with open(local_file_path, 'rb') as stream:
+        response = client.upload_file(data=stream, length=count, **upload_args)
+
+    if 'content_md5' in response:
+        if isinstance(response['content_md5'], bytearray):
+            response['content_md5'] = ''.join(hex(x) for x in response['content_md5'])
+
+    return response
+
+
 def storage_file_upload_batch(cmd, client, destination, source, destination_path=None, pattern=None, dryrun=False,
                               validate_content=False, content_settings=None, max_connections=1, metadata=None,
                               progress_callback=None):
@@ -145,50 +169,80 @@ def storage_file_upload_batch(cmd, client, destination, source, destination_path
     from azure.cli.command_modules.storage.util import glob_files_locally, normalize_blob_file_path
 
     source_files = list(glob_files_locally(source, pattern))
-    settings_class = cmd.get_models('file.models#ContentSettings')
+    settings_class = cmd.get_models('_models#ContentSettings')
 
     if dryrun:
         logger.info('upload files to file share')
         logger.info('    account %s', client.account_name)
         logger.info('      share %s', destination)
         logger.info('      total %d', len(source_files))
-        return [{'File': client.make_file_url(destination, os.path.dirname(dst) or None, os.path.basename(dst)),
+        dst = None
+        kwargs = {
+            'dir_name': os.path.dirname(dst),
+            'file_name': os.path.basename(dst)
+        }
+
+        return [{'File': create_file_url(client, **kwargs),
                  'Type': guess_content_type(src, content_settings, settings_class).content_type} for src, dst in
                 source_files]
 
     # TODO: Performance improvement
     # 1. Upload files in parallel
-    def _upload_action(src, dst):
-        dst = normalize_blob_file_path(destination_path, dst)
-        dir_name = os.path.dirname(dst)
-        file_name = os.path.basename(dst)
+    def _upload_action(src, dst2):
+        dst2 = normalize_blob_file_path(destination_path, dst2)
+        dir_name = os.path.dirname(dst2)
+        file_name = os.path.basename(dst2)
 
-        _make_directory_in_files_share(client, destination, dir_name)
-        create_file_args = {'share_name': destination, 'directory_name': dir_name, 'file_name': file_name,
-                            'local_file_path': src, 'progress_callback': progress_callback,
-                            'content_settings': guess_content_type(src, content_settings, settings_class),
-                            'metadata': metadata, 'max_connections': max_connections}
-
-        if cmd.supported_api_version(min_api='2016-05-31'):
-            create_file_args['validate_content'] = validate_content
+        _make_directory_in_files_share(client, destination, dir_name, V2=True)
 
         logger.warning('uploading %s', src)
-        client.create_file_from_path(**create_file_args)
+        storage_file_upload(client.get_file_client(dst2), src, content_settings, metadata, validate_content,
+                            progress_callback, max_connections)
 
-        return client.make_file_url(destination, dir_name, file_name)
+        args = {
+            'dir_name': dir_name,
+            'file_name': file_name
+        }
+        return create_file_url(client, **args)
 
     return list(_upload_action(src, dst) for src, dst in source_files)
 
 
-def storage_file_download_batch(cmd, client, source, destination, pattern=None, dryrun=False, validate_content=False,
-                                max_connections=1, progress_callback=None, snapshot=None):
+def download_file(client, destination_path=None, timeout=None, max_connections=2, open_mode='wb', **kwargs):
+    from azure.cli.command_modules.storage.util import mkdir_p
+    destination_folder = os.path.dirname(destination_path) if destination_path else ""
+    if destination_folder and not os.path.exists(destination_folder):
+        mkdir_p(destination_folder)
+
+    if not destination_folder or os.path.isdir(destination_path):
+        file = client.get_file_properties(timeout=timeout)
+        file_name = file.name.split("/")[-1]
+        destination_path = os.path.join(destination_path, file_name) \
+            if destination_path else file_name
+
+    kwargs['progress_hook'] = kwargs.pop("progress_callback", None)
+
+    with open(destination_path, open_mode) as stream:
+        start_range = kwargs.pop('start_range', None)
+        end_range = kwargs.pop('end_range', None)
+        length = None
+        if start_range is not None and end_range is not None:
+            length = end_range - start_range + 1
+        download = client.download_file(offset=start_range, length=length, timeout=timeout,
+                                        max_concurrency=max_connections, **kwargs)
+        download.readinto(stream)
+    return client.get_file_properties()
+
+
+def storage_file_download_batch(client, source, destination, pattern=None, dryrun=False, validate_content=False,
+                                max_connections=1, progress_callback=None):
     """
     Download files from file share to local directory in batch
     """
 
-    from azure.cli.command_modules.storage.util import glob_files_remotely, mkdir_p
+    from azure.cli.command_modules.storage.util import glob_files_remotely_track2
 
-    source_files = glob_files_remotely(cmd, client, source, pattern, snapshot=snapshot)
+    source_files = glob_files_remotely_track2(client, source, pattern, is_share_client=True)
 
     if dryrun:
         source_files_list = list(source_files)
@@ -206,18 +260,14 @@ def storage_file_download_batch(cmd, client, source, destination, pattern=None, 
         return []
 
     def _download_action(pair):
-        destination_dir = os.path.join(destination, pair[0])
-        mkdir_p(destination_dir)
+        path = os.path.join(*pair)
+        local_path = os.path.join(destination, *pair)
+        file_client = client.get_file_client(path)
 
-        get_file_args = {'share_name': source, 'directory_name': pair[0], 'file_name': pair[1],
-                         'file_path': os.path.join(destination, *pair), 'max_connections': max_connections,
-                         'progress_callback': progress_callback, 'snapshot': snapshot}
+        download_file(file_client, destination_path=local_path, max_connections=max_connections,
+                      progress_callback=progress_callback, validate_content=validate_content)
 
-        if cmd.supported_api_version(min_api='2016-05-31'):
-            get_file_args['validate_content'] = validate_content
-
-        client.get_file_to_path(**get_file_args)
-        return client.make_file_url(source, *pair)
+        return file_client.url.replace('%5C', '/')
 
     return list(_download_action(f) for f in source_files)
 
@@ -292,19 +342,18 @@ def storage_file_copy_batch(cmd, client, source_client, share_name=None, destina
     raise ValueError('Fail to find source. Neither blob container or file share is specified.')
 
 
-def storage_file_delete_batch(cmd, client, source, pattern=None, dryrun=False, timeout=None):
+def storage_file_delete_batch(client, source, pattern=None, dryrun=False, timeout=None):
     """
     Delete files from file share in batch
     """
 
-    def delete_action(file_pair):
-        delete_file_args = {'share_name': source, 'directory_name': file_pair[0], 'file_name': file_pair[1],
-                            'timeout': timeout}
+    def delete_action(pair):
+        path = os.path.join(*pair)
+        file_client = client.get_file_client(path)
+        return file_client.delete_file(timeout=timeout)
 
-        return client.delete_file(**delete_file_args)
-
-    from azure.cli.command_modules.storage.util import glob_files_remotely
-    source_files = list(glob_files_remotely(cmd, client, source, pattern))
+    from azure.cli.command_modules.storage.util import glob_files_remotely_track2
+    source_files = list(glob_files_remotely_track2(client, source, pattern, is_share_client=True))
 
     if dryrun:
         logger.warning('delete files from %s', source)
@@ -384,7 +433,6 @@ def _create_file_and_directory_from_file(cmd, file_service, source_file_service,
 def _make_directory_in_files_share(file_service, file_share, directory_path, existing_dirs=None, V2=False):
     """
     Create directories recursively.
-
     This method accept a existing_dirs set which serves as the cache of existing directory. If the
     parameter is given, the method will search the set first to avoid repeatedly create directory
     which already exists.
