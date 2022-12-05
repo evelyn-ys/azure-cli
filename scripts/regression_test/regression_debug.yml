@@ -53,6 +53,7 @@ jobs:
 
 - job: Summarize
   displayName: Summarize
+  dependsOn: Debug
   pool:
     name: ${{ variables.ubuntu_pool }}
   steps:
@@ -67,5 +68,7 @@ jobs:
         pwd
         ls -al
         cd ..
+        ls -al
+        cd test_results
         ls -al
 
