@@ -47,8 +47,8 @@ jobs:
         python scripts/regression_test/debug_script.py "8" "$(Instance_idx)"
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '/mnt/vss/_work/1/s/test_results.txt'
-        ArtifactName: 'test_results_$(Instance_idx).txt'
+        PathtoPublish: '/mnt/vss/_work/1/s/test_results_$(Instance_idx).txt'
+        ArtifactName: 'test_results'
         publishLocation: 'Container'
 
 - job: Summarize
@@ -64,6 +64,6 @@ jobs:
       displayName: 'Download Pipeline Artifact'
     - bash: |
         set -ev
-        pwd
+        cd ..
         ls -a
 
