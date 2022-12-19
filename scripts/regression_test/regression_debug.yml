@@ -65,10 +65,13 @@ jobs:
       displayName: 'Download Pipeline Artifact'
     - bash: |
         set -ev
-        pwd
-        ls -al
-        cd ..
-        ls -al
-        cd test_results
-        ls -al
+        ls test_results -al
+        
+        REGRESSION_BRANCHES=$(curl -H "Authorization: token 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" https://api.github.com/repos/azclibot/azure-cli-extensions/git/matching-refs/heads/extension_regression_test_)
+        echo ${REGRESSION_BRANCHES}
+
+        for branch in "${REGRESSION_BRANCHES[@]}"
+        do
+        echo $branch
+        done
 
