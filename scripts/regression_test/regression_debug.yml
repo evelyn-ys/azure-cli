@@ -12,44 +12,44 @@ variables:
 - template: ${{ variables.Pipeline.Workspace }}/.azure-pipelines/templates/variables.yml
 
 jobs:
-- job: Debug
-  displayName: Debug
-  strategy:
-    maxParallel: 8
-    matrix:
-      instance1:
-        Instance_idx: 1
-      instance2:
-        Instance_idx: 2
-      instance3:
-        Instance_idx: 3
-      instance4:
-        Instance_idx: 4
-      instance5:
-        Instance_idx: 5
-      instance6:
-        Instance_idx: 6
-      instance7:
-        Instance_idx: 7
-      instance8:
-        Instance_idx: 8
-  pool:
-    name: ${{ variables.ubuntu_pool }}
-  steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.10'
-        displayName: "Use Python 3.10"
-    - bash: |
-        set -ev
-        echo $(Build.BuildId)
+# - job: Debug
+#   displayName: Debug
+#   strategy:
+#     maxParallel: 8
+#     matrix:
+#       instance1:
+#         Instance_idx: 1
+#       instance2:
+#         Instance_idx: 2
+#       instance3:
+#         Instance_idx: 3
+#       instance4:
+#         Instance_idx: 4
+#       instance5:
+#         Instance_idx: 5
+#       instance6:
+#         Instance_idx: 6
+#       instance7:
+#         Instance_idx: 7
+#       instance8:
+#         Instance_idx: 8
+#   pool:
+#     name: ${{ variables.ubuntu_pool }}
+#   steps:
+#     - task: UsePythonVersion@0
+#       inputs:
+#         versionSpec: '3.10'
+#         displayName: "Use Python 3.10"
+#     - bash: |
+#         set -ev
+#         echo $(Build.BuildId)
 
-        python scripts/regression_test/debug_script.py "8" "$(Instance_idx)"
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '/mnt/vss/_work/1/s/test_results_$(Instance_idx).txt'
-        ArtifactName: 'test_results'
-        publishLocation: 'Container'
+#         python scripts/regression_test/debug_script.py "8" "$(Instance_idx)"
+#     - task: PublishBuildArtifacts@1
+#       inputs:
+#         PathtoPublish: '/mnt/vss/_work/1/s/test_results_$(Instance_idx).txt'
+#         ArtifactName: 'test_results'
+#         publishLocation: 'Container'
 
 - job: Summarize
   displayName: Summarize
@@ -61,11 +61,11 @@ jobs:
       inputs:
         versionSpec: '3.10'
         displayName: "Use Python 3.10"
-    - task: DownloadPipelineArtifact@2
-      displayName: 'Download Pipeline Artifact'
+    # - task: DownloadPipelineArtifact@2
+    #   displayName: 'Download Pipeline Artifact'
     - bash: |
         set -ev
-        ls ../test_results -al
+        # ls ../test_results -al
         
         REGRESSION_BRANCHES=$(curl -H "Authorization: token $(GITHUB_TOKEN)" https://api.github.com/repos/azclibot/azure-cli-extensions/git/matching-refs/heads/extension_regression_test_)
         echo ${REGRESSION_BRANCHES}
