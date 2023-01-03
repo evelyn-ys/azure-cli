@@ -85,8 +85,19 @@ jobs:
           echo ${REGRESSION_BRANCHES}
           for branch in ${REGRESSION_BRANCHES}
           do
-          branch=${branch##*/}
-          branch=${branch%\"*}
-          echo ${branch}
+            branch=${branch##*/}
+            branch=${branch%\"*}
+            echo ${branch}
+            module=${branch##*_}
+            echo ${module}
+            if [[ ${branch} -eq 'regression_test_21465_storage-preview']]; then
+              pr_title="Extension Regression Test for ${module}"
+              pr_body="Triggered by CLI Extension Regression Test Pipeline - ADO_BUILD_ID=$(Build.BuildId)\n\nThere may still exist some failed tests and failed modules, see [details](https://dev.azure.com/azure-sdk/internal/_build/results?buildId=$(Build.BuildId)&view=artifacts&type=publishedArtifacts) in ADO pipeline"
+              pr_head="azclibot:${branch}"
+              curl \
+              -H "Authorization: token ${GITHUB_TOKEN}" \
+              -d "{\"title\": \"${pr_title}\", \"body\": \"${pr_body}\", \"head\": \"${pr_head}\", \"base\": \"main\"}" \
+              https://api.github.com/repos/Azure/azure-cli-extensions/pulls
+            fi
           done
 
