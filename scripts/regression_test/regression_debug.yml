@@ -85,7 +85,7 @@ jobs:
           REGRESSION_BRANCHES=$(curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/azclibot/azure-cli-extensions/git/matching-refs/heads/regression_test_23193_ | jq '.[] | .ref')
           echo ${REGRESSION_BRANCHES}
 
-          for branch in "${REGRESSION_BRANCHES}"
+          for branch in "${REGRESSION_BRANCHES[@]}"
           do
             branch=${branch##*/}
             branch=${branch%\"*}
