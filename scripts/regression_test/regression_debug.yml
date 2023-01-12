@@ -61,6 +61,7 @@ jobs:
       inputs:
         versionSpec: '3.10'
         displayName: "Use Python 3.10"
+    - template: ../../.azure-pipelines/templates/azdev_setup.yml
     # - task: DownloadPipelineArtifact@2
     #   displayName: 'Download Pipeline Artifact'
     - task: AzureCLI@1
@@ -72,7 +73,8 @@ jobs:
           set -ev
           echo $AGENT_HOMEDIRECTORY
           echo $PIPELINE_WORKSPACE
-          ls -al
+          ls $HOME/.azdev -al
+          ls /mnt/vss/.azdev -al
 
           # # git config
           # git clone https://github.com/Azure/azure-cli-extensions.git
