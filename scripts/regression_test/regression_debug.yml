@@ -71,10 +71,9 @@ jobs:
         scriptLocation: inlineScript
         inlineScript: |
           set -ev
-          echo $AGENT_HOMEDIRECTORY
-          echo $PIPELINE_WORKSPACE
+          
           ls $HOME/.azdev -al
-          ls /mnt/vss/.azdev -al
+          ls ~/.azdev/env_config$BUILD_SOURCESDIRECTORY/env -al
 
           # # git config
           # git clone https://github.com/Azure/azure-cli-extensions.git
