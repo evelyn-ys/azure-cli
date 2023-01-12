@@ -71,7 +71,7 @@ jobs:
         inlineScript: |
           set -ev
 
-          echo ${{ variables.Pipeline.Workspace }}
+          echo $PIPELINE_WORKSPACE
           echo $HOME
           cd ~
           pwd
