@@ -70,11 +70,9 @@ jobs:
         scriptLocation: inlineScript
         inlineScript: |
           set -ev
-
+          echo $AGENT_HOMEDIRECTORY
           echo $PIPELINE_WORKSPACE
-          echo $HOME
-          cd ~
-          pwd
+          ls -al
 
           # # git config
           # git clone https://github.com/Azure/azure-cli-extensions.git
