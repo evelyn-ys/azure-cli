@@ -38,7 +38,7 @@ jobs:
         python scripts/regression_test/debug_script.py "3" "$(Instance_idx)"
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$HOME/.azdev/env_config/mnt/vss/_work/1/s/env/test_results_$(Instance_idx).txt'
+        PathtoPublish: '/$(HOME)/.azdev/env_config/mnt/vss/_work/1/s/env/test_results_$(Instance_idx).txt'
         ArtifactName: 'test_results'
         publishLocation: 'Container'
 
