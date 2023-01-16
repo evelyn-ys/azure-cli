@@ -18,7 +18,7 @@ logger.addHandler(ch)
 
 instance_cnt = int(sys.argv[1])
 instance_idx = int(sys.argv[2])
-working_directory = "/mnt/vss/_work/1/s"
+working_directory = "~/.azdev/env_config/mnt/vss/_work/1/s/env"
 
 
 def main():
