@@ -26,7 +26,7 @@ def main():
     print(f"The build id is {build_id}")
 
     test_result_fp = os.path.join(working_directory, f'test_results_{instance_idx}.txt')
-    with open(test_result_fp, 'a') as f:
+    with open(os.path.expanduser(test_result_fp), 'a') as f:
         f.write(f"results {instance_idx}/{instance_cnt}:\n")
         f.write("success 100%")
 
