@@ -15,7 +15,7 @@ jobs:
 - job: Debug
   displayName: Debug
   strategy:
-    maxParallel: 8
+    maxParallel: 3
     matrix:
       instance1:
         Instance_idx: 1
@@ -23,16 +23,6 @@ jobs:
         Instance_idx: 2
       instance3:
         Instance_idx: 3
-      instance4:
-        Instance_idx: 4
-      instance5:
-        Instance_idx: 5
-      instance6:
-        Instance_idx: 6
-      instance7:
-        Instance_idx: 7
-      instance8:
-        Instance_idx: 8
   pool:
     name: ${{ variables.ubuntu_pool }}
   steps:
@@ -45,10 +35,10 @@ jobs:
         set -ev
         echo $(Build.BuildId)
 
-        python scripts/regression_test/debug_script.py "8" "$(Instance_idx)"
+        python scripts/regression_test/debug_script.py "3" "$(Instance_idx)"
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$BUILD_SOURCESDIRECTORY/test_results_$(Instance_idx).txt'
+        PathtoPublish: '~/.azdev/env_config/mnt/vss/_work/1/s/env/test_results_$(Instance_idx).txt'
         ArtifactName: 'test_results'
         publishLocation: 'Container'
 
