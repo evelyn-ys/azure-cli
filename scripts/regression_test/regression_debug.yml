@@ -36,7 +36,15 @@ jobs:
         echo $(Build.BuildId)
 
         python scripts/regression_test/debug_script.py "3" "$(Instance_idx)"
+    - bash: |
+        publishResults='false'
+        if [[ -f '/$(HOME)/.azdev/env_config/mnt/vss/_work/1/s/env/test_results_$(Instance_idx).txt' ]]; then
+          publishResults='true'
+        fi
+        echo "##vso[task.setvariable variable=publishResults]$publishResults"
+
     - task: PublishBuildArtifacts@1
+      condition: and(succeededOrFailed(), eq(variables.publishResults, 'true'))
       inputs:
         PathtoPublish: '/$(HOME)/.azdev/env_config/mnt/vss/_work/1/s/env/test_results_$(Instance_idx).txt'
         ArtifactName: 'test_results'
