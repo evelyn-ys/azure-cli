@@ -59,14 +59,14 @@ jobs:
         az group create -l uksouth -n $rgName
 
         for i in {1..10}; do
-            kvName='clitestkv-full-'$(instance_no)'-'$i
+            kvName='clitestkv-novali-'$(instance_no)'-'$i
             startTime=$(date +%s)
             az keyvault create -n $kvName -g $rgName --retention-days 7
             finishTime=$(date +%s)
             totalTime=$(($finishTime-$startTime))
             echo "Total creation time is $totalTime seconds"
 
-            telemetryObject="{\"iKey\":\"02b91c82-6729-4241-befc-e6d02ca4fbba\",\"name\":\"azurecli/extension\",\"time\":\"$(date --utc +"%Y-%m-%dT%H:%M:%SZ")\",\"data\":{\"baseType\":\"EventData\",\"baseData\":{\"ver\":2,\"name\":\"azurecli/extension\",\"properties\":{\"Context.Default.VS.Core.OS.Type\":\"${os}\",\"Context.Default.VS.Core.OS.Version\":\"${osVersion}\",\"Context.Default.AzureCLI.KeyvaultCreationType\":\"ARMTemplateFull\",\"Context.Default.AzureCLI.KeyvaultCreationTime\":${totalTime}}}}}"
+            telemetryObject="{\"iKey\":\"02b91c82-6729-4241-befc-e6d02ca4fbba\",\"name\":\"azurecli/extension\",\"time\":\"$(date --utc +"%Y-%m-%dT%H:%M:%SZ")\",\"data\":{\"baseType\":\"EventData\",\"baseData\":{\"ver\":2,\"name\":\"azurecli/extension\",\"properties\":{\"Context.Default.VS.Core.OS.Type\":\"${os}\",\"Context.Default.VS.Core.OS.Version\":\"${osVersion}\",\"Context.Default.AzureCLI.KeyvaultCreationType\":\"ARMTemplateNoValidation\",\"Context.Default.AzureCLI.KeyvaultCreationTime\":${totalTime}}}}}"
 
             echo $telemetryObject
 

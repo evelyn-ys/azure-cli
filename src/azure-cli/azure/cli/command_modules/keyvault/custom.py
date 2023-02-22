@@ -785,10 +785,10 @@ def create_vault(cmd, client,  # pylint: disable=too-many-locals, too-many-state
     from azure.cli.core.commands.progress import IndeterminateProgressBar
 
     deployment_name = 'keyvault_deploy_' + random_string(32)
-    validation_progress_bar = IndeterminateProgressBar(cmd.cli_ctx, message='validating')
-
-    validation_poller = deploy_client.begin_validate(resource_group_name, deployment_name, deployment)
-    LongRunningOperation(cmd.cli_ctx, validation_progress_bar)(validation_poller)
+    # validation_progress_bar = IndeterminateProgressBar(cmd.cli_ctx, message='validating')
+    #
+    # validation_poller = deploy_client.begin_validate(resource_group_name, deployment_name, deployment)
+    # LongRunningOperation(cmd.cli_ctx, validation_progress_bar)(validation_poller)
 
     if no_wait:
         return sdk_no_wait(no_wait, deploy_client.begin_create_or_update, resource_group_name, deployment_name, deployment)
