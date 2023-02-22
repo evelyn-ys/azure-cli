@@ -59,10 +59,10 @@ jobs:
         az group create -l uksouth -n $rgName
 
         for i in {1..10}; do
-            kvName='clitest-kv-0222-'$i
-            startTime=$(date +%s.%3N)
+            kvName='clitest-kv-0222-'$(instance_no)'-'$i
+            startTime=$(date +%s)
             az keyvault create -n $kvName -g $rgName --retention-days 7
-            finishTime=$(date +%s.%3N)
+            finishTime=$(date +%s)
             totalTime=$(($finishTime-$startTime))
             echo "Total creation time is $totalTime seconds"
 
