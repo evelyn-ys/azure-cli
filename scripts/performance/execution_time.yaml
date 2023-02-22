@@ -1,0 +1,75 @@
+resources:
+- repo: self
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+
+pr:
+  branches:
+    include:
+    - '*'
+
+jobs:
+- job: MeasureKeyvaultCreationTime
+  timeoutInMinutes: 300
+  displayName: Measure Keyvault Creation Time
+  pool:
+    vmImage: 'ubuntu-20.04'
+  strategy:
+    matrix:
+      Instance1:
+        instance_no: 1
+      Instance2:
+        instance_no: 2
+      Instance3:
+        instance_no: 3
+      Instance4:
+        instance_no: 4
+      Instance5:
+        instance_no: 5
+      Instance6:
+        instance_no: 6
+      Instance7:
+        instance_no: 7
+      Instance8:
+        instance_no: 8
+      Instance9:
+        instance_no: 9
+      Instance10:
+        instance_no: 10
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.10'
+        displayName: "Use Python 3.10"
+    - template: ../../.azure-pipelines/templates/azdev_setup.yml
+    - bash: |
+        set -e
+        os="Ubuntu"
+        osVersion="20.04"
+
+        source env/bin/activate
+        az login -u $(CLI_LIVE_TEST_ACCOUNT) -p "$(CLI_LIVE_TEST_PASSWORD)"
+        az account set -s 0b1f6471-1bf0-4dda-aec3-cb9272f09590
+
+        rgName='clitest-kv-rg-'$RANDOM
+        az group create -l uksouth -n $rgName
+
+        for i in {1..10}; do
+            kvName='clitestkv-origin-'$(instance_no)'-'$i
+            startTime=$(date +%s)
+            az keyvault create -n $kvName -g $rgName --retention-days 7
+            finishTime=$(date +%s)
+            totalTime=$(($finishTime-$startTime))
+            echo "Total creation time is $totalTime seconds"
+
+            telemetryObject="{\"iKey\":\"02b91c82-6729-4241-befc-e6d02ca4fbba\",\"name\":\"azurecli/extension\",\"time\":\"$(date --utc +"%Y-%m-%dT%H:%M:%SZ")\",\"data\":{\"baseType\":\"EventData\",\"baseData\":{\"ver\":2,\"name\":\"azurecli/extension\",\"properties\":{\"Context.Default.VS.Core.OS.Type\":\"${os}\",\"Context.Default.VS.Core.OS.Version\":\"${osVersion}\",\"Context.Default.AzureCLI.KeyvaultCreationType\":\"Origin\",\"Context.Default.AzureCLI.KeyvaultCreationTime\":${totalTime}}}}}"
+
+            echo $telemetryObject
+
+            curl -X POST https://eastus-2.in.applicationinsights.azure.com//v2/track -d "${telemetryObject}"
+        done
+      displayName: Create and send telemetry
