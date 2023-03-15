@@ -30,7 +30,19 @@ jobs:
       inputs:
         versionSpec: '3.10'
         displayName: "Use Python 3.10"
+    - task: AzureCLI@1
+      displayName: 'checkout cli and extension repo'
+      inputs:
+        azureSubscription: 'Azure CLI release'
+        scriptLocation: inlineScript
+        inlineScript: |
+          set -ev
+          pwd
+          git clone https://github.com/Azure/azure-cli-extensions.git
+          cd azure-cli-extensions
     - template: ../../.azure-pipelines/templates/azdev_setup.yml
+      parameters:
+        CLIExtensionRepoPath: ./azure-cli-extensions
     - bash: |
         set -ev
         echo $(Build.BuildId)
