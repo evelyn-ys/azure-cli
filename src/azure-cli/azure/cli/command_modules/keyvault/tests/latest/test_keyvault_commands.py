@@ -319,6 +319,7 @@ class KeyVaultHSMMgmtScenarioTest(ScenarioTest):
             self.check('length([0].properties.initialAdminObjectIds)', 1),
             self.check('[0].properties.initialAdminObjectIds[0]', '{init_admin}'),
             self.check('[0].properties.networkAcls.bypass', 'None'),
+            self.check('[0].properties.publicNetworkAccess', 'Disabled'),
             self.exists('[0].properties.hsmUri')
         ]
 
@@ -331,7 +332,10 @@ class KeyVaultHSMMgmtScenarioTest(ScenarioTest):
             self.check('nameAvailable', True)
         ])
 
-        self.cmd('keyvault create --hsm-name {hsm_name} -g {rg} -l {loc} --administrators {init_admin} --retention-days 7')
+        self.cmd('keyvault create --hsm-name {hsm_name} -g {rg} -l {loc} --administrators {init_admin} '
+                 '--retention-days 7 --public-network-access Enabled', checks=[
+            self.check('properties.publicNetworkAccess', 'Enabled')
+        ])
 
         self.cmd('keyvault check-name -n {hsm_name}', checks=[
             self.check('nameAvailable', False),
@@ -354,7 +358,7 @@ class KeyVaultHSMMgmtScenarioTest(ScenarioTest):
         self.cmd('keyvault show --hsm-name {hsm_name}', checks=show_checks)
         self.cmd('keyvault show --hsm-name {hsm_name} -g {rg}', checks=show_checks)
 
-        self.cmd('keyvault update-hsm --hsm-name {hsm_name} --bypass None')
+        self.cmd('keyvault update-hsm --hsm-name {hsm_name} --bypass None --public-network-access Disabled --default-action Deny')
 
         self.cmd(r"keyvault list --resource-type hsm --query [?name==\'{hsm_name}\']", checks=list_checks)
         self.cmd('keyvault list --resource-type hsm -g {rg}', checks=list_checks)
@@ -1160,16 +1164,14 @@ class KeyVaultKeyScenarioTest(ScenarioTest):
 
 
 class KeyVaultHSMKeyUsingHSMNameScenarioTest(ScenarioTest):
-    # @record_only()
-    @unittest.skip('cannot run')
-    def test_keyvault_hsm_key_using_hsm_name(self):
+    @ResourceGroupPreparer(name_prefix='cli_test_hsm_key')
+    @ManagedHSMPreparer(name_prefix='clitesthsmkey', certs_path=CERTS_DIR, roles=['Managed HSM Crypto Officer', 'Managed HSM Crypto User'])
+    def test_keyvault_hsm_key_using_hsm_name(self, resource_group, managed_hsm):
         self.kwargs.update({
-            'hsm_name': ACTIVE_HSM_NAME,
-            'hsm_url': ACTIVE_HSM_URL,
-            'key': self.create_random_name('key2-', 24)
+            'hsm_url': f'https://{managed_hsm}.managedhsm.azure.net',
+            'hsm_name': managed_hsm,
+            'key': self.create_random_name('key1-', 24)
         })
-
-        _clear_hsm(self, hsm_url=self.kwargs['hsm_url'])
 
         # create a key
         hsm_key = self.cmd('keyvault key create --hsm-name {hsm_name} -n {key}',
@@ -1298,6 +1300,10 @@ class KeyVaultHSMKeyUsingHSMNameScenarioTest(ScenarioTest):
                  checks=[self.check('key.kty', 'RSA-HSM'), self.check('key.keyOps', ['import'])])
         self.cmd('keyvault key create --hsm-name {hsm_name} -n key2 --kty RSA-HSM --size 4096 --ops import',
                  checks=[self.check('key.kty', 'RSA-HSM'), self.check('key.keyOps', ['import'])])
+
+        # create OKP key
+        self.cmd('keyvault key create --hsm-name {hsm_name} -n okpkey --kty OKP-HSM --curve Ed25519',
+                 checks=[self.check('key.kty', 'OKP-HSM'), self.check('key.crv', 'Ed25519')])
 
     # Since the MHSM has to be activated manually so we use fixed hsm resource and mark the test as record_only
     @record_only()
