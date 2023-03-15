@@ -76,6 +76,7 @@ def main():
         error_flag = run_command(cmd)
         logger.info(f"Finish testing extension, error_flag:{error_flag}")
     remove_extension(module)
+    logger.info(f"Finish removing extension, error_flag:{error_flag}")
     if error_flag:
         rerun_setup(cli_repo_path=os.getenv('BUILD_SOURCESDIRECTORY'), extension_repo_path=f"{os.getenv('BUILD_SOURCESDIRECTORY')}/azure-cli-extensions")
 
