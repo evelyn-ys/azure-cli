@@ -34,6 +34,19 @@ def run_command(cmd, check_return_code=False):
     return error_flag
 
 
+def rerun_setup(cli_repo_path, extension_repo_path):
+    try:
+        if extension_repo_path:
+            cmd = ['azdev', 'setup', '-c', cli_repo_path, '-r', extension_repo_path, '--debug']
+        else:
+            cmd = ['azdev', 'setup', '-c', cli_repo_path, '--debug']
+        error_flag = run_command(cmd, check_return_code=True)
+    except Exception:
+        error_flag = True
+
+    return error_flag
+
+
 def install_extension(extension_module):
     try:
         cmd = ['azdev', 'extension', 'add', extension_module]
@@ -63,6 +76,8 @@ def main():
         error_flag = run_command(cmd)
         logger.info(f"Finish testing extension, error_flag:{error_flag}")
     remove_extension(module)
+    if error_flag:
+        rerun_setup(cli_repo_path=os.getenv('BUILD_SOURCESDIRECTORY'), extension_repo_path=f"{os.getenv('BUILD_SOURCESDIRECTORY')}/azure-cli-extensions")
 
 
 if __name__ == '__main__':
