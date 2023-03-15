@@ -45,9 +45,7 @@ jobs:
         CLIExtensionRepoPath: ./azure-cli-extensions
     - bash: |
         set -ev
-
         source env/bin/activate
-        cd azure-cli-extensions
 
         python scripts/regression_test/debug_script.py "3" "$(Instance_idx)"
     - bash: |
