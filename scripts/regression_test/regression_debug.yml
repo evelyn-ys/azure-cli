@@ -31,14 +31,14 @@ jobs:
     - bash: |
           set -ev
 
-          cli_repo_path=$(pwd)
-          echo $cli_repo_path
-          echo "##vso[task.setvariable variable=cli_repo_path]$cli_repo_path"
+          cli_repo=$(pwd)/
+          echo $cli_repo
+          echo "##vso[task.setvariable variable=cli_repo]$cli_repo"
 
           git clone https://github.com/Azure/azure-cli-extensions.git
-          cli_extension_repo_path=$(pwd)/azure-cli-extensions
-          echo $cli_extension_repo_path
-          echo "##vso[task.setvariable variable=cli_extension_repo_path]$cli_extension_repo_path"
+          cli_extension_repo_=$(pwd)/azure-cli-extensions
+          echo $cli_extension_repo
+          echo "##vso[task.setvariable variable=cli_extension_repo]$cli_extension_repo"
       displayName: 'checkout cli and extension repo'
     - bash: |
         set -ev
@@ -47,7 +47,8 @@ jobs:
         python scripts/regression_test/debug_script.py "2" "$(Instance_idx)"
     - template: ../../.azure-pipelines/templates/azdev_setup.yml
       parameters:
-        CLIExtensionRepoPath: '$(cli_extension_repo_path)'
+        CLIRepoPath: '$(cli_repo)'
+        CLIExtensionRepoPath: '$(cli_extension_repo)'
     - bash: |
         publishResults='false'
         if [[ -f '/$(HOME)/.azdev/env_config/mnt/vss/_work/1/s/env/test_results_$(Instance_idx).txt' ]]; then

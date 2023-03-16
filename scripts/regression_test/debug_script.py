@@ -69,8 +69,8 @@ def remove_extension(extension_module):
 
 def main():
     print(f"working directory: {os.getenv('BUILD_SOURCESDIRECTORY')}")
-    print(f"cli repo path: {os.getenv('CLI_REPO_PATH', None)}")
-    print(f"extension repo path: {os.getenv('CLI_EXTENSION_REPO_PATH', None)}")
+    print(f"cli repo path: {os.getenv('CLI_REPO', None)}")
+    print(f"extension repo path: {os.getenv('CLI_EXTENSION_REPO', None)}")
     # modules = ["functionapp", "alertsmanagement"]
     # for module in modules:
     #     error_flag = install_extension(module)
