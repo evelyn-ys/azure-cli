@@ -68,17 +68,18 @@ def remove_extension(extension_module):
 
 
 def main():
-    module = "functionapp"
-    error_flag = install_extension(module)
-    logger.info(f"Finish installing extension, error_flag:{error_flag}")
-    if not error_flag:
-        cmd = ['azdev', 'test', module, '--discover', '--no-exitfirst', '--verbose', '--pytest-args', '"--durations=10"']
-        error_flag = run_command(cmd)
-        logger.info(f"Finish testing extension, error_flag:{error_flag}")
-    remove_extension(module)
-    logger.info(f"Finish removing extension, error_flag:{error_flag}")
-    if error_flag:
-        rerun_setup(cli_repo_path=os.getenv('BUILD_SOURCESDIRECTORY'), extension_repo_path=f"{os.getenv('BUILD_SOURCESDIRECTORY')}/azure-cli-extensions")
+    modules = ["functionapp", "alertsmanagement"]
+    for module in modules:
+        error_flag = install_extension(module)
+        logger.info(f"Finish installing extension {module}, error_flag:{error_flag}")
+        if not error_flag:
+            cmd = ['azdev', 'test', module, '--discover', '--no-exitfirst', '--verbose', '--pytest-args', '"--durations=10"']
+            error_flag = run_command(cmd)
+            logger.info(f"Finish testing extension {module}, error_flag:{error_flag}")
+        remove_extension(module)
+        logger.info(f"Finish removing extension {module}, error_flag:{error_flag}")
+        if error_flag:
+            rerun_setup(cli_repo_path=os.getenv('BUILD_SOURCESDIRECTORY'), extension_repo_path=f"{os.getenv('BUILD_SOURCESDIRECTORY')}/azure-cli-extensions")
 
 
 if __name__ == '__main__':
