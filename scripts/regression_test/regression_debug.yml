@@ -42,7 +42,7 @@ jobs:
       displayName: 'checkout cli and extension repo'
     - bash: |
         set -ev
-        source env/bin/activate
+        # source env/bin/activate
 
         python scripts/regression_test/debug_script.py "2" "$(Instance_idx)"
     - template: ../../.azure-pipelines/templates/azdev_setup.yml
