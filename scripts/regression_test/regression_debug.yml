@@ -31,9 +31,9 @@ jobs:
     - bash: |
           set -ev
 
-          cliRepo=$(pwd)
-          echo $cliRepo
-          echo "##vso[task.setvariable variable=cliRepo]$cliRepo"
+          repo=$(pwd)
+          echo $repo
+          echo "##vso[task.setvariable variable=repo]$repo"
 
           git clone https://github.com/Azure/azure-cli-extensions.git
           extensionRepo=$(pwd)/azure-cli-extensions
@@ -47,7 +47,7 @@ jobs:
         python scripts/regression_test/debug_script.py "2" "$(Instance_idx)"
     - template: ../../.azure-pipelines/templates/azdev_setup.yml
       parameters:
-        CLIRepoPath: '$(cliRepo)'
+        CLIRepoPath: '$(repo)'
         CLIExtensionRepoPath: '$(extensionRepo)'
     - bash: |
         publishResults='false'
