@@ -30,7 +30,7 @@ jobs:
         displayName: "Use Python 3.10"
     - bash: |
           set -ev
-          pwd
+
           cli_repo_path=$(pwd)
           echo $cli_repo_path
           echo "##vso[task.setvariable variable=cli_repo_path]$cli_repo_path"
@@ -47,7 +47,6 @@ jobs:
         python scripts/regression_test/debug_script.py "2" "$(Instance_idx)"
     - template: ../../.azure-pipelines/templates/azdev_setup.yml
       parameters:
-        CLIRepoPath: '$(cli_repo_path)'
         CLIExtensionRepoPath: '$(cli_extension_repo_path)'
     - bash: |
         publishResults='false'
