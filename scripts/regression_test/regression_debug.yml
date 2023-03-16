@@ -46,8 +46,8 @@ jobs:
           echo "##vso[task.setvariable variable=cli_extension_repo_path]$cli_extension_repo_path"
     - template: ../../.azure-pipelines/templates/azdev_setup.yml
       parameters:
-        CLIRepoPath: ${{ variables.cli_repo_path }}
-        CLIExtensionRepoPath: ${{ variables.cli_extension_repo_path }}
+        CLIRepoPath: $(cli_repo_path)
+        CLIExtensionRepoPath: $(cli_extension_repo_path)
     - bash: |
         set -ev
         source env/bin/activate
