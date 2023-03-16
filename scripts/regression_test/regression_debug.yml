@@ -21,8 +21,6 @@ jobs:
         Instance_idx: 1
       instance2:
         Instance_idx: 2
-      instance3:
-        Instance_idx: 3
   pool:
     name: ${{ variables.ubuntu_pool }}
   steps:
@@ -38,16 +36,23 @@ jobs:
         inlineScript: |
           set -ev
           pwd
+          cli_repo_path=$pwd
+          echo $cli_repo_path
+          echo "##vso[task.setvariable variable=cli_repo_path]$cli_repo_path"
+
           git clone https://github.com/Azure/azure-cli-extensions.git
-          cd azure-cli-extensions
+          cli_extension_repo_path=$pwd/azure-cli-extensions
+          echo $cli_extension_repo_path
+          echo "##vso[task.setvariable variable=cli_extension_repo_path]$cli_extension_repo_path"
     - template: ../../.azure-pipelines/templates/azdev_setup.yml
       parameters:
-        CLIExtensionRepoPath: ./azure-cli-extensions
+        CLIRepoPath: ${{ variables.cli_repo_path }}
+        CLIExtensionRepoPath: ${{ variables.cli_extension_repo_path }}
     - bash: |
         set -ev
         source env/bin/activate
 
-        python scripts/regression_test/debug_script.py "3" "$(Instance_idx)"
+        python scripts/regression_test/debug_script.py "2" "$(Instance_idx)"
     - bash: |
         publishResults='false'
         if [[ -f '/$(HOME)/.azdev/env_config/mnt/vss/_work/1/s/env/test_results_$(Instance_idx).txt' ]]; then
