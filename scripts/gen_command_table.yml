@@ -40,7 +40,7 @@ jobs:
           if [[ -n "$(EXTENSION_COMMIT)" ]]; then
             git checkout $(EXTENSION_COMMIT)
           fi
-    - bash:
+    - bash: |
         set -ev
         
         python -m venv env
