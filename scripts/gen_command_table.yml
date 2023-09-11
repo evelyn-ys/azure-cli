@@ -40,20 +40,21 @@ jobs:
           if [[ -n "$(EXTENSION_COMMIT)" ]]; then
             git checkout $(EXTENSION_COMMIT)
           fi
-    - template: ../.azure-pipelines/templates/azdev_setup.yml
-      parameters:
-        CLIExtensionRepoPath: ./azure-cli-extensions
     - bash:
         set -ev
-        source env/bin/activate
+        
+        python -m venv env
+        chmod +x env/bin/activate
+        . env/bin/activate
+        python -m pip install -U pip
+        pip install azdev
+        azdev setup -c -r ./azure-cli-extensions
+
         azdev extension add "*"
         azdev setup -c -r ./azure-cli-extensions
-      displayName: 'install extensions'
-    - bash:
-        set -ev
-        source env/bin/activate
+
         azdev statistics list-command-table > /tmp/command_table_$(CLI_VERSION).json
-      displayName: 'list command table'
+      displayName: 'install extensions & list command table'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '/tmp/command_table_$(CLI_VERSION).json'
