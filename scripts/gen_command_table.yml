@@ -48,10 +48,10 @@ jobs:
         . env/bin/activate
         python -m pip install -U pip
         pip install azdev
-        azdev setup -c -r ./azure-cli-extensions
+        azdev setup -c -r ./azure-cli-extensions --debug
 
         azdev extension add "*"
-        azdev setup -c -r ./azure-cli-extensions
+        azdev setup -c -r ./azure-cli-extensions --debug
 
         azdev statistics list-command-table > /tmp/command_table_$(CLI_VERSION).json
       displayName: 'install extensions & list command table'
