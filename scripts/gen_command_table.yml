@@ -38,7 +38,7 @@ jobs:
           if [[ -n "$(EXTENSION_COMMIT)" ]]; then
             git checkout $(EXTENSION_COMMIT)
           fi
-    - template: ../../.azure-pipelines/templates/azdev_setup.yml
+    - template: ../.azure-pipelines/templates/azdev_setup.yml
       parameters:
         CLIExtensionRepoPath: ./azure-cli-extensions
     - bash:
