@@ -45,9 +45,13 @@ jobs:
         set -ev
         source env/bin/activate
         azdev extension add "*"
-        # Some extension will change the dependence, so run `azdev setup` again after all extensions installed.
         azdev setup -c -r ./azure-cli-extensions
+      displayName: 'install extensions'
+    - bash:
+        set -ev
+        source env/bin/activate
         azdev statistics list-command-table > /tmp/command_table_$(CLI_VERSION).json
+      displayName: 'list command table'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '/tmp/command_table_$(CLI_VERSION).json'
