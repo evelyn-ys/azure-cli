@@ -1,0 +1,55 @@
+name: Generate CLI $(CLI_VERSION) & Extensions' command table $(Date:yyyyMMdd)$(Rev:.r)
+
+resources:
+- repo: self
+
+trigger:
+  branches:
+    exclude:
+    - '*'
+
+variables:
+- template: ${{ variables.Pipeline.Workspace }}/.azure-pipelines/templates/variables.yml
+
+jobs:
+- job: GenerateCommandTable
+  displayName: Generate Command Table
+  pool:
+    name: ${{ variables.ubuntu_pool }}
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.10'
+        displayName: "Use Python 3.10"
+    - task: AzureCLI@1
+      displayName: 'checkout branch'
+      inputs:
+        azureSubscription: 'Azure CLI release'
+        scriptLocation: inlineScript
+        inlineScript: |
+          set -ev
+          pwd
+          if [[ -n "$(CLI_VERSION)" ]]; then
+            git checkout tags/azure-cli-$(CLI_VERSION) -b azure-cli-$(CLI_VERSION)
+          fi
+
+          git clone https://github.com/Azure/azure-cli-extensions.git
+          cd azure-cli-extensions
+          if [[ -n "$(EXTENSION_COMMIT)" ]]; then
+            git checkout $(EXTENSION_COMMIT)
+          fi
+    - template: ../../.azure-pipelines/templates/azdev_setup.yml
+      parameters:
+        CLIExtensionRepoPath: ./azure-cli-extensions
+    - bash:
+        set -ev
+        source env/bin/activate
+        azdev extension add "*"
+        # Some extension will change the dependence, so run `azdev setup` again after all extensions installed.
+        azdev setup -c -r ./azure-cli-extensions
+        azdev statistics list-command-table > /tmp/command_table_$(CLI_VERSION).json
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '/tmp/command_table_$(CLI_VERSION).json'
+        ArtifactName: 'command_table_$(CLI_VERSION).json'
+        publishLocation: 'Container'
