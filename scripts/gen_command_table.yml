@@ -30,6 +30,8 @@ jobs:
           set -ev
           pwd
           if [[ -n "$(CLI_VERSION)" ]]; then
+            git remote add upstream https://github.com/Azure/azure-cli.git
+            git fetch upstream
             git checkout tags/azure-cli-$(CLI_VERSION) -b azure-cli-$(CLI_VERSION)
           fi
 
