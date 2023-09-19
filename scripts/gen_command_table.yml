@@ -1,4 +1,4 @@
-name: Generate CLI $(CLI_VERSION) & Extensions' command table $(Date:yyyyMMdd)$(Rev:.r)
+name: Generate $(TARGET_DATE) CLI & Extensions' command table $(Date:yyyyMMdd)$(Rev:.r)
 
 resources:
 - repo: self
@@ -29,10 +29,10 @@ jobs:
         inlineScript: |
           set -ev
           pwd
-          if [[ -n "$(CLI_VERSION)" ]]; then
+          if [[ -n "$(CLI_COMMIT)" ]]; then
             git remote add upstream https://github.com/Azure/azure-cli.git
             git fetch upstream
-            git checkout tags/azure-cli-$(CLI_VERSION) -b azure-cli-$(CLI_VERSION)
+            git checkout $(CLI_COMMIT)
           fi
 
           git clone https://github.com/Azure/azure-cli-extensions.git
@@ -53,10 +53,10 @@ jobs:
         azdev extension add "*"
         azdev setup -c -r ./azure-cli-extensions --debug
 
-        azdev statistics list-command-table > /tmp/command_table_$(CLI_VERSION).json
+        azdev statistics list-command-table > /tmp/command_table_$(TARGET_DATE).json
       displayName: 'install extensions & list command table'
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '/tmp/command_table_$(CLI_VERSION).json'
-        ArtifactName: 'command_table_$(CLI_VERSION).json'
+        PathtoPublish: '/tmp/command_table_$(TARGET_DATE).json'
+        ArtifactName: 'command_table_$(TARGET_DATE).json'
         publishLocation: 'Container'
