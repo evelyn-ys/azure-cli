@@ -640,8 +640,8 @@ class Profile:
         self._set_subscriptions(result, merge=False)
 
     def get_sp_auth_info(self, subscription_id=None, name=None, password=None, cert_file=None):
-        """Generate a JSON for --sdk-auth argument when used in:
-            - az ad sp create-for-rbac --sdk-auth
+        """Generate a JSON for --json-auth argument when used in:
+            - az ad sp create-for-rbac --json-auth
         """
         from collections import OrderedDict
         account = self.get_subscription(subscription_id)
@@ -858,6 +858,11 @@ def _create_identity_instance(cli_ctx, *args, **kwargs):
 
     # PREVIEW: On Windows, use core.allow_broker=true to use broker (WAM) for authentication.
     allow_broker = cli_ctx.config.getboolean('core', 'allow_broker', fallback=False)
+    from .telemetry import set_broker_info
+    set_broker_info(allow_broker=allow_broker)
+
+    # PREVIEW: In Azure Stack environment, use core.instance_discovery=false to disable MSAL's instance discovery.
+    instance_discovery = cli_ctx.config.getboolean('core', 'instance_discovery', True)
 
     return Identity(*args, encrypt=encrypt, use_msal_http_cache=use_msal_http_cache, allow_broker=allow_broker,
-                    **kwargs)
+                    instance_discovery=instance_discovery, **kwargs)

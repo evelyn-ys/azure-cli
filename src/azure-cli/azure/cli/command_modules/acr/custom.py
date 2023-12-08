@@ -65,7 +65,7 @@ def acr_create(cmd,
         raise CLIError("Classic SKU is no longer supported. Please select a managed SKU.")
 
     if re.match(r'\w*[A-Z]\w*', registry_name):
-        raise InvalidArgumentValueError("argument error: Connected registry name must use only lowercase.")
+        raise InvalidArgumentValueError("argument error: Registry name must use only lowercase.")
 
     Registry, Sku, NetworkRuleSet = cmd.get_models('Registry', 'Sku', 'NetworkRuleSet')
     registry = Registry(location=location, sku=Sku(name=sku), admin_user_enabled=admin_enabled,
@@ -301,7 +301,7 @@ def acr_login(cmd,
                        'docker commands, to avoid authentication errors, use all lowercase.')
 
     from subprocess import PIPE, Popen
-    logger.debug("Invoking '%s --username %s --password <redacted> %s'",
+    logger.debug("Invoking '%s login --username %s --password <redacted> %s'",
                  docker_command, username, login_server)
     p = Popen([docker_command, "login",
                "--username", username,

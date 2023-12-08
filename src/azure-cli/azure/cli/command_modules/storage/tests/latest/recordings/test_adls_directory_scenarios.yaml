@@ -15,12 +15,13 @@ interactions:
       ParameterSetName:
       - -n -g --query -o
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-azure-mgmt-storage/20.1.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-azure-mgmt-storage/21.1.0 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
     method: POST
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rg000001/providers/Microsoft.Storage/storageAccounts/clitest000002/listKeys?api-version=2022-05-01&$expand=kerb
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rg000001/providers/Microsoft.Storage/storageAccounts/clitest000002/listKeys?api-version=2023-01-01&$expand=kerb
   response:
     body:
-      string: '{"keys":[{"creationTime":"2022-08-19T02:49:07.7991185Z","keyName":"key1","value":"veryFakedStorageAccountKey==","permissions":"FULL"},{"creationTime":"2022-08-19T02:49:07.7991185Z","keyName":"key2","value":"veryFakedStorageAccountKey==","permissions":"FULL"}]}'
+      string: '{"keys":[{"creationTime":"2023-10-19T09:02:25.7748703Z","keyName":"key1","value":"veryFakedStorageAccountKey==","permissions":"FULL"},{"creationTime":"2023-10-19T09:02:25.7748703Z","keyName":"key2","value":"veryFakedStorageAccountKey==","permissions":"FULL"}]}'
     headers:
       cache-control:
       - no-cache
@@ -29,7 +30,7 @@ interactions:
       content-type:
       - application/json
       date:
-      - Fri, 19 Aug 2022 02:49:29 GMT
+      - Thu, 19 Oct 2023 09:02:48 GMT
       expires:
       - '-1'
       pragma:
@@ -45,7 +46,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-ratelimit-remaining-subscription-resource-requests:
-      - '11996'
+      - '11995'
     status:
       code: 200
       message: OK
@@ -65,11 +66,12 @@ interactions:
       ParameterSetName:
       - -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:30 GMT
+      - Thu, 19 Oct 2023 09:02:49 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: PUT
     uri: https://clitest000002.blob.core.windows.net/filesystem000003?restype=container
   response:
@@ -79,15 +81,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:30 GMT
+      - Thu, 19 Oct 2023 09:02:48 GMT
       etag:
-      - '"0x8DA818D70DEB269"'
+      - '"0x8DBD0822B46430D"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:31 GMT
+      - Thu, 19 Oct 2023 09:02:49 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 201
       message: Created
@@ -105,11 +107,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:31 GMT
+      - Thu, 19 Oct 2023 09:02:49 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/dir000004
   response:
@@ -117,7 +120,7 @@ interactions:
       string: ''
     headers:
       date:
-      - Fri, 19 Aug 2022 02:49:31 GMT
+      - Thu, 19 Oct 2023 09:02:49 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -125,7 +128,7 @@ interactions:
       x-ms-error-code:
       - BlobNotFound
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 404
       message: The specified blob does not exist.
@@ -145,11 +148,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:32 GMT
+      - Thu, 19 Oct 2023 09:02:49 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: PUT
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003/dir000004?resource=directory
   response:
@@ -159,17 +163,17 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       etag:
-      - '"0x8DA818D7238B9CD"'
+      - '"0x8DBD0822BCCEBCD"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-request-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 201
       message: Created
@@ -187,11 +191,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/dir000004
   response:
@@ -205,11 +210,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       etag:
-      - '"0x8DA818D7238B9CD"'
+      - '"0x8DBD0822BCCEBCD"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-access-tier:
@@ -219,7 +224,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       x-ms-group:
       - $superuser
       x-ms-lease-state:
@@ -237,7 +242,7 @@ interactions:
       x-ms-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -255,11 +260,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:34 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/dir000004
   response:
@@ -273,11 +279,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 19 Aug 2022 02:49:35 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       etag:
-      - '"0x8DA818D7238B9CD"'
+      - '"0x8DBD0822BCCEBCD"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-access-tier:
@@ -287,7 +293,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       x-ms-group:
       - $superuser
       x-ms-lease-state:
@@ -305,7 +311,7 @@ interactions:
       x-ms-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -323,11 +329,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:35 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003/dir000004?action=getAccessControl&upn=false
   response:
@@ -335,11 +342,11 @@ interactions:
       string: ''
     headers:
       date:
-      - Fri, 19 Aug 2022 02:49:36 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       etag:
-      - '"0x8DA818D7238B9CD"'
+      - '"0x8DBD0822BCCEBCD"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-acl:
@@ -351,7 +358,7 @@ interactions:
       x-ms-permissions:
       - rwxr-x---
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -371,15 +378,16 @@ interactions:
       ParameterSetName:
       - -n -f --permissions --umask --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:36 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       x-ms-permissions:
       - rwxrwxrwx
       x-ms-umask:
       - '0007'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: PUT
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003/dir000004%2Fsubdir000005?resource=directory
   response:
@@ -389,17 +397,17 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       etag:
-      - '"0x8DA818D74AB0FF3"'
+      - '"0x8DBD0822C9FE574"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-request-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 201
       message: Created
@@ -417,11 +425,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/dir000004/subdir000005
   response:
@@ -435,11 +444,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 19 Aug 2022 02:49:38 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       etag:
-      - '"0x8DA818D74AB0FF3"'
+      - '"0x8DBD0822C9FE574"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-access-tier:
@@ -449,7 +458,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       x-ms-group:
       - $superuser
       x-ms-lease-state:
@@ -467,7 +476,7 @@ interactions:
       x-ms-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -485,11 +494,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:38 GMT
+      - Thu, 19 Oct 2023 09:02:52 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003/dir000004%2Fsubdir000005?action=getAccessControl&upn=false
   response:
@@ -497,11 +507,11 @@ interactions:
       string: ''
     headers:
       date:
-      - Fri, 19 Aug 2022 02:49:39 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       etag:
-      - '"0x8DA818D74AB0FF3"'
+      - '"0x8DBD0822C9FE574"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-acl:
@@ -513,7 +523,7 @@ interactions:
       x-ms-permissions:
       - rwxrwx---
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -531,31 +541,32 @@ interactions:
       ParameterSetName:
       - -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:39 GMT
+      - Thu, 19 Oct 2023 09:02:52 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: GET
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003?resource=filesystem&recursive=true
   response:
     body:
-      string: '{"paths":[{"contentLength":"0","creationTime":"133053509733038541","etag":"0x8DA818D7238B9CD","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Fri,
-        19 Aug 2022 02:49:33 GMT","name":"dir000004","owner":"$superuser","permissions":"rwxr-x---"},{"contentLength":"0","creationTime":"133053509774086131","etag":"0x8DA818D74AB0FF3","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Fri,
-        19 Aug 2022 02:49:37 GMT","name":"dir000004/subdir000005","owner":"$superuser","permissions":"rwxrwx---"}]}
+      string: '{"paths":[{"contentLength":"0","creationTime":"133421797702233037","etag":"0x8DBD0822BCCEBCD","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Thu,
+        19 Oct 2023 09:02:50 GMT","name":"dir000004","owner":"$superuser","permissions":"rwxr-x---"},{"contentLength":"0","creationTime":"133421797716059508","etag":"0x8DBD0822C9FE574","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Thu,
+        19 Oct 2023 09:02:51 GMT","name":"dir000004/subdir000005","owner":"$superuser","permissions":"rwxrwx---"}]}
 
         '
     headers:
       content-type:
       - application/json;charset=utf-8
       date:
-      - Fri, 19 Aug 2022 02:49:39 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
       - chunked
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -573,30 +584,31 @@ interactions:
       ParameterSetName:
       - -f --path --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:40 GMT
+      - Thu, 19 Oct 2023 09:02:52 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: GET
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003?resource=filesystem&directory=dir000004&recursive=true
   response:
     body:
-      string: '{"paths":[{"contentLength":"0","creationTime":"133053509774086131","etag":"0x8DA818D74AB0FF3","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Fri,
-        19 Aug 2022 02:49:37 GMT","name":"dir000004/subdir000005","owner":"$superuser","permissions":"rwxrwx---"}]}
+      string: '{"paths":[{"contentLength":"0","creationTime":"133421797716059508","etag":"0x8DBD0822C9FE574","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Thu,
+        19 Oct 2023 09:02:51 GMT","name":"dir000004/subdir000005","owner":"$superuser","permissions":"rwxrwx---"}]}
 
         '
     headers:
       content-type:
       - application/json;charset=utf-8
       date:
-      - Fri, 19 Aug 2022 02:49:40 GMT
+      - Thu, 19 Oct 2023 09:02:52 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
       - chunked
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -614,11 +626,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:41 GMT
+      - Thu, 19 Oct 2023 09:02:53 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/new_dir
   response:
@@ -626,7 +639,7 @@ interactions:
       string: ''
     headers:
       date:
-      - Fri, 19 Aug 2022 02:49:41 GMT
+      - Thu, 19 Oct 2023 09:02:53 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -634,7 +647,7 @@ interactions:
       x-ms-error-code:
       - BlobNotFound
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 404
       message: The specified blob does not exist.
@@ -654,15 +667,16 @@ interactions:
       ParameterSetName:
       - -n -f --new-directory --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:42 GMT
+      - Thu, 19 Oct 2023 09:02:53 GMT
       x-ms-rename-source:
-      - /filesystemepiyvrau4o3clr/dir4c7l7hspz/subdirkkgj3c
+      - /filesystemyxkzcgit66xlfx/dir6fdgjamqe/subdirhe6lof
       x-ms-source-lease-id:
       - ''
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: PUT
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003/new_dir?mode=legacy
   response:
@@ -672,15 +686,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:43 GMT
+      - Thu, 19 Oct 2023 09:02:53 GMT
       etag:
-      - '"0x8DA818D74AB0FF3"'
+      - '"0x8DBD0822C9FE574"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 201
       message: Created
@@ -698,11 +712,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:43 GMT
+      - Thu, 19 Oct 2023 09:02:54 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/new_dir
   response:
@@ -716,11 +731,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 19 Aug 2022 02:49:44 GMT
+      - Thu, 19 Oct 2023 09:02:54 GMT
       etag:
-      - '"0x8DA818D74AB0FF3"'
+      - '"0x8DBD0822C9FE574"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-access-tier:
@@ -730,7 +745,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       x-ms-group:
       - $superuser
       x-ms-lease-state:
@@ -748,7 +763,7 @@ interactions:
       x-ms-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -766,11 +781,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:44 GMT
+      - Thu, 19 Oct 2023 09:02:54 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/dir000004/subdir000005
   response:
@@ -778,7 +794,7 @@ interactions:
       string: ''
     headers:
       date:
-      - Fri, 19 Aug 2022 02:49:45 GMT
+      - Thu, 19 Oct 2023 09:02:54 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -786,7 +802,7 @@ interactions:
       x-ms-error-code:
       - BlobNotFound
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 404
       message: The specified blob does not exist.
@@ -804,11 +820,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:46 GMT
+      - Thu, 19 Oct 2023 09:02:54 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000003/new_dir
   response:
@@ -822,11 +839,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 19 Aug 2022 02:49:46 GMT
+      - Thu, 19 Oct 2023 09:02:54 GMT
       etag:
-      - '"0x8DA818D74AB0FF3"'
+      - '"0x8DBD0822C9FE574"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-access-tier:
@@ -836,7 +853,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       x-ms-group:
       - $superuser
       x-ms-lease-state:
@@ -854,7 +871,7 @@ interactions:
       x-ms-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -872,11 +889,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:46 GMT
+      - Thu, 19 Oct 2023 09:02:55 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003/new_dir?action=getAccessControl&upn=false
   response:
@@ -884,11 +902,11 @@ interactions:
       string: ''
     headers:
       date:
-      - Fri, 19 Aug 2022 02:49:47 GMT
+      - Thu, 19 Oct 2023 09:02:54 GMT
       etag:
-      - '"0x8DA818D74AB0FF3"'
+      - '"0x8DBD0822C9FE574"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:37 GMT
+      - Thu, 19 Oct 2023 09:02:51 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-acl:
@@ -900,7 +918,7 @@ interactions:
       x-ms-permissions:
       - rwxrwx---
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -918,31 +936,32 @@ interactions:
       ParameterSetName:
       - -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:48 GMT
+      - Thu, 19 Oct 2023 09:02:55 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: GET
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003?resource=filesystem&recursive=true
   response:
     body:
-      string: '{"paths":[{"contentLength":"0","creationTime":"133053509733038541","etag":"0x8DA818D7238B9CD","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Fri,
-        19 Aug 2022 02:49:33 GMT","name":"dir000004","owner":"$superuser","permissions":"rwxr-x---"},{"contentLength":"0","creationTime":"133053509774086131","etag":"0x8DA818D74AB0FF3","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Fri,
-        19 Aug 2022 02:49:37 GMT","name":"new_dir","owner":"$superuser","permissions":"rwxrwx---"}]}
+      string: '{"paths":[{"contentLength":"0","creationTime":"133421797702233037","etag":"0x8DBD0822BCCEBCD","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Thu,
+        19 Oct 2023 09:02:50 GMT","name":"dir000004","owner":"$superuser","permissions":"rwxr-x---"},{"contentLength":"0","creationTime":"133421797716059508","etag":"0x8DBD0822C9FE574","expiryTime":"0","group":"$superuser","isDirectory":"true","lastModified":"Thu,
+        19 Oct 2023 09:02:51 GMT","name":"new_dir","owner":"$superuser","permissions":"rwxrwx---"}]}
 
         '
     headers:
       content-type:
       - application/json;charset=utf-8
       date:
-      - Fri, 19 Aug 2022 02:49:48 GMT
+      - Thu, 19 Oct 2023 09:02:55 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
       - chunked
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -960,11 +979,12 @@ interactions:
       ParameterSetName:
       - -f --path --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:49 GMT
+      - Thu, 19 Oct 2023 09:02:55 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: GET
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003?resource=filesystem&directory=dir000004&recursive=true
   response:
@@ -976,13 +996,13 @@ interactions:
       content-type:
       - application/json;charset=utf-8
       date:
-      - Fri, 19 Aug 2022 02:49:49 GMT
+      - Thu, 19 Oct 2023 09:02:55 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
       - chunked
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -1002,11 +1022,12 @@ interactions:
       ParameterSetName:
       - -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:50 GMT
+      - Thu, 19 Oct 2023 09:02:56 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: PUT
     uri: https://clitest000002.blob.core.windows.net/filesystem000006?restype=container
   response:
@@ -1016,15 +1037,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:50 GMT
+      - Thu, 19 Oct 2023 09:02:56 GMT
       etag:
-      - '"0x8DA818D7CD6C672"'
+      - '"0x8DBD0822F9117B8"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:51 GMT
+      - Thu, 19 Oct 2023 09:02:56 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 201
       message: Created
@@ -1044,15 +1065,16 @@ interactions:
       ParameterSetName:
       - -n -f --new-directory --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:51 GMT
+      - Thu, 19 Oct 2023 09:02:56 GMT
       x-ms-rename-source:
-      - /filesystemepiyvrau4o3clr/dir4c7l7hspz
+      - /filesystemyxkzcgit66xlfx/dir6fdgjamqe
       x-ms-source-lease-id:
       - ''
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: PUT
     uri: https://clitest000002.dfs.core.windows.net/filesystem000006/new_dir?mode=legacy
   response:
@@ -1062,15 +1084,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:51 GMT
+      - Thu, 19 Oct 2023 09:02:56 GMT
       etag:
-      - '"0x8DA818D7238B9CD"'
+      - '"0x8DBD0822BCCEBCD"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 201
       message: Created
@@ -1088,11 +1110,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:52 GMT
+      - Thu, 19 Oct 2023 09:02:57 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.blob.core.windows.net/filesystem000006/new_dir
   response:
@@ -1106,11 +1129,11 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 19 Aug 2022 02:49:52 GMT
+      - Thu, 19 Oct 2023 09:02:57 GMT
       etag:
-      - '"0x8DA818D7238B9CD"'
+      - '"0x8DBD0822BCCEBCD"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       x-ms-access-tier:
@@ -1120,7 +1143,7 @@ interactions:
       x-ms-blob-type:
       - BlockBlob
       x-ms-creation-time:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       x-ms-group:
       - $superuser
       x-ms-lease-state:
@@ -1138,7 +1161,7 @@ interactions:
       x-ms-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -1156,11 +1179,12 @@ interactions:
       ParameterSetName:
       - -n -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:53 GMT
+      - Thu, 19 Oct 2023 09:02:57 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: HEAD
     uri: https://clitest000002.dfs.core.windows.net/filesystem000006/new_dir?action=getAccessControl&upn=false
   response:
@@ -1168,11 +1192,11 @@ interactions:
       string: ''
     headers:
       date:
-      - Fri, 19 Aug 2022 02:49:53 GMT
+      - Thu, 19 Oct 2023 09:02:57 GMT
       etag:
-      - '"0x8DA818D7238B9CD"'
+      - '"0x8DBD0822BCCEBCD"'
       last-modified:
-      - Fri, 19 Aug 2022 02:49:33 GMT
+      - Thu, 19 Oct 2023 09:02:50 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-acl:
@@ -1184,7 +1208,7 @@ interactions:
       x-ms-permissions:
       - rwxr-x---
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -1204,11 +1228,12 @@ interactions:
       ParameterSetName:
       - -n -f -y --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:54 GMT
+      - Thu, 19 Oct 2023 09:02:57 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: DELETE
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003/new_dir?recursive=true
   response:
@@ -1218,13 +1243,13 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:54 GMT
+      - Thu, 19 Oct 2023 09:02:57 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-delete-type-permanent:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -1244,11 +1269,12 @@ interactions:
       ParameterSetName:
       - -n -f -y --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:55 GMT
+      - Thu, 19 Oct 2023 09:02:58 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: DELETE
     uri: https://clitest000002.dfs.core.windows.net/filesystem000006/new_dir?recursive=true
   response:
@@ -1258,13 +1284,13 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 19 Aug 2022 02:49:56 GMT
+      - Thu, 19 Oct 2023 09:02:58 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       x-ms-delete-type-permanent:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK
@@ -1282,11 +1308,12 @@ interactions:
       ParameterSetName:
       - -f --account-name --account-key
       User-Agent:
-      - AZURECLI/2.39.0 azsdk-python-storage-dfs/12.7.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-dfs/12.9.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 19 Aug 2022 02:49:56 GMT
+      - Thu, 19 Oct 2023 09:02:58 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     method: GET
     uri: https://clitest000002.dfs.core.windows.net/filesystem000003?resource=filesystem&recursive=true
   response:
@@ -1298,13 +1325,13 @@ interactions:
       content-type:
       - application/json;charset=utf-8
       date:
-      - Fri, 19 Aug 2022 02:49:56 GMT
+      - Thu, 19 Oct 2023 09:02:58 GMT
       server:
       - Windows-Azure-HDFS/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
       - chunked
       x-ms-version:
-      - '2021-06-08'
+      - '2021-08-06'
     status:
       code: 200
       message: OK

@@ -72,9 +72,9 @@ image_by_tag_or_digest_type = CLIArgumentType(
 
 
 def load_arguments(self, _):  # pylint: disable=too-many-statements
-    SkuName, PasswordName, DefaultAction, PolicyStatus, WebhookAction, WebhookStatus, \
+    PasswordName, DefaultAction, PolicyStatus, WebhookAction, WebhookStatus, \
         TokenStatus, ZoneRedundancy = self.get_models(
-            'SkuName', 'PasswordName', 'DefaultAction', 'PolicyStatus', 'WebhookAction', 'WebhookStatus',
+            'PasswordName', 'DefaultAction', 'PolicyStatus', 'WebhookAction', 'WebhookStatus',
             'TokenStatus', 'ZoneRedundancy')
     TaskStatus, BaseImageTriggerType, SourceRegistryLoginMode, UpdateTriggerPayloadType = self.get_models(
         'TaskStatus', 'BaseImageTriggerType', 'SourceRegistryLoginMode', 'UpdateTriggerPayloadType', operation_group='tasks')
@@ -84,7 +84,7 @@ def load_arguments(self, _):  # pylint: disable=too-many-statements
         c.argument('tags', arg_type=tags_type)
         c.argument('registry_name', options_list=['--name', '-n'], help='The name of the container registry. It should be specified in lower case. You can configure the default registry name using `az configure --defaults acr=<registry name>`', completer=get_resource_name_completion_list(REGISTRY_RESOURCE_TYPE), configured_default='acr', validator=validate_registry_name)
         c.argument('tenant_suffix', options_list=['--suffix'], help="The tenant suffix in registry login server. You may specify '--suffix tenant' if your registry login server is in the format 'registry-tenant.azurecr.io'. Applicable if you\'re accessing the registry from a different subscription or you have permission to access images but not the permission to manage the registry resource.")
-        c.argument('sku', help='The SKU of the container registry', arg_type=get_enum_type(SkuName))
+        c.argument('sku', help='The SKU of the container registry', arg_type=get_enum_type(['Basic', 'Standard', 'Premium']))
         c.argument('admin_enabled', help='Indicates whether the admin user is enabled', arg_type=get_three_state_flag())
         c.argument('password_name', help='The name of password to regenerate', arg_type=get_enum_type(PasswordName))
         c.argument('username', options_list=['--username', '-u'], help='The username used to log into a container registry')
@@ -169,6 +169,16 @@ def load_arguments(self, _):  # pylint: disable=too-many-statements
         c.argument('read_enabled', help='Indicates whether read operation is allowed.', arg_type=get_three_state_flag())
         c.argument('write_enabled', help='Indicates whether write or delete operation is allowed.', arg_type=get_three_state_flag())
 
+    with self.argument_context('acr artifact-streaming') as c:
+        c.argument('repository', help="The name of the repository.", required=True)
+        c.argument('image', arg_type=image_by_tag_or_digest_type, required=True)
+        c.argument('enable_streaming', help="Indicates whether artifact streaming is enabled for a repository.", required=True, arg_type=get_three_state_flag())
+
+    with self.argument_context('acr artifact-streaming operation') as c:
+        c.argument('repository', help="The name of the repository.", required=False)
+        c.argument('image', arg_type=image_by_tag_or_digest_type, required=False)
+        c.argument('operation_id', options_list=['--id'], required=False, help="The ID returned when creating a streaming artifact.")
+
     with self.argument_context('acr manifest') as c:
         c.argument('registry_name', options_list=['--registry', '-r'], help='The name of the container registry. You can configure the default registry name using `az configure --defaults acr=<registry name>`', completer=get_resource_name_completion_list(REGISTRY_RESOURCE_TYPE), configured_default='acr', validator=validate_registry_name)
         c.argument('top', type=int, help='Limit the number of items in the results.')
@@ -226,6 +236,21 @@ def load_arguments(self, _):  # pylint: disable=too-many-statements
         c.argument('digest', options_list=['--digest', '-d'], help="The digest of the manifest such as 'sha256@abc123'.")
         c.argument('force', options_list=['--force', '-f'], help='Overwrite the existing tag.', action='store_true')
         c.argument('manifest_spec', options_list=['--name', '-n'], help="The name of the artifact. May include a tag in the format 'name:tag'.")
+
+    with self.argument_context('acr cache') as c:
+        c.argument('registry_name', options_list=['--registry', '-r'])
+        c.argument('name', options_list=['--name', '-n'], help='The name of the cache rule.')
+        c.argument('cred_set', options_list=['--cred-set', '-c'], help='The name of the credential set.')
+        c.argument('source_repo', options_list=['--source-repo', '-s'], help="The full source repository path such as 'docker.io/library/ubuntu'.")
+        c.argument('target_repo', options_list=['--target-repo', '-t'], help="The target repository namespace such as 'ubuntu'.")
+        c.argument('remove_cred_set', action="store_true", help='Optional boolean indicating whether to remove the credential set from the cache rule. False by default.')
+
+    with self.argument_context('acr credential-set') as c:
+        c.argument('registry_name', options_list=['--registry', '-r'])
+        c.argument('name', options_list=['--name', '-n'], help='The name of the credential set.')
+        c.argument('login_server', options_list=['--login-server', '-l'], help="The login server address of the upstream registry such as 'docker.io'")
+        c.argument('username_id', options_list=['--username-id', '-u'], help='The Azure Key Vault secret ID of the secret containing the username to the upstream registry.')
+        c.argument('password_id', options_list=['--password-id', '-p'], help='The Azure Key Vault secret ID of the secret containing the password to the upstream registry.')
 
     with self.argument_context('acr repository untag') as c:
         c.argument('image', options_list=['--image', '-t'], help="The name of the image. May include a tag in the format 'name:tag'.")
@@ -415,8 +440,9 @@ def load_arguments(self, _):  # pylint: disable=too-many-statements
         c.argument('description', options_list=['--description'], help='Description for the scope map. Maximum 256 characters are allowed.', required=False)
         c.argument('scope_map_name', options_list=['--name', '-n'], help='The name of the scope map.', required=True)
 
-    repo_valid_actions = "Valid actions are {}".format({action.value for action in RepoScopeMapActions})
-    gateway_valid_actions = "Valid actions are {}".format({action.value for action in GatewayScopeMapActions})
+    # Action strings generated this way to ensure consistent ordering each time the help text is generated.
+    repo_valid_actions = "Valid actions are {}".format(sorted(action.value for action in RepoScopeMapActions))
+    gateway_valid_actions = "Valid actions are {}".format(sorted(action.value for action in GatewayScopeMapActions))
     with self.argument_context('acr scope-map update') as c:
         c.argument('add_repository', options_list=['--add-repository', c.deprecate(target='--add', redirect='--add-repository', hide=True)], nargs='+', action='append', required=False,
                    help='repository permissions to be added. Use the format "--add-repository REPO [ACTION1 ACTION2 ...]" per flag. ' + repo_valid_actions)

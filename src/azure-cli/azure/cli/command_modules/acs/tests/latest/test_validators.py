@@ -529,6 +529,49 @@ class TestValidateAzureKeyVaultKmsKeyId(unittest.TestCase):
             validators.validate_azure_keyvault_kms_key_id(namespace)
         self.assertEqual(str(cm.exception), err)
 
+class ImageCleanerNamespace:
+    def __init__(
+        self,
+        enable_image_cleaner=False,
+        disable_image_cleaner=False,
+        image_cleaner_interval_hours=None,
+    ):
+        self.enable_image_cleaner = enable_image_cleaner
+        self.disable_image_cleaner = disable_image_cleaner
+        self.image_cleaner_interval_hours = image_cleaner_interval_hours
+
+class TestValidateImageCleanerEnableDiasble(unittest.TestCase):
+    def test_invalid_image_cleaner_enable_disable_not_existing_together(self):
+        namespace = ImageCleanerNamespace(
+            enable_image_cleaner=True,
+            disable_image_cleaner=True,
+        )
+        err = 'Cannot specify --enable-image-cleaner and --disable-image-cleaner at the same time.'
+
+        with self.assertRaises(CLIError) as cm:
+            validators.validate_image_cleaner_enable_disable_mutually_exclusive(namespace)
+        self.assertEqual(str(cm.exception), err)
+
+class ForceUpgradeNamespace:
+    def __init__(
+        self,
+        enable_force_upgrade=False,
+        disable_force_upgrade=False,
+    ):
+        self.enable_force_upgrade = enable_force_upgrade
+        self.disable_force_upgrade = disable_force_upgrade
+
+class TestValidateForceUpgradeEnableDiasble(unittest.TestCase):
+    def test_invalid_force_upgrade_enable_disable_not_existing_together(self):
+        namespace = ForceUpgradeNamespace(
+            enable_force_upgrade=True,
+            disable_force_upgrade=True,
+        )
+        err = 'Providing both --disable-force-upgrade and --enable-force-upgrade flags is invalid'
+
+        with self.assertRaises(CLIError) as cm:
+            validators.validate_force_upgrade_disable_and_enable_parameters(namespace)
+        self.assertEqual(str(cm.exception), err)
 
 class AzureKeyVaultKmsKeyVaultResourceIdNamespace:
 
@@ -636,6 +679,64 @@ class TestValidateRegistryName(unittest.TestCase):
             validators.validate_registry_name(cmd, namespace)
             self.assertEqual(namespace.acr, "myacr" + acr_suffix)
 
+class TestValidateAllowedHostPorts(unittest.TestCase):
+    def test_invalid_allowed_host_ports(self):
+        namespace = SimpleNamespace(
+            **{
+                "allowed_host_ports": ["80"],
+            }
+        )
+        with self.assertRaises(InvalidArgumentValueError):
+            validators.validate_allowed_host_ports(
+                namespace
+            )
+
+    def test_valid_allowed_host_ports(self):
+        namespace = SimpleNamespace(
+            **{
+                "allowed_host_ports": ["80/tcp", "443/tcp", "8080-8090/tcp", "53/udp"],
+            }
+        )
+        validators.validate_allowed_host_ports(
+            namespace
+        )
+
+
+class TestValidateApplicationSecurityGroups(unittest.TestCase):
+    def test_invalid_application_security_groups(self):
+        namespace = SimpleNamespace(
+            **{
+                "asg_ids": "invalid",
+            }
+        )
+        with self.assertRaises(InvalidArgumentValueError):
+            validators.validate_application_security_groups(
+                namespace
+            )
+
+    def test_empty_application_security_groups(self):
+        namespace = SimpleNamespace(
+            **{
+                "asg_ids": "",
+            }
+        )
+        validators.validate_application_security_groups(
+            namespace
+        )
+
+    def test_multiple_application_security_groups(self):
+        asg_ids = [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Network/applicationSecurityGroups/asg1",
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg2/providers/Microsoft.Network/applicationSecurityGroups/asg2",
+        ]
+        namespace = SimpleNamespace(
+            **{
+                "asg_ids": asg_ids,
+            }
+        )
+        validators.validate_application_security_groups(
+            namespace
+        )
 
 if __name__ == "__main__":
     unittest.main()

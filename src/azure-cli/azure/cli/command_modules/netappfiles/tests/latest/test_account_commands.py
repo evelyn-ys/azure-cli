@@ -7,7 +7,8 @@ import unittest
 from knack.util import CLIError
 from azure.cli.core.azclierror import ValidationError
 from azure.cli.testsdk import ScenarioTest, ResourceGroupPreparer
-LOCATION = "southcentralusstage"
+import time
+LOCATION = "eastus2"
 ADLOCATION = "northeurope"
 
 # No tidy up of tests required. The resource group is automatically removed
@@ -122,11 +123,13 @@ class AzureNetAppFilesAccountServiceScenarioTest(ScenarioTest):
             self.check('name', '{acc_name}')
         ])
 
+        if self.is_live or self.in_recording:
+            time.sleep(60)
         # add an active directory
         self.cmd(
             "netappfiles account ad add -g {rg} -n {acc_name} --username {ad_user} --password {ad_user} "
             "--smb-server-name SMBSERVER --dns '1.2.3.4' --domain {loc} --ad-name {ad_name} --kdc-ip {kdc_ip} "
-            "--ldap-signing {ldap} --allow-local-ldap-users {ldap_users}", checks=[
+            "--ldap-signing {ldap} --allow-local-ldap-users {ldap_users}", checks=[ 
                 self.check('name', '{acc_name}'),
                 self.check('activeDirectories[0].username', '{ad_user}'),
                 self.check('activeDirectories[0].status', 'Created'),
@@ -205,14 +208,16 @@ class AzureNetAppFilesAccountServiceScenarioTest(ScenarioTest):
             'keyVaultUri': "myUri",
             'keyName': "myKeyName",
             'keyVaultResourceId': "myKeyVaultResourceId",
-            'userAssignedIdentity': "myIdentity"
+            'userAssignedIdentity': "myIdentity",
+            'identityType': "UserAssigned"
         })
         
         with self.assertRaises(CLIError):
             # create account with encryption value
-            self.cmd("az netappfiles account create -g {rg} -a {acc_name} -l {loc} --key-source {keySource} --key-vault-uri {keyVaultUri} --key-name {keyName} --keyvault-resource-id {keyVaultResourceId} --user-assigned-identity {userAssignedIdentity}", checks=[
+            self.cmd("az netappfiles account create -g {rg} -a {acc_name} -l {loc} --key-source {keySource} --identity-type {identityType}  --key-vault-uri {keyVaultUri} --key-name {keyName} --keyvault-resource-id {keyVaultResourceId} --user-assigned-identity {userAssignedIdentity}", checks=[
                 self.check('name', '{acc_name}'),
-                self.check('encryption.keySource', '{keySource}')
+                self.check('encryption.keySource', '{keySource}'),
+                self.check('identity.type', '{identityType}')
             ])
 
         # create account without encryption value
@@ -227,7 +232,7 @@ class AzureNetAppFilesAccountServiceScenarioTest(ScenarioTest):
                 self.check('encryption.keySource', '{keySource}')
             ])
 
-    @unittest.skip('(servicedeployment) api has not been deployed cannot test untill finilized')
+    #@unittest.skip('(servicedeployment) api has not been deployed cannot test until finalized')
     @ResourceGroupPreparer(name_prefix='cli_netappfiles_test_account_', additional_tags={'owner': 'cli_test'})
     def test_account_renew_credentials_fails(self):
         self.kwargs.update({
@@ -253,11 +258,13 @@ class AzureNetAppFilesAccountServiceScenarioTest(ScenarioTest):
             self.check('name', '{acc2_name}')
         ])
 
-        # with self.assertRaises(CLIError):
-        #     # create account with encryption value
-        #     self.cmd("az netappfiles account renew-credentials -g {rg} -a {acc_name} ", checks=[
-        #         self.check('name', '{acc_name}'),                
-        #     ])
+        with self.assertRaises(CLIError) as cm:
+            # create account with encryption value
+            self.cmd("az netappfiles account renew-credentials -g {rg} -a {acc2_name} ", checks=[
+                self.check('name', '{acc2_name}'),                
+            ])
+        self.assertIn('MsiInvalidForRenewal', str(
+            cm.exception))                            
         # with self.assertRaises(CLIError):
         #     # create account with encryption value
         #     self.cmd("az rest --method POST --uri /subscriptions/69a75bda-882e-44d5-8431-63421204132a/resourcegroups/{rg}/providers/Microsoft.NetApp/netappAccounts/{acc_name}/renewCredentials?api-version=2022-05-01  ", checks=[

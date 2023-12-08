@@ -15,12 +15,13 @@ interactions:
       ParameterSetName:
       - -n -g --query -o
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-azure-mgmt-storage/20.1.0 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-azure-mgmt-storage/21.1.0 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
     method: POST
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rg000001/providers/Microsoft.Storage/storageAccounts/clitest000002/listKeys?api-version=2022-05-01&$expand=kerb
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rg000001/providers/Microsoft.Storage/storageAccounts/clitest000002/listKeys?api-version=2023-01-01&$expand=kerb
   response:
     body:
-      string: '{"keys":[{"creationTime":"2022-09-09T08:24:35.0050269Z","keyName":"key1","value":"veryFakedStorageAccountKey==","permissions":"FULL"},{"creationTime":"2022-09-09T08:24:35.0050269Z","keyName":"key2","value":"veryFakedStorageAccountKey==","permissions":"FULL"}]}'
+      string: '{"keys":[{"creationTime":"2023-10-19T09:47:00.6873073Z","keyName":"key1","value":"veryFakedStorageAccountKey==","permissions":"FULL"},{"creationTime":"2023-10-19T09:47:00.6873073Z","keyName":"key2","value":"veryFakedStorageAccountKey==","permissions":"FULL"}]}'
     headers:
       cache-control:
       - no-cache
@@ -29,7 +30,7 @@ interactions:
       content-type:
       - application/json
       date:
-      - Fri, 09 Sep 2022 08:24:56 GMT
+      - Thu, 19 Oct 2023 09:47:20 GMT
       expires:
       - '-1'
       pragma:
@@ -38,10 +39,14 @@ interactions:
       - Microsoft-Azure-Storage-Resource-Provider/1.0,Microsoft-HTTPAPI/2.0 Microsoft-HTTPAPI/2.0
       strict-transport-security:
       - max-age=31536000; includeSubDomains
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
       x-content-type-options:
       - nosniff
       x-ms-ratelimit-remaining-subscription-resource-requests:
-      - '11998'
+      - '11982'
     status:
       code: 200
       message: OK
@@ -61,11 +66,12 @@ interactions:
       ParameterSetName:
       - -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:24:58 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000003?restype=share
   response:
@@ -75,15 +81,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:24:58 GMT
+      - Thu, 19 Oct 2023 09:47:20 GMT
       etag:
-      - '"0x8DA923CC8A80F07"'
+      - '"0x8DBD08863DAC243"'
       last-modified:
-      - Fri, 09 Sep 2022 08:24:58 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 201
       message: Created
@@ -103,11 +109,12 @@ interactions:
       ParameterSetName:
       - -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:24:59 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000004?restype=share
   response:
@@ -117,15 +124,15 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:24:59 GMT
+      - Thu, 19 Oct 2023 09:47:20 GMT
       etag:
-      - '"0x8DA923CC9844CB7"'
+      - '"0x8DBD08863FA7582"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:00 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 201
       message: Created
@@ -145,9 +152,10 @@ interactions:
       ParameterSetName:
       - --share-name -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:01 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       x-ms-file-attributes:
       - none
       x-ms-file-creation-time:
@@ -157,7 +165,7 @@ interactions:
       x-ms-file-permission:
       - inherit
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000003/dir1?restype=directory
   response:
@@ -167,31 +175,31 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:25:01 GMT
+      - Thu, 19 Oct 2023 09:47:20 GMT
       etag:
-      - '"0x8DA923CCA5FB5BF"'
+      - '"0x8DBD08864102701"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:01 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-file-attributes:
       - Directory
       x-ms-file-change-time:
-      - '2022-09-09T08:25:01.7309631Z'
+      - '2023-10-19T09:47:21.5966977Z'
       x-ms-file-creation-time:
-      - '2022-09-09T08:25:01.7309631Z'
+      - '2023-10-19T09:47:21.5966977Z'
       x-ms-file-id:
       - '13835128424026341376'
       x-ms-file-last-write-time:
-      - '2022-09-09T08:25:01.7309631Z'
+      - '2023-10-19T09:47:21.5966977Z'
       x-ms-file-parent-id:
       - '0'
       x-ms-file-permission-key:
-      - 9952030213285023238*16341189012755880335
+      - 8197968598250432338*1809935857602113755
       x-ms-request-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 201
       message: Created
@@ -211,9 +219,10 @@ interactions:
       ParameterSetName:
       - --share-name -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:02 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       x-ms-file-attributes:
       - none
       x-ms-file-creation-time:
@@ -223,7 +232,7 @@ interactions:
       x-ms-file-permission:
       - inherit
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000004/dir2?restype=directory
   response:
@@ -233,31 +242,31 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:25:02 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       etag:
-      - '"0x8DA923CCB34735D"'
+      - '"0x8DBD0886424E481"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:03 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-file-attributes:
       - Directory
       x-ms-file-change-time:
-      - '2022-09-09T08:25:03.1251805Z'
+      - '2023-10-19T09:47:21.7326209Z'
       x-ms-file-creation-time:
-      - '2022-09-09T08:25:03.1251805Z'
+      - '2023-10-19T09:47:21.7326209Z'
       x-ms-file-id:
       - '13835128424026341376'
       x-ms-file-last-write-time:
-      - '2022-09-09T08:25:03.1251805Z'
+      - '2023-10-19T09:47:21.7326209Z'
       x-ms-file-parent-id:
       - '0'
       x-ms-file-permission-key:
-      - 9952030213285023238*16341189012755880335
+      - 8197968598250432338*1809935857602113755
       x-ms-request-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 201
       message: Created
@@ -277,11 +286,12 @@ interactions:
       ParameterSetName:
       - -p --share-name --source --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-content-length:
       - '524288'
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:04 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       x-ms-file-attributes:
       - none
       x-ms-file-creation-time:
@@ -293,7 +303,7 @@ interactions:
       x-ms-type:
       - file
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000003/dir1/source_file.txt
   response:
@@ -303,31 +313,31 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:25:04 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       etag:
-      - '"0x8DA923CCC1F9BF4"'
+      - '"0x8DBD088643B9D7B"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:04 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-file-attributes:
       - Archive
       x-ms-file-change-time:
-      - '2022-09-09T08:25:04.6663156Z'
+      - '2023-10-19T09:47:21.8815355Z'
       x-ms-file-creation-time:
-      - '2022-09-09T08:25:04.6663156Z'
+      - '2023-10-19T09:47:21.8815355Z'
       x-ms-file-id:
       - '13835093239654252544'
       x-ms-file-last-write-time:
-      - '2022-09-09T08:25:04.6663156Z'
+      - '2023-10-19T09:47:21.8815355Z'
       x-ms-file-parent-id:
       - '13835128424026341376'
       x-ms-file-permission-key:
-      - 5361386451562492161*16341189012755880335
+      - 12807893550636226645*1809935857602113755
       x-ms-request-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 201
       message: Created
@@ -349,13 +359,14 @@ interactions:
       ParameterSetName:
       - -p --share-name --source --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:05 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       x-ms-range:
       - bytes=0-524287
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
       x-ms-write:
       - update
     method: PUT
@@ -369,19 +380,19 @@ interactions:
       content-md5:
       - WQcVkAmdId1DmJZZIzi/lQ==
       date:
-      - Fri, 09 Sep 2022 08:25:06 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       etag:
-      - '"0x8DA923CCD30BD9F"'
+      - '"0x8DBD0886443D9B3"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:06 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-file-last-write-time:
-      - '2022-09-09T08:25:06.4563103Z'
+      - '2023-10-19T09:47:21.9355059Z'
       x-ms-request-server-encrypted:
       - 'true'
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 201
       message: Created
@@ -399,11 +410,12 @@ interactions:
       ParameterSetName:
       - -p -s --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:07 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: HEAD
     uri: https://clitest000002.file.core.windows.net/share000003/dir1/source_file.txt
   response:
@@ -415,27 +427,27 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 09 Sep 2022 08:25:07 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       etag:
-      - '"0x8DA923CCD30BD9F"'
+      - '"0x8DBD0886443D9B3"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:06 GMT
+      - Thu, 19 Oct 2023 09:47:21 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-file-attributes:
       - Archive
       x-ms-file-change-time:
-      - '2022-09-09T08:25:06.4563103Z'
+      - '2023-10-19T09:47:21.9355059Z'
       x-ms-file-creation-time:
-      - '2022-09-09T08:25:04.6663156Z'
+      - '2023-10-19T09:47:21.8815355Z'
       x-ms-file-id:
       - '13835093239654252544'
       x-ms-file-last-write-time:
-      - '2022-09-09T08:25:06.4563103Z'
+      - '2023-10-19T09:47:21.9355059Z'
       x-ms-file-parent-id:
       - '13835128424026341376'
       x-ms-file-permission-key:
-      - 5361386451562492161*16341189012755880335
+      - 12807893550636226645*1809935857602113755
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -445,7 +457,7 @@ interactions:
       x-ms-type:
       - File
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 200
       message: OK
@@ -463,30 +475,31 @@ interactions:
       ParameterSetName:
       - -p -s --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:08 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: GET
     uri: https://clitest000002.file.core.windows.net/share000003/dir1%2Fsource_file.txt?restype=directory
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>ResourceNotFound</Code><Message>The
-        specified resource does not exist.\nRequestId:c28aeef8-501a-0036-6525-c498fb000000\nTime:2022-09-09T08:25:09.2371657Z</Message></Error>"
+        specified resource does not exist.\nRequestId:9a572fac-c01a-0044-5771-02a054000000\nTime:2023-10-19T09:47:22.2101039Z</Message></Error>"
     headers:
       content-length:
       - '221'
       content-type:
       - application/xml
       date:
-      - Fri, 09 Sep 2022 08:25:08 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-error-code:
       - ResourceNotFound
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 404
       message: The specified resource does not exist.
@@ -506,13 +519,14 @@ interactions:
       ParameterSetName:
       - -s -p -u --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-copy-source:
-      - https://clitestjobrrvm3nv3dtklot.file.core.windows.net/sharev2cqzrtltp2rhx55htm/dir1/source_file.txt
+      - https://clitestkpjszqosmjuhen53a.file.core.windows.net/share5jztxtfwwp7ozq3m574/dir1/source_file.txt
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:10 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000004/dir2/destination_file.txt
   response:
@@ -522,19 +536,19 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:25:09 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       etag:
-      - '"0x8DA923CCFD58BB6"'
+      - '"0x8DBD08864B30608"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:10 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-copy-id:
-      - 11794b5e-297f-4903-8f79-7e9ed5c00dbf
+      - 74f06290-937b-4460-b2b9-93552423ec80
       x-ms-copy-status:
       - success
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 202
       message: Accepted
@@ -552,11 +566,12 @@ interactions:
       ParameterSetName:
       - --share-name -p --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:11 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: HEAD
     uri: https://clitest000002.file.core.windows.net/share000004/dir2/destination_file.txt
   response:
@@ -568,37 +583,37 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 09 Sep 2022 08:25:11 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       etag:
-      - '"0x8DA923CCFD58BB6"'
+      - '"0x8DBD08864B30608"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:10 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-copy-completion-time:
-      - Fri, 09 Sep 2022 08:25:10 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       x-ms-copy-id:
-      - 11794b5e-297f-4903-8f79-7e9ed5c00dbf
+      - 74f06290-937b-4460-b2b9-93552423ec80
       x-ms-copy-progress:
       - 524288/524288
       x-ms-copy-source:
-      - https://clitestjobrrvm3nv3dtklot.file.core.windows.net/sharev2cqzrtltp2rhx55htm/dir1/source_file.txt
+      - https://clitestkpjszqosmjuhen53a.file.core.windows.net/share5jztxtfwwp7ozq3m574/dir1/source_file.txt
       x-ms-copy-status:
       - success
       x-ms-file-attributes:
       - Archive
       x-ms-file-change-time:
-      - '2022-09-09T08:25:10.8918198Z'
+      - '2023-10-19T09:47:22.6640904Z'
       x-ms-file-creation-time:
-      - '2022-09-09T08:25:10.8918198Z'
+      - '2023-10-19T09:47:22.6640904Z'
       x-ms-file-id:
       - '13835093239654252544'
       x-ms-file-last-write-time:
-      - '2022-09-09T08:25:10.8918198Z'
+      - '2023-10-19T09:47:22.6640904Z'
       x-ms-file-parent-id:
       - '13835128424026341376'
       x-ms-file-permission-key:
-      - 5361386451562492161*16341189012755880335
+      - 12807893550636226645*1809935857602113755
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -608,7 +623,7 @@ interactions:
       x-ms-type:
       - File
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 200
       message: OK
@@ -628,13 +643,14 @@ interactions:
       ParameterSetName:
       - -s -p -u --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-copy-source:
-      - https://clitestjobrrvm3nv3dtklot.file.core.windows.net/sharev2cqzrtltp2rhx55htm/dir1/source_file.txt
+      - https://clitestkpjszqosmjuhen53a.file.core.windows.net/share5jztxtfwwp7ozq3m574/dir1/source_file.txt
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:13 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000004/dir2/destination_file.txt
   response:
@@ -644,19 +660,19 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:25:13 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       etag:
-      - '"0x8DA923CD18D5CBD"'
+      - '"0x8DBD08864E61C86"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:13 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-copy-id:
-      - da78839d-f142-447f-a7ca-40a03ff0a72a
+      - b98c1320-e829-42e8-9618-4724afc8cffc
       x-ms-copy-status:
       - success
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 202
       message: Accepted
@@ -674,11 +690,12 @@ interactions:
       ParameterSetName:
       - -s -p --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:14 GMT
+      - Thu, 19 Oct 2023 09:47:23 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: HEAD
     uri: https://clitest000002.file.core.windows.net/share000004/dir2/destination_file.txt
   response:
@@ -690,37 +707,37 @@ interactions:
       content-type:
       - application/octet-stream
       date:
-      - Fri, 09 Sep 2022 08:25:14 GMT
+      - Thu, 19 Oct 2023 09:47:23 GMT
       etag:
-      - '"0x8DA923CD18D5CBD"'
+      - '"0x8DBD08864E61C86"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:13 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-copy-completion-time:
-      - Fri, 09 Sep 2022 08:25:13 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       x-ms-copy-id:
-      - da78839d-f142-447f-a7ca-40a03ff0a72a
+      - b98c1320-e829-42e8-9618-4724afc8cffc
       x-ms-copy-progress:
       - 524288/524288
       x-ms-copy-source:
-      - https://clitestjobrrvm3nv3dtklot.file.core.windows.net/sharev2cqzrtltp2rhx55htm/dir1/source_file.txt
+      - https://clitestkpjszqosmjuhen53a.file.core.windows.net/share5jztxtfwwp7ozq3m574/dir1/source_file.txt
       x-ms-copy-status:
       - success
       x-ms-file-attributes:
       - Archive
       x-ms-file-change-time:
-      - '2022-09-09T08:25:13.7742013Z'
+      - '2023-10-19T09:47:22.9988998Z'
       x-ms-file-creation-time:
-      - '2022-09-09T08:25:13.7742013Z'
+      - '2023-10-19T09:47:22.9988998Z'
       x-ms-file-id:
       - '13835093239654252544'
       x-ms-file-last-write-time:
-      - '2022-09-09T08:25:13.7742013Z'
+      - '2023-10-19T09:47:22.9988998Z'
       x-ms-file-parent-id:
       - '13835128424026341376'
       x-ms-file-permission-key:
-      - 5361386451562492161*16341189012755880335
+      - 12807893550636226645*1809935857602113755
       x-ms-lease-state:
       - available
       x-ms-lease-status:
@@ -730,7 +747,7 @@ interactions:
       x-ms-type:
       - File
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 200
       message: OK
@@ -750,13 +767,14 @@ interactions:
       ParameterSetName:
       - -s -p --source-share --source-path --account-name --account-key
       User-Agent:
-      - AZURECLI/2.40.0 azsdk-python-storage-file-share/12.10.0b1 Python/3.9.13 (Windows-10-10.0.19044-SP0)
+      - AZURECLI/2.53.0 azsdk-python-storage-file-share/12.12.0b1 Python/3.10.13 (Linux-5.15.0-1047-azure-x86_64-with-glibc2.31)
+        VSTS_7b238909-6802-4b65-b90d-184bca47f458_build_220_0
       x-ms-copy-source:
-      - https://clitestjobrrvm3nv3dtklot.file.core.windows.net/sharev2cqzrtltp2rhx55htm/dir1%5Csource_file.txt
+      - https://clitestkpjszqosmjuhen53a.file.core.windows.net/share5jztxtfwwp7ozq3m574/dir1/source_file.txt
       x-ms-date:
-      - Fri, 09 Sep 2022 08:25:16 GMT
+      - Thu, 19 Oct 2023 09:47:23 GMT
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     method: PUT
     uri: https://clitest000002.file.core.windows.net/share000004/dir2/destination_file.txt
   response:
@@ -766,19 +784,19 @@ interactions:
       content-length:
       - '0'
       date:
-      - Fri, 09 Sep 2022 08:25:16 GMT
+      - Thu, 19 Oct 2023 09:47:22 GMT
       etag:
-      - '"0x8DA923CD3410FA5"'
+      - '"0x8DBD08865378C0A"'
       last-modified:
-      - Fri, 09 Sep 2022 08:25:16 GMT
+      - Thu, 19 Oct 2023 09:47:23 GMT
       server:
       - Windows-Azure-File/1.0 Microsoft-HTTPAPI/2.0
       x-ms-copy-id:
-      - 4dc65045-b065-4579-a1fb-b54e61272daa
+      - df8696c3-069d-46c7-89b6-be1b86a99c74
       x-ms-copy-status:
       - success
       x-ms-version:
-      - '2021-06-08'
+      - '2022-11-02'
     status:
       code: 202
       message: Accepted

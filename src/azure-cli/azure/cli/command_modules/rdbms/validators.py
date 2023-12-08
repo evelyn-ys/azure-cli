@@ -20,9 +20,12 @@ from azure.mgmt.rdbms.mysql_flexibleservers.operations._firewall_rules_operation
 from ._client_factory import cf_mysql_flexible_servers, cf_postgres_flexible_servers
 from ._flexible_server_util import (get_mysql_versions, get_mysql_skus, get_mysql_storage_size,
                                     get_mysql_backup_retention, get_mysql_tiers, get_mysql_list_skus_info,
-                                    get_postgres_list_skus_info, get_postgres_versions,
                                     get_postgres_skus, get_postgres_storage_sizes, get_postgres_tiers,
                                     _is_resource_name)
+from ._flexible_server_location_capabilities_util import (get_postgres_location_capability_info,
+                                                          get_postgres_server_capability_info,
+                                                          get_performance_tiers,
+                                                          get_performance_tiers_for_storage)
 
 logger = get_logger(__name__)
 
@@ -126,15 +129,23 @@ def validate_private_endpoint_connection_id(cmd, namespace):
     del namespace.connection_id
 
 
+def mysql_restore_tier_validator(target_tier, source_tier, sku_info):
+    _mysql_tier_validator(target_tier, sku_info)
+    sku_list = list(sku_info.keys())
+    if sku_list.index(target_tier) < sku_list.index(source_tier):
+        raise CLIError("Incorrect value: --tier. Restored server must not go to below the source server compute tier.")
+
+
 # pylint: disable=too-many-locals
 def mysql_arguments_validator(db_context, location, tier, sku_name, storage_gb, backup_retention=None,
                               server_name=None, zone=None, standby_availability_zone=None, high_availability=None,
                               subnet=None, public_access=None, version=None, auto_grow=None, replication_role=None,
                               geo_redundant_backup=None, byok_identity=None, backup_byok_identity=None, byok_key=None,
-                              backup_byok_key=None, disable_data_encryption=None, instance=None):
+                              backup_byok_key=None, disable_data_encryption=None, iops=None, auto_io_scaling=None,
+                              instance=None):
     validate_server_name(db_context, server_name, 'Microsoft.DBforMySQL/flexibleServers')
 
-    list_skus_info = get_mysql_list_skus_info(db_context.cmd, location)
+    list_skus_info = get_mysql_list_skus_info(db_context.cmd, location, server_name=instance.name if instance else None)
     sku_info = list_skus_info['sku_info']
     single_az = list_skus_info['single_az']
     geo_paired_regions = list_skus_info['geo_paired_regions']
@@ -143,21 +154,22 @@ def mysql_arguments_validator(db_context, location, tier, sku_name, storage_gb, 
     _mysql_tier_validator(tier, sku_info)  # need to be validated first
     if geo_redundant_backup is None and instance is not None:
         geo_redundant_backup = instance.backup.geo_redundant_backup
-    _mysql_georedundant_backup_validator(geo_redundant_backup, geo_paired_regions)
+    mysql_georedundant_backup_validator(geo_redundant_backup, geo_paired_regions)
     if tier is None and instance is not None:
         tier = instance.sku.tier
-    _mysql_retention_validator(backup_retention, sku_info, tier)
-    _mysql_storage_validator(storage_gb, sku_info, tier, instance)
-    _mysql_sku_name_validator(sku_name, sku_info, tier, instance)
+    mysql_retention_validator(backup_retention, sku_info, tier)
+    mysql_storage_validator(storage_gb, sku_info, tier, instance)
+    mysql_sku_name_validator(sku_name, sku_info, tier, instance)
     _mysql_high_availability_validator(high_availability, standby_availability_zone, zone, tier,
                                        single_az, auto_grow, instance)
     _mysql_version_validator(version, sku_info, tier, instance)
-    _mysql_auto_grow_validator(auto_grow, replication_role, high_availability, instance)
+    mysql_auto_grow_validator(auto_grow, replication_role, high_availability, instance)
     _mysql_byok_validator(byok_identity, backup_byok_identity, byok_key, backup_byok_key,
                           disable_data_encryption, geo_redundant_backup, instance)
+    _mysql_iops_validator(iops, auto_io_scaling, instance)
 
 
-def _mysql_retention_validator(backup_retention, sku_info, tier):
+def mysql_retention_validator(backup_retention, sku_info, tier):
     if backup_retention is not None:
         backup_retention_range = get_mysql_backup_retention(sku_info, tier)
         if not 1 <= int(backup_retention) <= backup_retention_range[1]:
@@ -165,7 +177,7 @@ def _mysql_retention_validator(backup_retention, sku_info, tier):
                            .format(1, backup_retention_range[1]))
 
 
-def _mysql_storage_validator(storage_gb, sku_info, tier, instance):
+def mysql_storage_validator(storage_gb, sku_info, tier, instance):
     if storage_gb is not None:
         if instance:
             original_size = instance.storage.storage_size_gb
@@ -179,7 +191,7 @@ def _mysql_storage_validator(storage_gb, sku_info, tier, instance):
                            .format(max(min_mysql_storage, storage_sizes[0]), storage_sizes[1]))
 
 
-def _mysql_georedundant_backup_validator(geo_redundant_backup, geo_paired_regions):
+def mysql_georedundant_backup_validator(geo_redundant_backup, geo_paired_regions):
     if geo_redundant_backup and geo_redundant_backup.lower() == 'enabled' and len(geo_paired_regions) == 0:
         raise ArgumentUsageError("The region of the server does not support geo-restore feature.")
 
@@ -191,7 +203,7 @@ def _mysql_tier_validator(tier, sku_info):
             raise CLIError('Incorrect value for --tier. Allowed values : {}'.format(tiers))
 
 
-def _mysql_sku_name_validator(sku_name, sku_info, tier, instance):
+def mysql_sku_name_validator(sku_name, sku_info, tier, instance):
     if instance is not None:
         tier = instance.sku.tier if tier is None else tier
     if sku_name:
@@ -212,7 +224,7 @@ def _mysql_version_validator(version, sku_info, tier, instance):
             raise CLIError('Incorrect value for --version. Allowed values : {}'.format(versions))
 
 
-def _mysql_auto_grow_validator(auto_grow, replication_role, high_availability, instance):
+def mysql_auto_grow_validator(auto_grow, replication_role, high_availability, instance):
     if auto_grow is None:
         return
     if instance is not None:
@@ -274,21 +286,50 @@ def _mysql_byok_validator(byok_identity, backup_byok_identity, byok_key, backup_
                        "Use the primary server instead.")
 
 
+def _mysql_iops_validator(iops, auto_io_scaling, instance):
+    if iops is None:
+        return
+    if instance is not None:
+        auto_io_scaling = instance.storage.auto_io_scaling if auto_io_scaling is None else auto_io_scaling
+    if auto_io_scaling.lower() == 'enabled':
+        logger.warning("The server has enabled the auto scale iops. So the iops will be ignored.")
+
+
 def pg_arguments_validator(db_context, location, tier, sku_name, storage_gb, server_name=None, zone=None,
                            standby_availability_zone=None, high_availability=None, subnet=None, public_access=None,
-                           version=None, instance=None):
+                           version=None, instance=None, geo_redundant_backup=None,
+                           byok_identity=None, byok_key=None, backup_byok_identity=None, backup_byok_key=None,
+                           auto_grow=None, replication_role=None, performance_tier=None):
     validate_server_name(db_context, server_name, 'Microsoft.DBforPostgreSQL/flexibleServers')
-    list_skus_info = get_postgres_list_skus_info(db_context.cmd, location)
-    sku_info = list_skus_info['sku_info']
-    single_az = list_skus_info['single_az']
+    if not instance:
+        list_location_capability_info = get_postgres_location_capability_info(
+            db_context.cmd,
+            location)
+    else:
+        list_location_capability_info = get_postgres_server_capability_info(
+            db_context.cmd,
+            resource_group=parse_resource_id(instance.id)["resource_group"],
+            server_name=instance.name)
+    sku_info = list_location_capability_info['sku_info']
+    single_az = list_location_capability_info['single_az']
+    geo_backup_supported = list_location_capability_info['geo_backup_supported']
     _network_arg_validator(subnet, public_access)
     _pg_tier_validator(tier, sku_info)  # need to be validated first
     if tier is None and instance is not None:
         tier = instance.sku.tier
+    _pg_storage_performance_tier_validator(performance_tier,
+                                           sku_info,
+                                           tier,
+                                           instance.storage.storage_size_gb if storage_gb is None else storage_gb)
+    if geo_redundant_backup is None and instance is not None:
+        geo_redundant_backup = instance.backup.geo_redundant_backup
+    _pg_georedundant_backup_validator(geo_redundant_backup, geo_backup_supported)
     _pg_storage_validator(storage_gb, sku_info, tier, instance)
+    pg_auto_grow_validator(auto_grow, replication_role, high_availability, instance)
     _pg_sku_name_validator(sku_name, sku_info, tier, instance)
     _pg_high_availability_validator(high_availability, standby_availability_zone, zone, tier, single_az, instance)
-    _pg_version_validator(version, sku_info, tier, instance)
+    _pg_version_validator(version, list_location_capability_info['server_versions'])
+    pg_byok_validator(byok_identity, byok_key, backup_byok_identity, backup_byok_key, geo_redundant_backup, instance)
 
 
 def _pg_storage_validator(storage_gb, sku_info, tier, instance):
@@ -323,11 +364,22 @@ def _pg_sku_name_validator(sku_name, sku_info, tier, instance):
                            'Allowed values : {}'.format(tier, skus))
 
 
-def _pg_version_validator(version, sku_info, tier, instance):
-    if instance is not None:
-        tier = instance.sku.tier if tier is None else tier
+def _pg_storage_performance_tier_validator(performance_tier, sku_info, tier=None, storage_size=None):
+    if performance_tier:
+        tiers = get_postgres_tiers(sku_info)
+        if tier in tiers:
+            if storage_size is None:
+                performance_tiers = get_performance_tiers(sku_info[tier]["storage_edition"])
+            else:
+                performance_tiers = get_performance_tiers_for_storage(sku_info[tier]["storage_edition"],
+                                                                      storage_size=storage_size)
+            if performance_tier not in performance_tiers:
+                raise CLIError('Incorrect value for --performance-tier for storage-size: {}.'
+                               ' Allowed values : {}'.format(storage_size, performance_tiers))
+
+
+def _pg_version_validator(version, versions):
     if version:
-        versions = get_postgres_versions(sku_info, tier)
         if version not in versions:
             raise CLIError('Incorrect value for --version. Allowed values : {}'.format(versions))
 
@@ -352,6 +404,37 @@ def _pg_high_availability_validator(high_availability, standby_availability_zone
         if zone == standby_availability_zone:
             raise ArgumentUsageError("Your server is in availability zone {}. "
                                      "The zone of the server cannot be same as the standby zone.".format(zone))
+
+
+def _pg_georedundant_backup_validator(geo_redundant_backup, geo_backup_supported):
+    if (geo_redundant_backup and geo_redundant_backup.lower() == 'enabled') and not geo_backup_supported:
+        raise ArgumentUsageError("The region of the server does not support geo-restore feature.")
+
+
+def pg_byok_validator(byok_identity, byok_key, backup_byok_identity=None, backup_byok_key=None,
+                      geo_redundant_backup=None, instance=None):
+    if bool(byok_identity is None) ^ bool(byok_key is None):
+        raise ArgumentUsageError("User assigned identity and keyvault key need to be provided together. "
+                                 "Please provide --identity and --key together.")
+
+    if bool(backup_byok_identity is None) ^ bool(backup_byok_key is None):
+        raise ArgumentUsageError("User assigned identity and keyvault key need to be provided together. "
+                                 "Please provide --backup-identity and --backup-key together.")
+
+    if (instance is not None) and \
+       not (instance.data_encryption and instance.data_encryption.type == 'AzureKeyVault') and \
+       (byok_key or backup_byok_key):
+        raise ArgumentUsageError("You cannot enable data encryption on a server "
+                                 "that was not created with data encryption.")
+
+    if geo_redundant_backup is None or geo_redundant_backup.lower() == 'disabled':
+        if backup_byok_identity or backup_byok_key:
+            raise ArgumentUsageError("Geo-redundant backup is not enabled. "
+                                     "You cannot provide Geo-location user assigned identity and keyvault key.")
+    else:
+        if instance is None and (bool(byok_key is not None) ^ bool(backup_byok_key is not None)):
+            raise ArgumentUsageError("Please provide both primary as well as geo-back user assigned identity "
+                                     "and keyvault key to enable Data encryption for geo-redundant backup.")
 
 
 def _network_arg_validator(subnet, public_access):
@@ -396,10 +479,11 @@ def ip_address_validator(ns):
 def public_access_validator(ns):
     if ns.public_access:
         val = ns.public_access.lower()
-        if not (val == 'all' or val == 'none' or (len(val.split('-')) == 1 and _validate_ip(val)) or
+        if not (ns.public_access == 'Disabled' or ns.public_access == 'Enabled' or
+                val == 'all' or val == 'none' or (len(val.split('-')) == 1 and _validate_ip(val)) or
                 (len(val.split('-')) == 2 and _validate_ip(val))):
             raise CLIError('incorrect usage: --public-access. '
-                           'Acceptable values are \'all\', \'none\',\'<startIP>\' and '
+                           'Acceptable values are \'Disabled\', \'Enabled\', \'all\', \'none\',\'<startIP>\' and '
                            '\'<startIP>-<destinationIP>\' where startIP and destinationIP ranges from '
                            '0.0.0.0 to 255.255.255.255')
         if len(val.split('-')) == 2:
@@ -408,8 +492,8 @@ def public_access_validator(ns):
 
 
 def _validate_start_and_end_ip_address_order(start_ip, end_ip):
-    start_ip_elements = start_ip.split('.')
-    end_ip_elements = end_ip.split('.')
+    start_ip_elements = [int(octet) for octet in start_ip.split('.')]
+    end_ip_elements = [int(octet) for octet in end_ip.split('.')]
 
     for idx in range(4):
         if start_ip_elements[idx] < end_ip_elements[idx]:
@@ -448,10 +532,19 @@ def _valid_range(addr_range):
     return False
 
 
+def virtual_endpoint_name_validator(ns):
+    if not re.search(r'^(?=[a-z0-9].*)(?=.*[a-z-])(?!.*[^a-z0-9-])(?=.*[a-z0-9]$)', ns.virtual_endpoint_name):
+        raise ValidationError("The virtual endpoint name can only contain 0-9, a-z, and \'-\'. "
+                              "The virtual endpoint name must not start or end in a hyphen. "
+                              "Additionally, the name of the virtual endpoint must be at least 3 characters "
+                              "and no more than 63 characters in length. ")
+
+
 def firewall_rule_name_validator(ns):
     if not re.search(r'^[a-zA-Z0-9][-_a-zA-Z0-9]{1,126}[_a-zA-Z0-9]$', ns.firewall_rule_name):
-        raise ValidationError("The firewall rule name can only contain 0-9, a-z, A-Z, \'-\' and \'_\' "
-                              "and the name cannot exceed 126 characters. ")
+        raise ValidationError("The firewall rule name can only contain 0-9, a-z, A-Z, \'-\' and \'_\'. "
+                              "Additionally, the name of the firewall rule must be at least 3 characters "
+                              "and no more than 128 characters in length. ")
 
 
 def validate_server_name(db_context, server_name, type_):
@@ -462,21 +555,17 @@ def validate_server_name(db_context, server_name, type_):
 
     if len(server_name) < 3 or len(server_name) > 63:
         raise ValidationError("Server name must be at least 3 characters and at most 63 characters.")
-
-    if db_context.command_group == 'mysql':
-        try:
-            result = client.execute(db_context.location,
-                                    name_availability_request={
-                                        'name': server_name,
-                                        'type': type_})
-        except HttpResponseError as e:
-            if e.status_code == 403 and e.error and e.error.code == 'AuthorizationFailed':
-                client_without_location = db_context.cf_availability_without_location(db_context.cmd.cli_ctx, '_')
-                result = client_without_location.execute(name_availability_request={'name': server_name, 'type': type_})
-            else:
-                raise e
-    else:
-        result = client.execute(name_availability_request={'name': server_name, 'type': type_})
+    try:
+        result = client.execute(db_context.location,
+                                name_availability_request={
+                                    'name': server_name,
+                                    'type': type_})
+    except HttpResponseError as e:
+        if e.status_code == 403 and e.error and e.error.code == 'AuthorizationFailed':
+            client_without_location = db_context.cf_availability_without_location(db_context.cmd.cli_ctx, '_')
+            result = client_without_location.execute(name_availability_request={'name': server_name, 'type': type_})
+        else:
+            raise e
 
     if not result.name_available:
         raise ValidationError(result.message)
@@ -505,22 +594,37 @@ def validate_mysql_ha_enabled(server):
 
 
 def validate_vnet_location(vnet, location):
-    if vnet.location != location:
+    if vnet["location"] != location:
         raise ValidationError("The location of Vnet should be same as the location of the server")
 
 
-def validate_mysql_replica(cmd, server):
+def validate_mysql_replica(server):
     # Tier validation
     if server.sku.tier == 'Burstable':
         raise ValidationError("Read replica is not supported for the Burstable pricing tier. "
                               "Scale up the source server to General Purpose or Memory Optimized. ")
 
-    # single az validation
-    list_skus_info = get_mysql_list_skus_info(cmd, server.location)
-    single_az = list_skus_info['single_az']
-    if single_az:
-        raise ValidationError("Replica can only be created for multi-availability zone regions. "
-                              "The location of the source server is in a single availability zone region.")
+
+def validate_postgres_replica(cmd, tier, location, instance, sku_name,
+                              storage_gb, performance_tier=None, list_location_capability_info=None):
+    # Tier validation
+    if tier == 'Burstable':
+        raise ValidationError("Read replica is not supported for the Burstable pricing tier. "
+                              "Scale up the source server to General Purpose or Memory Optimized. ")
+
+    if instance is not None and instance.storage.auto_grow.lower() == 'enabled':
+        raise ValidationError("Read replica is not supported for servers with Storage Auto-grow enabled")
+
+    if not list_location_capability_info:
+        list_location_capability_info = get_postgres_location_capability_info(cmd, location)
+
+    sku_info = list_location_capability_info['sku_info']
+    _pg_tier_validator(tier, sku_info)  # need to be validated first
+    _pg_sku_name_validator(sku_name, sku_info, tier, instance)
+    _pg_storage_performance_tier_validator(performance_tier,
+                                           sku_info,
+                                           tier,
+                                           storage_gb)
 
 
 def validate_mysql_tier_update(instance, tier):
@@ -539,10 +643,19 @@ def validate_georestore_location(db_context, location):
         raise ValidationError("The region is not paired with the region of the source server. ")
 
 
-def validate_georestore_network(source_server_object, public_access, vnet, subnet):
+def validate_replica_location(cmd, source_server_location, replica_location):
+    if source_server_location != replica_location:
+        list_skus_info = get_mysql_list_skus_info(cmd, source_server_location)
+        geo_paired_regions = list_skus_info['geo_paired_regions']
+
+        if replica_location not in geo_paired_regions:
+            raise ValidationError("The region is not paired with the region of the source server. ")
+
+
+def validate_georestore_network(source_server_object, public_access, vnet, subnet, db_engine):
     if source_server_object.network.public_network_access == 'Disabled' and not any((public_access, vnet, subnet)):
         raise ValidationError("Please specify network parameters if you are geo-restoring a private access server. "
-                              "Run 'az mysql flexible-server goe-restore --help' command to see examples")
+                              F"Run 'az {db_engine} flexible-server geo-restore --help' command to see examples")
 
 
 def validate_and_format_restore_point_in_time(restore_time):
@@ -588,7 +701,7 @@ def validate_byok_identity(cmd, namespace):
     if namespace.byok_identity:
         namespace.byok_identity = _validate_identity(cmd, namespace, namespace.byok_identity)
 
-    if namespace.backup_byok_identity:
+    if hasattr(namespace, 'backup_byok_identity') and namespace.backup_byok_identity:
         namespace.backup_byok_identity = _validate_identity(cmd, namespace, namespace.backup_byok_identity)
 
 
@@ -597,8 +710,12 @@ def validate_identities(cmd, namespace):
         namespace.identities = [_validate_identity(cmd, namespace, identity) for identity in namespace.identities]
 
 
-def high_availability_validator(namespace):
-    if namespace.high_availability and namespace.high_availability == 'Enabled':
-        logger.warning("'Enabled' value for high availability parameter will be deprecated by April 2023. "
-                       "Please use 'ZoneRedundant' or 'SameZone' instead.")
-        namespace.high_availability = 'ZoneRedundant'
+def pg_auto_grow_validator(auto_grow, replication_role, high_availability, instance):
+    if auto_grow is None:
+        return
+    if instance is not None:
+        replication_role = instance.replication_role if replication_role is None else replication_role
+        high_availability = instance.high_availability.mode if high_availability is None else high_availability
+    # if replica, cannot be disabled
+    if replication_role not in ('None', None, 'Primary'):
+        raise ValidationError("Storage Auto grow is not supported for replica servers.")

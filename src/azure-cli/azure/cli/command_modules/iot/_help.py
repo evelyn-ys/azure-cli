@@ -10,7 +10,6 @@ from knack.help_files import helps  # pylint: disable=unused-import
 helps['iot'] = """
 type: group
 short-summary: Manage Internet of Things (IoT) assets.
-long-summary: Comprehensive IoT data-plane functionality is available in the Azure IoT CLI Extension. For more info and install guide go to https://github.com/Azure/azure-iot-cli-extension
 """
 
 helps['iot dps'] = """
@@ -699,10 +698,10 @@ examples:
   - name: Add a new endpoint "E2" of type EventHub to "MyIotHub" IoT Hub.
     text: >
         az iot hub routing-endpoint create --resource-group MyResourceGroup --hub-name MyIotHub --endpoint-name E2 --endpoint-type eventhub --endpoint-resource-group {ResourceGroup} --endpoint-subscription-id {SubscriptionId} --connection-string {ConnectionString}
-  - name: Add a new endpoint "S1" of type AzureStorageContainer to "MyIotHub" IoT Hub.
+  - name: Add a new endpoint "S1" of type AzureStorageContainer to the "MyIotHub" IoT Hub within the endpoint resource group "MyEndpointResourceGroup".
     text: |
         az iot hub routing-endpoint create --resource-group MyResourceGroup --hub-name MyIotHub \\
-        --endpoint-name S1 --endpoint-type azurestoragecontainer --endpoint-resource-group "[Resource Group]" \\
+        --endpoint-name S1 --endpoint-type azurestoragecontainer --endpoint-resource-group MyEndpointResourceGroup \\
         --endpoint-subscription-id {SubscriptionId} --connection-string {ConnectionString} \\
         --container-name {ContainerName} --batch-frequency 100 --chunk-size 100 \\
         --ff {iothub}-{partition}-{YYYY}-{MM}-{DD}-{HH}-{mm}
@@ -842,6 +841,21 @@ examples:
   - name: Update the IoT Hub local authentication, device SAS, and module SAS settings
     text: >
         az iot hub update -n MyIoTHub --disable-local-auth --disable-device-sas false --disable-module-sas true
+"""
+
+helps['iot hub wait'] = """
+type: command
+short-summary: Wait until an operation on an IoT Hub instance is complete.
+examples:
+  - name: Wait until an existing IoT Hub instance is created
+    text: >
+        az iot hub wait -n MyIoTHub --created
+  - name: Wait until an IoT Hub instance is deleted
+    text: >
+        az iot hub wait -n MyIoTHub --deleted
+  - name: Wait until an existing IoT Hub instance has an Active state
+    text: >
+        az iot hub wait -n MyIoTHub --custom "properties.state=='Active'"
 """
 
 helps['iot central'] = """

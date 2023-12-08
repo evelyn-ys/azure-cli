@@ -6,8 +6,14 @@
 """
 Credentials defined in this module are alternative implementations of credentials provided by Azure Identity.
 
-These credentials implement azure.core.credentials.TokenCredential by exposing get_token method for Track 2
+These credentials implement azure.core.credentials.TokenCredential by exposing `get_token` method for Track 2
 SDK invocation.
+
+If you want to implement your own credential, the credential must also expose `get_token` method.
+
+`get_token` method takes `scopes` as positional arguments and other optional `kwargs`, such as `claims`, `data`.
+The return value should be a named tuple containing two elements: token (str), expires_on (int). You may simply use
+azure.cli.core.auth.util.AccessToken to build the return value. See below credentials as examples.
 """
 
 from knack.log import get_logger
@@ -129,8 +135,6 @@ class ServicePrincipalCredential(ConfidentialClientApplication):
         logger.debug("ServicePrincipalCredential.get_token: scopes=%r, kwargs=%r", scopes, kwargs)
 
         scopes = list(scopes)
-        result = self.acquire_token_silent(scopes, None, **kwargs)
-        if not result:
-            result = self.acquire_token_for_client(scopes, **kwargs)
+        result = self.acquire_token_for_client(scopes, **kwargs)
         check_result(result)
         return build_sdk_access_token(result)

@@ -179,8 +179,10 @@ def load_arguments(self, _):
                    help='Role of the service principal.')
         c.argument('skip_assignment', arg_type=get_three_state_flag(),
                    deprecate_info=c.deprecate(target='--skip-assignment', hide=True), help='No-op.')
-        c.argument('show_auth_for_sdk', options_list='--sdk-auth', deprecate_info=c.deprecate(target='--sdk-auth'),
-                   help='output result in compatible with Azure SDK auth file', arg_type=get_three_state_flag())
+        c.argument('show_auth_in_json', options_list=['--sdk-auth', '--json-auth'],
+                   deprecate_info=c.deprecate(target='--sdk-auth'),
+                   help='Output service principal credential along with cloud endpoints in JSON format. ',
+                   arg_type=get_three_state_flag())
 
     with self.argument_context('ad sp owner list') as c:
         c.argument('identifier', options_list=['--id'], help='service principal name, or object id or the service principal')
@@ -301,7 +303,6 @@ def load_arguments(self, _):
         c.argument('resource_group_name', options_list=['--resource-group', '-g'], help='use it only if the role or assignment was added at the level of a resource group')
 
     with self.argument_context('role assignment') as c:
-        c.argument('role_assignment_name', options_list=['--name', '-n'])
         c.argument('role', help='role name or id', completer=get_role_definition_name_completion_list)
         c.argument('show_all', options_list=['--all'], action='store_true', help='show all assignments under the current subscription')
         c.argument('include_inherited', action='store_true', help='include assignments applied on parent scopes')
@@ -316,6 +317,8 @@ def load_arguments(self, _):
         c.argument('description', is_preview=True, min_api='2020-04-01-preview', help='Description of role assignment.')
         c.argument('condition', is_preview=True, min_api='2020-04-01-preview', help='Condition under which the user can be granted permission.')
         c.argument('condition_version', is_preview=True, min_api='2020-04-01-preview', help='Version of the condition syntax. If --condition is specified without --condition-version, default to 2.0.')
+        c.argument('assignment_name', name_arg_type,
+                   help='A GUID for the role assignment. It must be unique and different for each role assignment. If omitted, a new GUID is generetd.')
 
     time_help = ('The {} of the query in the format of %Y-%m-%dT%H:%M:%SZ, e.g. 2000-12-31T12:59:59Z. Defaults to {}')
     with self.argument_context('role assignment list-changelogs') as c:

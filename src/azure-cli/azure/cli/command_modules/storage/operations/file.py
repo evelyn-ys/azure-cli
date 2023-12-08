@@ -148,7 +148,7 @@ def storage_file_upload(client, local_file_path, content_settings=None,
     }
     if progress_callback:
         upload_args['progress_hook'] = progress_callback
-    # Because the contents of the uploaded file may be too large, it should be passed into the a stream object,
+    # Because the contents of the uploaded file may be too large, it should be passed into a stream object,
     # upload_file() read file data in batches to avoid OOM problems
     count = os.path.getsize(local_file_path)
     with open(local_file_path, 'rb') as stream:
@@ -161,6 +161,16 @@ def storage_file_upload(client, local_file_path, content_settings=None,
     return response
 
 
+def _execute_in_parallel(max_workers, fn, args_list):
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    if len(args_list) == 0:
+        return []
+    max_workers = min(max_workers, len(args_list))
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [executor.submit(fn, *args) for args in args_list]
+        return list(f.result() for f in as_completed(futures))
+
+
 def storage_file_upload_batch(cmd, client, destination, source, destination_path=None, pattern=None, dryrun=False,
                               validate_content=False, content_settings=None, max_connections=1, metadata=None,
                               progress_callback=None):
@@ -169,25 +179,25 @@ def storage_file_upload_batch(cmd, client, destination, source, destination_path
     from azure.cli.command_modules.storage.util import glob_files_locally, normalize_blob_file_path
 
     source_files = list(glob_files_locally(source, pattern))
-    settings_class = cmd.get_models('_models#ContentSettings')
+    settings_class = cmd.get_models('_models#ContentSettings', resource_type=ResourceType.DATA_STORAGE_FILESHARE)
 
     if dryrun:
         logger.info('upload files to file share')
         logger.info('    account %s', client.account_name)
         logger.info('      share %s', destination)
         logger.info('      total %d', len(source_files))
-        dst = None
-        kwargs = {
-            'dir_name': os.path.dirname(dst),
-            'file_name': os.path.basename(dst)
-        }
+        res = []
+        for src, dst in source_files:
+            formatted_dst = normalize_blob_file_path(destination_path, dst)
+            kwargs = {
+                'directory_name': os.path.dirname(formatted_dst),
+                'file_name': os.path.basename(formatted_dst)
+            }
+            file = create_file_url(client, **kwargs)
+            guessed_type = guess_content_type(src, content_settings, settings_class).content_type
+            res.append({'File': file, 'Type': guessed_type})
+        return res
 
-        return [{'File': create_file_url(client, **kwargs),
-                 'Type': guess_content_type(src, content_settings, settings_class).content_type} for src, dst in
-                source_files]
-
-    # TODO: Performance improvement
-    # 1. Upload files in parallel
     def _upload_action(src, dst2):
         dst2 = normalize_blob_file_path(destination_path, dst2)
         dir_name = os.path.dirname(dst2)
@@ -200,12 +210,14 @@ def storage_file_upload_batch(cmd, client, destination, source, destination_path
                             progress_callback, max_connections)
 
         args = {
-            'dir_name': dir_name,
+            'directory_name': dir_name,
             'file_name': file_name
         }
         return create_file_url(client, **args)
 
-    return list(_upload_action(src, dst) for src, dst in source_files)
+    # 1. Upload files in parallel
+    # 2. Return the list of uploaded files
+    return _execute_in_parallel(max_connections, _upload_action, source_files)
 
 
 def download_file(client, destination_path=None, timeout=None, max_connections=2, open_mode='wb', **kwargs):

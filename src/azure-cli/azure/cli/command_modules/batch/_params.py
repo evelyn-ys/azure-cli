@@ -14,15 +14,18 @@ from azure.mgmt.batch.models import (
     PublicNetworkAccessType,
     ResourceIdentityType,
     EndpointAccessDefaultAction)
-from azure.batch.models import ComputeNodeDeallocationOption
+from azure.batch.models import (
+    ComputeNodeDeallocationOption,
+    NodeCommunicationMode)
 
 from azure.cli.core.commands.parameters import (
-    tags_type,
-    get_location_type,
-    resource_group_name_type,
-    get_resource_name_completion_list,
     file_type,
-    get_enum_type)
+    get_enum_type,
+    get_location_type,
+    get_resource_name_completion_list,
+    get_three_state_flag,
+    resource_group_name_type,
+    tags_type)
 
 from azure.cli.command_modules.batch._completers import load_supported_images
 from azure.cli.command_modules.batch._validators import (
@@ -238,6 +241,16 @@ def load_arguments(self, _):
                 help='A space separated list of DiskEncryptionTargets. current possible values include OsDisk and TemporaryDisk.', type=disk_encryption_configuration_format)
         c.extra('image', completer=load_supported_images, arg_group="Pool: Virtual Machine Configuration",
                 help="OS image reference. This can be either 'publisher:offer:sku[:version]' format, or a fully qualified ARM image id of the form '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/images/{imageName}'. If 'publisher:offer:sku[:version]' format, version is optional and if omitted latest will be used. Valid values can be retrieved via 'az batch pool supported-images list'. For example: 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:latest'")
+        c.argument('target_node_communication_mode', options_list=['--target-communication'],
+                   help="The desired node communication mode for the pool. If this element is present, it replaces the existing targetNodeCommunicationMode configured on the Pool. If omitted, any existing metadata is left unchanged.",
+                   arg_type=get_enum_type(NodeCommunicationMode))
+        c.extra('enable_accelerated_networking', arg_type=get_three_state_flag(), options_list=['--accelerated-networking'], arg_group="Pool: Network Configuration",
+                help='Whether this pool should enable accelerated networking. Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, which may lead to improved networking performance. For more details, see: https://learn.microsoft.com/azure/virtual- network/accelerated-networking-overview. Set true to enable.')
+
+    with self.argument_context('batch pool set') as c:
+        c.argument('target_node_communication_mode', options_list=['--target-communication'],
+                   help="The desired node communication mode for the pool. If this element is present, it replaces the existing targetNodeCommunicationMode configured on the Pool. If omitted, any existing metadata is left unchanged.",
+                   arg_type=get_enum_type(NodeCommunicationMode))
 
     with self.argument_context('batch certificate') as c:
         c.argument('thumbprint', help='The certificate thumbprint.')
