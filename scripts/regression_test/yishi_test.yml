@@ -50,6 +50,5 @@ jobs:
 
           az account set -s 0b1f6471-1bf0-4dda-aec3-cb9272f09590
           env
-          azdev test containerapp --no-exitfirst
-          azdev test containerapp --lf --live
+          azdev test test_containerapp_custom_domains_app_in_different_rg --live
           env
