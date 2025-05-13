@@ -20,35 +20,14 @@ jobs:
       inputs:
         versionSpec: '3.10'
         displayName: "Use Python 3.10"
-    - task: AzureCLI@1
-      displayName: 'Checkout Target Branch'
+    - task: AzureCLI@2
+      displayName: 'Checkout CLI version and upgrade'
       inputs:
         azureSubscription: $(AZURE_SDK_INFRA_SUB_CONNECTED_SERVICE)
+        scriptType: 'bash'
         scriptLocation: inlineScript
         inlineScript: |
           set -ev
-          GITHUB_REPO="azclibot"
-          GITHUB_BRANCH="regression_test_144699"
-          GITHUB_TOKEN=$(az keyvault secret show --vault-name kv-azuresdk --name azclibot-pat --query value -otsv)
-
-          git config --global user.email "AzPyCLI@microsoft.com"
-          git config --global user.name "Azure CLI Team"
-          git remote add ${GITHUB_REPO} https://${GITHUB_REPO}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}/azure-cli.git
-          git fetch ${GITHUB_REPO} ${GITHUB_BRANCH}
-
-          git checkout -b ${GITHUB_BRANCH} ${GITHUB_REPO}/${GITHUB_BRANCH}
-    - template: ../../.azure-pipelines/templates/azdev_setup.yml
-    - task: AzureCLI@1
-      displayName: 'Rerun tests'
-      inputs:
-        azureSubscription: $(AZURE_SDK_TEST_SUB_CONNECTED_SERVICE)
-        scriptLocation: inlineScript
-        inlineScript: |
-          set -ev
-
-          source env/bin/activate
-
-          az account set -s 0b1f6471-1bf0-4dda-aec3-cb9272f09590
-          azdev test storage
-          azdev test test_containerapp_custom_domains_app_in_different_rg --live
-          env
+          az --version
+          az upgrade --yes
+          az --version
